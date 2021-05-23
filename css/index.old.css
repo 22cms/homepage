@@ -1,0 +1,329 @@
+:root {
+	--searchtype-sizeorig:105px;
+	--searchtype-size:105px;
+	--searchtype-onecharsize:52px;
+}
+html {
+	background-color: #212121;
+	height: 100%;
+	width: 100%
+}
+body {
+	height: 100%;
+	width: 100%;
+	margin: 0;
+	border: none;
+}
+
+p, input, label, a, span {
+	font-family: Arial, Inter, sans-serif;
+	color: white;
+}
+
+
+#body-centerbox, .centerbox {
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+#body-centerbox {
+	min-height: 100%;
+}
+
+.fHidden {
+	display: none;
+}
+
+.searchbox-container {
+	position: relative;
+	width: 100%;
+	height: 120px;
+}
+
+#search-box, #search-tip {
+	width: 100%;
+	height: 120px;
+	background-color: rgba(0, 0, 0, 0);
+	border: none;
+	color: white;
+	font-size: var(--searchtype-size);
+	text-align: center;
+	outline: none;
+	caret-color: gray;
+	overflow: hidden;
+}
+
+#search-tip {
+	color: gray;
+	margin: 0;
+	height: initial;
+	white-space: nowrap;
+}
+#search-box {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+
+.searchbox-url {
+	text-decoration: underline;
+	cursor: pointer;
+}
+.searchbox-eval {
+	font-family: monospace;
+	color: #4EF900 !important;
+}
+
+#searchbox-action {
+	color: #FFFFFF50;
+	margin-top: 20px;
+}
+
+
+#searchengines-container, #bookmarks-container {
+	display: flex;
+    flex-direction: row;
+    height: 32px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+#bookmarks-container {
+	height: auto;
+	transition: height 0.7s;
+	margin-bottom: 0px;
+}
+
+.search-engine, .bookmark-icon {
+	margin-left: 15px;
+	margin-right: 15px;
+	max-width: 32px;
+	min-width: 22px;
+	height: auto;
+	filter: grayscale(100%) brightness(70%) contrast(1);
+	transition: filter 0.2s;
+	cursor: pointer;
+}
+.bookmark-icon {
+	max-width: 24px;
+	min-width: 18px;
+}
+.search-engine:hover {
+	filter: grayscale(0%);
+}
+
+.bookmark-link {
+	flex-direction: column;
+	width: 95px;
+	height: 110px;
+	transition: background-color 0.1s;
+	border-radius: 5px;
+	margin: 2px;
+}
+.bookmark-link:hover {
+	background-color: #65656560;
+	cursor: pointer;
+}
+.bookmark-circle {
+	width: 46px;
+	height: 46px;
+	border-radius: 46px;
+	background-color: #454545;
+}
+.bookmark-title {
+	color: #A0A0A0;
+	margin: 0;
+	margin-top: 14px;
+	font-size: 12.5px;
+	text-align: center;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	width: 100%;
+}
+.bookmark-link:hover .bookmark-icon {
+	filter: grayscale(0%);
+}
+
+
+.settings-overlay {
+	position: fixed;
+	visibility: visible;
+	opacity: 1;
+	transform: scale(1);
+	width: 100%; 
+	height: 100%;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #09090950;
+	z-index: 2; 
+	transition: transform 0.25s, opacity 0.25s, visibility 0.25s, background-color 0.5s, top 0.25s;
+}
+.sHidden {
+	opacity: 0;
+	visibility: hidden;
+	transform: scale(0.5);
+	background-color: rgba(0, 0, 0, 0);
+}
+#settings-container {
+	display: flex;
+	flex-direction: column;
+	background-color: #404040;
+	box-shadow: 0px 5px 10px #212121;
+	width: auto;
+	height: auto;
+	border-radius: 4px;
+	padding: 12px;
+}
+#settings-title {
+	font-size: 30px;
+	margin: 16px;
+	margin-left: 0px;
+	
+}
+.settings-category-title {
+	margin: 10px;
+	margin-left: 0px;
+}
+.settings-cancel {
+	color: #f44336;
+	font-size: 15px;
+	font-weight: 500;
+	background-color: #404040;
+	padding: 8px;
+	padding-left: 10px;
+	padding-right: 10px;
+	border: 0px solid #f44336;
+	border-radius: 2px;
+	margin: 5px;
+	margin-right: 0px;
+}
+.settings-type {
+	background-color: #333333;
+	border: 1px solid grey;
+	border-radius: 2.5px;
+	width: 220px;
+	height: 40px;
+	margin-right: 6px;
+	margin-bottom: 4px;
+	padding: 12px;
+	padding-bottom: 0;
+	padding-top: 0;
+	outline: none;
+	transition: border 0.3s, background-color 0.3s;
+	font-weight: 100;
+	color: white;
+}
+.settings-type:hover {
+	background-color: #383838;
+}
+.settings-type:focus {
+	border: 1px solid white;
+	background-color: #404040;
+}
+#add-element-form {
+	margin: 0;
+}
+.radio-label {
+	font-size: 14px;
+}
+.settings-button {
+	cursor: pointer;
+	height: 35px;
+	width: auto;
+	padding-left: 20px;
+	padding-right: 20px;
+	margin: 0px;
+	font-size: 15px;
+	background-color: #404040;
+	border-radius: 3px;
+}
+.green {
+	color: #43a047;
+	border: 2px solid #43a047;
+}
+.red {
+	
+	color: #f44336;
+	border: none;
+}
+
+.reverse-row {
+	display: flex;
+	width: 100%;
+	flex-direction: row-reverse;
+	align-items: center;
+}
+.ripple {
+  background-position: center;
+  transition: background 0.5s;
+  cursor: pointer;
+}
+.ripple:hover {
+  background: #505050 radial-gradient(circle, transparent 1%, #505050 1%) center/15000%;
+}
+.ripple:active {
+  background-color: #707070;
+  background-size: 100%;
+  transition: background 0s;
+}
+
+.notification-popup {
+	position:fixed;
+	z-index: 2;
+	right: 25px;
+	top: 25px;
+	
+	cursor: pointer;
+	visibility: visible;
+	min-width: 150px;
+	max-width: 350px;
+	background-color: #333333;
+	border-radius: 5px;
+	padding: 12px 16px 12px 16px;
+	box-shadow: 0px 2px 5px #191919;
+	transition: visibility 0.3s, opacity 0.3s, right 0.3s, bottom 0.3s;
+}
+.nHidden {
+	right: -50px;
+	opacity: 0;
+	visibility: hidden;
+}
+
+
+
+@media only screen and (max-width: 550px) {
+	.song-tab {
+		width: 100%; 
+		min-width: initial;
+		height: 110px;
+		border-radius: 0px;
+	}
+	.song-title {
+		margin-top: 12px;
+		font-size: 20px;
+	}
+	.song-albumart {
+		width: 110px;
+		height: 110px;
+	}
+	.song-albumart-overlay {
+		width: 110px;
+		height: 110px;
+	}
+	
+	.settings-overlay {
+		flex-direction: row;
+		align-items: flex-end;
+	}
+	.sHidden {
+		transform: scale(1,1);
+		top: 275px;
+	}
+	#settings-container {
+		border-radius: 0px;
+		width: 100%;
+		height: auto;
+	}
+}
