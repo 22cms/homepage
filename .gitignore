@@ -1,0 +1,2 @@
+#Ignores any script that's used to automate the oldtheme.html file creation
+makeOldThemeFile.*

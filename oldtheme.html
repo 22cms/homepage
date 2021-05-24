@@ -1,0 +1,64 @@
+<html>
+	<head>
+		<title>Francesco's Home Page</title>
+		<link id="css-id" rel="stylesheet" href="css/index.old.css">
+		<link rel="icon" href="imgs/404.svg"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+	<body>
+		<div id="body-centerbox">
+			<div id="searchengines-container"></div>
+			
+			<div class="searchbox-container centerbox" class="centerbox">
+				<p id="search-tip">Type here</p>
+				<input autocomplete="off" onclick="if(URLMode) goToURL(this.value)" oninput="hideTip()" id="search-box" type="text">
+			</div>
+			<p id="searchbox-action">Search on Google</p>
+			<div id="bookmarks-container" class="centerbox">
+				
+			</div>
+		</div>
+		<div id="settings-overlay" class="settings-overlay centerbox sHidden">
+			<div id="settings-container">
+				<p id="settings-title">Settings</p>
+				<p class="settings-category-title">Search Engines/Bookmarks</p>
+				<form id="add-element-form">
+					<input autocomplete="off" name="name" type="text" class="settings-type" placeholder="Googel Search" id="settings-nametype">
+					<input autocomplete="off" name="url" type="text" class="settings-type" placeholder="Use <query> for the engine query" id="settings-urltype">
+					<button type="button" class="settings-button green border ripple" onclick="addFormElem()">ADD</button>
+					<br><br style="font-size: 7px;">
+					
+					<label class="radio-label">
+						<input for="searchEngine" type="radio" id="engine-radio" name="elementType" value="searchEngine" checked="checked">
+						Add as a Search Engine
+					</label><br>
+					<label class="radio-label">
+						<input for="bookmark" type="radio" id="bookmark-radio" name="elementType" value="bookmark">
+						Add as a Bookmark
+					</label><br>
+				</form><br style="font-size: 7px;">
+				<button type="button" class="settings-button red ripple" onclick="removeMode = 1;settings()">REMOVE AN ELEMENT</button>
+				
+				
+				<p class="settings-category-title row">Language</p>
+				<select class="settings-type" id="language-select" onchange="changeLangTo(this.value)">
+				</select>
+				
+				<p class="settings category-title">Reset and Import</p>
+				<div class="centerbox row">
+					<button type="button" class="settings-button green ripple" onclick="exportToSearchBox();settings()">EXPORT SETTINGS</button>
+					<button type="button" class="settings-button red ripple" onclick="localStorage.clear();location.reload()">RESET ALL SETTINGS</button>
+				</div>
+				<div class="reverse-row">
+					<button onclick="settings()" class="settings-cancel ripple">CANCEL</button>
+				</div>
+			</div>
+		</div>
+		<div ontouchstart="this.classList.add('nHidden')" onclick="this.classList.add('nHidden')" id="notif-popup" class="nHidden notification-popup">
+			<span id="notif-text">The actual notification content</span>
+		</div>
+	
+		<script src="js/translations.js"></script> 
+		<script src="js/index.js"></script> 
+	</body>
+</html>
