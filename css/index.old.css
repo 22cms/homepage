@@ -5,6 +5,7 @@
 }
 html {
 	background-color: #212121;
+	transition: background-color 0.5s;
 	height: 100%;
 	width: 100%
 }
@@ -300,26 +301,7 @@ p, input, label, a, span {
 
 
 
-@media only screen and (max-width: 550px) {
-	.song-tab {
-		width: 100%; 
-		min-width: initial;
-		height: 110px;
-		border-radius: 0px;
-	}
-	.song-title {
-		margin-top: 12px;
-		font-size: 20px;
-	}
-	.song-albumart {
-		width: 110px;
-		height: 110px;
-	}
-	.song-albumart-overlay {
-		width: 110px;
-		height: 110px;
-	}
-	
+@media only screen and (max-width: 550px) {	
 	.settings-overlay {
 		flex-direction: row;
 		align-items: flex-end;
@@ -332,5 +314,48 @@ p, input, label, a, span {
 		border-radius: 0px;
 		width: 100%;
 		height: auto;
+	}
+}
+
+@media screen and (prefers-color-scheme: light) {
+	html {
+		background-color: #FFFFFF;
+	}
+	
+	#search-tip {
+		color: #84878b;
+	}
+	#search-box {
+		color: black;
+	}
+	#searchbox-action {
+		color: #84878b;
+	}
+	
+	.searchbox-eval {
+		color: #24f262 !important;
+	}
+	
+	.search-engine {
+		filter: grayscale(1);
+		opacity: 0.7;
+		transition: opacity 0.2s, filter 0.2s;
+	}
+	.bookmark-icon {
+		filter: initial;
+		opacity: 1;
+		transition: opacity 0.2s;
+	}
+	.search-engine:hover {
+		filter: initial;
+		opacity: 1;
+	}
+	
+	.bookmark-circle {
+		background-color: #F1F3F4;
+	}
+	
+	.bookmark-title {
+		color: black;
 	}
 }
