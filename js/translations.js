@@ -12,9 +12,10 @@ var translations = {
 		"newSearchEngineError" : "The Search engine URL does not contain any <query> tag. Check it the provided URL is correct.",
 		"newBookmarkAdded" : "The new bookmark has been added",
 		"searchEngineRemoved" : "The Search engine has been removed",
-		"searchEngineRemoveError" : "You need at least 1 Search engine to let the site work properly",
+		"searchEngineRemoveError" : "You need at least 1 Search engine to let the site work properly.",
 		"bookmarkRemoved" : "The bookmark has been removed",
-		"goTo" : "Go to <name>"
+		"goTo" : "Go to <name>",
+		"exportNotif" : "Settings got exported succesfully, just copy this code and execute it where you want to restore them all."
 	},
 	"it" : {
 		"languageName" : "Italiano",
@@ -30,7 +31,8 @@ var translations = {
 		"searchEngineRemoved" : "Il motore di ricerca \u00E8 stato rimosso",
 		"searchEngineRemoveError" : "Hai bisogno di almeno 1 motore di Ricera per far funzionare il sito correttamente",
 		"bookmarkRemoved" : "Il segnalibro \u00E8 stato rimosso",
-		"goTo" : "Vai su <name>"
+		"goTo" : "Vai su <name>",
+		"exportNotif" : "Le tue impostazioni sono state esportate, copia il codice che si trova nella barra di ricerca ed eseguiscilo dove vuoi per ripristinarle"
 	},
 	"nap" : {
 		"languageName" : "Napulitano",
@@ -46,7 +48,8 @@ var translations = {
 		"searchEngineRemoved" : "'O mutor 'e ricirca \u00E8 state luato",
 		"searchEngineRemoveError" : "T'\u00E8 ten\u00E9 pe 'llu meno 'nu mutor 'e ricirca ppe fa funzionà 'o sito",
 		"bookmarkRemoved" : "'O signalibbro \u00E8 state luato",
-		"goTo" : "Vaje 'ngopp 'a <name>"
+		"goTo" : "Vaje 'ngopp 'a <name>",
+		"exportNotif" : "'E preferenze toje anna state esportate, mietti 'stu codice e seguiscilo addò vuò tu ppe recuperà."
 	},
 }
 

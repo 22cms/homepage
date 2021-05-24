@@ -25,7 +25,7 @@
 				<form id="add-element-form">
 					<input autocomplete="off" name="name" type="text" class="settings-type" placeholder="Googel Search" id="settings-nametype">
 					<input autocomplete="off" name="url" type="text" class="settings-type" placeholder="Use <query> for the engine query" id="settings-urltype">
-					<button type="button" class="settings-button green ripple" onclick="addFormElem()">ADD</button>
+					<button type="button" class="settings-button green border ripple" onclick="addFormElem()">ADD</button>
 					<br><br style="font-size: 7px;">
 					
 					<label class="radio-label">
@@ -37,13 +37,18 @@
 						Add as a Bookmark
 					</label><br>
 				</form><br style="font-size: 7px;">
-				<button type="button" class="settings-button red ripple" onclick="removeMode = 1, settings()">REMOVE AN ELEMENT</button>
+				<button type="button" class="settings-button red ripple" onclick="removeMode = 1;settings()">REMOVE AN ELEMENT</button>
 				
 				
-				<p class="settings-category-title row">Language and Themes</p>
+				<p class="settings-category-title row">Language</p>
 				<select class="settings-type" id="language-select" onchange="changeLangTo(this.value)">
 				</select>
 				
+				<p class="settings category-title">Reset and Import</p>
+				<div class="centerbox row">
+					<button type="button" class="settings-button green ripple" onclick="exportToSearchBox();settings()">EXPORT SETTINGS</button>
+					<button type="button" class="settings-button red ripple" onclick="localStorage.clear();location.reload()">RESET ALL SETTINGS</button>
+				</div>
 				<div class="reverse-row">
 					<button onclick="settings()" class="settings-cancel ripple">CANCEL</button>
 				</div>

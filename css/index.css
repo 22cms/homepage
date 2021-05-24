@@ -254,21 +254,28 @@ p, input, label, a, span {
 	width: auto;
 	padding-left: 20px;
 	padding-right: 20px;
-	margin: 0px;
+	margin: 2px;
 	font-size: 15px;
 	background-color: #40404040;
 	border-radius: 3px;
 }
 .green {
 	color: #43a047;
+	border: none;
+}
+.green.border {
 	border: 2px solid #43a047;
 }
 .red {
-	
 	color: #f44336;
 	border: none;
 }
 
+.row {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+}
 .reverse-row {
 	display: flex;
 	width: 100%;

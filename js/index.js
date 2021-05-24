@@ -1,10 +1,14 @@
+//Loads the settings object from localStorage
+var localSettings = {};
+if (localStorage.getItem("localSettings")) localSettings = JSON.parse(localStorage.getItem("localSettings"));
+
 //Search Engines. The First in the List is the default one
 var searchEngines = [
 	["Google", "https://www.google.com/search?q=<query>"],
 	["Wikipedia", "https://en.wikipedia.org/w/index.php?search=<query>"],
 	["Deezer", "https://www.deezer.com/search/<query>"],
 ]
-if (localStorage.getItem('searchEngines')) searchEngines = JSON.parse(localStorage.getItem('searchEngines'));
+if (localStorage.searchEngines) searchEngines = localStorage.searchEngines;
 
 const engineSelectorScheme = '<picture nm="<arrayPosition>" onmouseover="describeEngine(this)" onmouseleave="hideTip()" onclick="switchEngineTo(this, true)"> <source srcset="https://api.faviconkit.com/<URL>/32"> <img class="search-engine" src="imgs/404.svg"></picture>'
 
@@ -18,7 +22,7 @@ var bookmarks = [
 	["YouTube", "https://www.youtube.com"],
 	["Deezer", "https://www.deezer.com"],
 ]
-if (localStorage.getItem('bookmarks')) bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
+if (localSettings.bookmarks) bookmarks = localSettings.bookmarks;
 
 const bookmarkLinkScheme = '<div class="bookmark-link centerbox" nm="<arrayPosition>" onmouseover="describeURL(this)" onmouseleave="hideTip()" onclick="goToBookmarkURL(this)"><div class="bookmark-circle centerbox"><picture> <source srcset="https://api.faviconkit.com/<URL>/32"><img class="bookmark-icon" src="imgs/404.svg"></picture></div><p class="bookmark-title"><title></p></div>';
 
@@ -84,7 +88,7 @@ function renderElements() {
 
 renderElements();
 
-//Function: When the searchbox changes, if something is written in it, change the text behind it to "", else put it back to the original value.
+//Function: When the searchbox changes, if something is written in it, change the text behind it to "",else put it back to the original value.
 // + asks to enable the URL Mode if the input is an URL
 function hideTip() {
 	searchBox.classList.remove("fHidden");
@@ -265,8 +269,9 @@ function removeSpecBookmark(arrayPosition) {
 //Function: Saves the preferences in the browser localStorage
 
 function savePreferences() {
-	localStorage.setItem("searchEngines", JSON.stringify(searchEngines))
-	localStorage.setItem("bookmarks", JSON.stringify(bookmarks))
+	localSettings.searchEngines = searchEngines;
+	localSettings.bookmarks = bookmarks;
+	localStorage.setItem("localSettings", JSON.stringify(localSettings));
 }
 
 //Function: Shows the Bookmark info when it is hovered
@@ -353,4 +358,17 @@ function notify(text) {
 		}
 	}, 1000);
 
+}
+
+//Function: Stringifies the localSettings JSON, makes it a command, and places it all in the searchBox,
+//making a command that autorestores all personal settings.
+
+function exportToSearchBox() {
+	var setString = JSON.stringify(localSettings);
+	
+	searchBox.value = ".$" + "localStorage.setItem('localSettings','" + setString + "');" + "localStorage.setItem('curLang','" 
+	+ curLangCode + "');" + "location.reload()";
+	hideTip();
+	
+	notify(curLang.exportNotif);
 }
