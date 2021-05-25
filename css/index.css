@@ -74,7 +74,7 @@ p, input, label, a, span {
 	cursor: pointer;
 }
 .searchbox-eval {
-	font-family: monospace;
+	font-family: Consolas, "Ubuntu Mono", monospace;
 	color: #00f942 !important;
 }
 
