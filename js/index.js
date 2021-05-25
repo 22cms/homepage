@@ -10,7 +10,7 @@ var searchEngines = [
 ]
 if (localStorage.searchEngines) searchEngines = localStorage.searchEngines;
 
-const engineSelectorScheme = '<picture nm="<arrayPosition>" onmouseover="describeEngine(this)" onmouseleave="hideTip()" onclick="switchEngineTo(this, true)"> <source srcset="https://api.faviconkit.com/<URL>/32"> <img class="search-engine" src="imgs/404.svg"></picture>'
+const engineSelectorScheme = '<picture nm="<arrayPosition>" onmouseover="describeEngine(this)" onmouseleave="hideTip()" onclick="switchEngineTo(this, true)"> <source srcset="https://api.faviconkit.com/<URL>/64"> <img class="search-engine" src="imgs/404.svg"></picture>'
 
 var currentEngine = searchEngines[0];
 var URLMode = false;
@@ -24,7 +24,7 @@ var bookmarks = [
 ]
 if (localSettings.bookmarks) bookmarks = localSettings.bookmarks;
 
-const bookmarkLinkScheme = '<div class="bookmark-link centerbox" nm="<arrayPosition>" onmouseover="describeURL(this)" onmouseleave="hideTip()" onclick="goToBookmarkURL(this)"><div class="bookmark-circle centerbox"><picture> <source srcset="https://api.faviconkit.com/<URL>/32"><img class="bookmark-icon" src="imgs/404.svg"></picture></div><p class="bookmark-title"><title></p></div>';
+const bookmarkLinkScheme = '<div class="bookmark-link centerbox" nm="<arrayPosition>" onmouseover="describeURL(this)" onmouseleave="hideTip()" onclick="goToBookmarkURL(this)"><div class="bookmark-circle centerbox"><picture> <source srcset="https://api.faviconkit.com/<URL>/64"><img class="bookmark-icon" src="imgs/404.svg"></picture></div><p class="bookmark-title"><title></p></div>';
 
 const languageSelectScheme = '<option value="<key>"><emoji> <lang></option>'
 
