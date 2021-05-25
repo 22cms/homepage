@@ -104,13 +104,17 @@ p, input, label, a, span {
 	filter: grayscale(100%) brightness(70%) contrast(1);
 	transition: filter 0.2s;
 	cursor: pointer;
+	border-radius: 5px;
 }
 .bookmark-icon {
 	max-width: 24px;
 	min-width: 18px;
 }
-.search-engine:hover {
+.search-engine:hover, .in-use {
 	filter: grayscale(0%);
+}
+.in-use {
+	cursor: initial;
 }
 
 .bookmark-link {
@@ -346,7 +350,7 @@ p, input, label, a, span {
 		opacity: 1;
 		transition: opacity 0.2s;
 	}
-	.search-engine:hover {
+	.search-engine:hover, .in-use {
 		filter: initial;
 		opacity: 1;
 	}

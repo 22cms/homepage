@@ -113,9 +113,12 @@ p, input, label, a, span {
 	max-width: 24px;
 	min-width: 18px;
 }
-.search-engine:hover {
+.search-engine:hover, .in-use {
 	filter: grayscale(0%);
 	opacity: 1;
+}
+.in-use {
+	cursor: initial;
 }
 
 .bookmark-link {

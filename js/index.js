@@ -13,6 +13,7 @@ if (localStorage.searchEngines) searchEngines = localStorage.searchEngines;
 const engineSelectorScheme = '<picture nm="<arrayPosition>" onmouseover="describeEngine(this)" onmouseleave="hideTip()" onclick="switchEngineTo(this, true)"> <source srcset="https://api.faviconkit.com/<URL>/64"> <img class="search-engine" src="imgs/404.svg"></picture>'
 
 var currentEngine = searchEngines[0];
+var currentEngineNum = 0;
 var URLMode = false;
 var evalMode = false;
 var removeMode = 0;
@@ -74,6 +75,7 @@ function renderElements() {
 	for (i = 0; i < bookmarks.length; i++) {
 		bookmarksContainer.innerHTML += genBookmarkElement(i);
 	}
+	document.getElementsByClassName("search-engine")[0].classList.add("in-use")
 	currentEngine = searchEngines[0];
 	hideTip();
 	
@@ -154,11 +156,19 @@ function switchEngineTo(number, isFromElem) {
 	var engine = parseInt(number.attributes.nm.value, 10);
 	
 	if (!removeMode) {
-		if (!isFromElem) currentEngine = searchEngines[number];
-		else {
+		if (isFromElem) {
 			currentEngine = searchEngines[engine];
-			hideTip();
+			currentEngineNum = engine;
+			document.getElementsByClassName("in-use")[0].classList.remove("in-use");
+			document.getElementsByClassName("search-engine")[engine].classList.add("in-use");
 		}
+		else {
+			currentEngine = searchEngines[number];
+			currentEngineNum = number;
+			document.getElementsByClassName("in-use")[0].classList.remove("in-use");
+			number.classList.add("in-use");
+		}
+		hideTip();
 	}
 	else {
 		removeSpecEngine(engine);
