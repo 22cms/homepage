@@ -142,31 +142,45 @@ function goToBookmarkURL(element) {
 	}
 }
 
-//Listener: When the enter Key has ben pressed, search the sentence using the search engine which has been choosen, unless it's an URL
+//Listener: When the enter Key has ben pressed, search the sentence using the search engine which has been choosen, unless it's an URL or a command;
+//If the up or down arrow keys have been pressed, switch the search engine to the next/previous one
+
 document.addEventListener("keyup", function(event) {
-    if (event.keyCode === 13) {
-		if (evalMode) searchAction.innerHTML = eval(searchBox.value.slice(2));
-		else if (!URLMode) window.location.href = currentEngine[1].replace("<query>", encodeURIComponent(searchBox.value));
-		else goToURL(searchBox.value);
-    }
+    switch (event.keyCode) {
+		case 13:
+			if (evalMode) searchAction.innerHTML = eval(searchBox.value.slice(2));
+			else if (!URLMode) window.location.href = currentEngine[1].replace("<query>", encodeURIComponent(searchBox.value));
+			else goToURL(searchBox.value);
+		break;
+		case 38:
+			if (currentEngineNum == 0) switchEngineTo(searchEngines.length-1, false);
+			else switchEngineTo(currentEngineNum-1, false);
+		break;
+		case 40: 
+			if (currentEngineNum == searchEngines.length-1) switchEngineTo(0, false);
+			else switchEngineTo(currentEngineNum+1, false);
+		break;
+	};
 });
+
 
 //Functions: Change the Search Engine to the Engine Specified, from the engine number or
 function switchEngineTo(number, isFromElem) {
-	var engine = parseInt(number.attributes.nm.value, 10);
 	
 	if (!removeMode) {
-		if (isFromElem) {
+		if (isFromElem == true) {
+			var engine = parseInt(number.attributes.nm.value, 10);
 			currentEngine = searchEngines[engine];
 			currentEngineNum = engine;
 			document.getElementsByClassName("in-use")[0].classList.remove("in-use");
-			document.getElementsByClassName("search-engine")[engine].classList.add("in-use");
+			number.children[1].classList.add("in-use");
 		}
 		else {
 			currentEngine = searchEngines[number];
 			currentEngineNum = number;
 			document.getElementsByClassName("in-use")[0].classList.remove("in-use");
-			number.classList.add("in-use");
+			document.getElementsByClassName("search-engine")[number].classList.add("in-use");
+			
 		}
 		hideTip();
 	}
