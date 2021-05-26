@@ -46,20 +46,10 @@ const notifPopUp = document.getElementById("notif-popup");
 const notifText = document.getElementById("notif-text");
 
 const rootCSS = document.querySelector(":root");
+const themeAdvisor = document.getElementById("theme-advisor");
+
 var maxCharacters;
-var curTheme = "/css/index.old.css";
 
-
-//On Load Function: Changes the theme to the legacy one if it finds the right parameter. This must be the first function to load
-
-/*function switchThemeTo() {
-	if (window.location.href.includes("?oldtheme")) {
-		cssID = document.getElementById("css-id")
-		arrayedCSS = cssID.href.split("/");
-		cssID.href = cssID.href.replace(arrayedCSS[arrayedCSS.length - 1], "index.old.css")
-	}
-}
-switchThemeTo();*/
 
 //On Load Function: Renders all the right buttons for every search engine/bookmark
 
@@ -396,3 +386,15 @@ function exportToSearchBox() {
 	
 	notify(curLang.exportNotif);
 }
+
+
+//On Load Function: if the New Theme is not in use, change the themeAdvisor message 
+
+function notifyRightTheme() {
+	var themeName = getComputedStyle(document.documentElement).getPropertyValue('--theme-name');
+	var advisorMessage = "You're Using the \"" + themeName + "\" Theme, <a href='index.html' class='searchbox-url'>Click here</a> to change it to the default one";
+	
+	if (themeName != "Default") themeAdvisor.innerHTML = advisorMessage;
+}
+
+notifyRightTheme();

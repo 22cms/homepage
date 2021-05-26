@@ -1,7 +1,8 @@
 :root {
-	--searchtype-sizeorig:128px;
-	--searchtype-size:128px;
-	--searchtype-onecharsize:64px;
+	--theme-name:Default; /*Theme name*/
+	--searchtype-sizeorig:128px; /*Set here the default font size*/
+	--searchtype-size:128px; /*And here too*/
+	--searchtype-onecharsize:64px; /*Set here the average character size, it'll be used in the auto fontsize regulation.*/
 }
 html {
 	background-color: #191f22;
