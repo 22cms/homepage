@@ -8,7 +8,7 @@ var searchEngines = [
 	["Wikipedia", "https://en.wikipedia.org/w/index.php?search=<query>"],
 	["Deezer", "https://www.deezer.com/search/<query>"],
 ]
-if (localStorage.searchEngines) searchEngines = localStorage.searchEngines;
+if (localSettings.searchEngines) searchEngines = localSettings.searchEngines;
 
 const engineSelectorScheme = '<picture nm="<arrayPosition>" onmouseover="describeEngine(this)" onmouseleave="hideTip()" onclick="switchEngineTo(this, true)"> <source srcset="https://api.faviconkit.com/<URL>/64"> <img class="search-engine" src="imgs/404.svg"></picture>'
 
@@ -138,7 +138,7 @@ function goToBookmarkURL(element) {
 document.addEventListener("keyup", function(event) {
     switch (event.keyCode) {
 		case 13:
-			if (evalMode) searchAction.innerHTML = eval(searchBox.value.slice(2));
+			if (evalMode) searchAction.innerText = eval(searchBox.value.slice(2));
 			else if (!URLMode) window.location.href = currentEngine[1].replace("<query>", encodeURIComponent(searchBox.value));
 			else goToURL(searchBox.value);
 		break;
