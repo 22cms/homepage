@@ -114,7 +114,7 @@ function toggleEvalMode(toggle) {
 
 //Function: Goes to the URL specified, adding "https://" if needed
 function goToURL(URL) { 
-		if (!(URL.includes("http://") || URL.includes("https://"))) URL = "https://" + URL;
+		if (!(URL.includes("://") || URL.includes("about:"))) URL = "https://" + URL;
 		window.location.href = URL;
 }
 
