@@ -192,7 +192,7 @@ function validURL(str) {
   return !!pattern.test(str); */
 	strArray = str.split(":")[0].split(".");
 	var result = false;
-	if ((strArray[0].length != "") && (str.includes("://") || (strArray.length > 1 && strArray[strArray.length - 1].length > 0 && (strArray[strArray.length - 1].length != "")))) result = true;
+	if ((strArray[0].length != "") && (str.includes("://") || (strArray.length > 1 && strArray[strArray.length - 1].length > 0 && (strArray[strArray.length - 1].length != "") && !(strArray[strArray.length - 1].includes(" "))))) result = true;
 	return result;
 }
 
