@@ -31,6 +31,11 @@ p, input, label, a, span {
 	font-family: Arial, Inter, sans-serif;
 	color: white;
 }
+.Micon {
+	font-family: Material Design Icons;
+	font-size: 26px;
+	margin: 0;
+}
 
 
 #body-centerbox, .centerbox {
@@ -160,6 +165,19 @@ p, input, label, a, span {
 	filter: grayscale(0%);
 }
 
+#settings-icon {
+	position: fixed;
+	top: 7px;
+	right: 7px;
+	opacity: 25%;
+	font-size: 21px;
+	transition: opacity 0.2s;
+	cursor: pointer;
+}
+#settings-icon:hover {
+	opacity: 1;
+}
+
 
 .settings-overlay {
 	position: fixed;
@@ -182,7 +200,7 @@ p, input, label, a, span {
 	transform: scale(0.5);
 	background-color: rgba(0, 0, 0, 0);
 }
-#settings-container {
+.settings-container {
 	display: flex;
 	flex-direction: column;
 	background-color: #404040;
