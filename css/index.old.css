@@ -433,4 +433,7 @@ p, input, label, a, span {
 	.bookmark-title {
 		color: black;
 	}
+	#settings-icon {
+		color: black;
+	}
 }
