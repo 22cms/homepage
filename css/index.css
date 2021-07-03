@@ -102,6 +102,7 @@ p, input, label, a, span {
 
 #searchengines-container, #bookmarks-container {
 	display: flex;
+	flex-wrap: wrap;
     flex-direction: row;
     height: 32px;
     margin-top: 10px;
