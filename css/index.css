@@ -4,6 +4,16 @@
 	--searchtype-size:128px; /*And here too*/
 	--searchtype-onecharsize:64px; /*Set here the average character size, it'll be used in the auto fontsize regulation.*/
 }
+
+@font-face {
+  font-family: 'Material Design Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: local(''),
+       url('./materialdesignicons-webfont.woff2') format('woff2'),
+       url('./materialdesignicons-webfont.woff') format('woff');
+}
+
 html {
 	background-color: #191f22;
 	height: 100%;
@@ -22,6 +32,11 @@ body {
 p, input, label, a, span {
 	font-family: Arial, Inter, sans-serif;
 	color: white;
+}
+.Micon {
+	font-family: Material Design Icons;
+	font-size: 26px;
+	margin: 0;
 }
 
 
@@ -117,6 +132,7 @@ p, input, label, a, span {
 .search-engine:hover, .in-use {
 	filter: grayscale(0%);
 	opacity: 1;
+	transition: initial;
 }
 .in-use {
 	cursor: initial;
@@ -133,6 +149,7 @@ p, input, label, a, span {
 .bookmark-link:hover {
 	background-color: #65656550;
 	cursor: pointer;
+	transition: initial;
 }
 .bookmark-circle {
 	width: 46px;
@@ -155,6 +172,18 @@ p, input, label, a, span {
 	opacity: 1;
 }
 
+#settings-icon {
+	position: fixed;
+	top: 7px;
+	right: 7px;
+	opacity: 25%;
+	font-size: 21px;
+	transition: opacity 0.2s;
+	cursor: pointer;
+}
+#settings-icon:hover {
+	opacity: 1;
+}
 
 .settings-overlay {
 	position: fixed;

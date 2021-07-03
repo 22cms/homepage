@@ -4,6 +4,16 @@
 	--searchtype-size:105px; /*And here too*/
 	--searchtype-onecharsize:52; /*Set here the average character size, it'll be used in the auto fontsize regulation.*/
 }
+
+@font-face {
+  font-family: 'Material Design Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: local(''),
+       url('./materialdesignicons-webfont.woff2') format('woff2'),
+       url('./materialdesignicons-webfont.woff') format('woff');
+}
+
 html {
 	background-color: #212121;
 	transition: background-color 0.5s;
