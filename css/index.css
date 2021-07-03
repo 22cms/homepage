@@ -165,7 +165,7 @@ p, input, label, a, span {
 	text-align: center;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	width: 100%;
+	width: 100%;	
 }
 .bookmark-link:hover .bookmark-icon {
 	filter: grayscale(0%);
@@ -206,7 +206,7 @@ p, input, label, a, span {
 	transform: scale(0.5);
 	background-color: rgba(0, 0, 0, 0);
 }
-#settings-container {
+.settings-container {
 	display: flex;
 	flex-direction: column;
 	background-color: #40404050;
@@ -217,15 +217,15 @@ p, input, label, a, span {
 	padding: 12px;
 	transition: backdrop-filter 0.4s, background-color 0.4s;
 }
-#settings-container:hover {
+.settings-container:hover {
 	background-color: #333333;
 }
 @supports (backdrop-filter: blur(2em))  {
-	#settings-container {
+	.settings-container {
 		backdrop-filter: blur(6px);
 		background-color: #50505060;
 	}
-	#settings-container:hover {
+	.settings-container:hover {
 		backdrop-filter: blur(16px);
 		background-color: #50505060;
 	}
@@ -353,7 +353,38 @@ p, input, label, a, span {
 	visibility: hidden;
 }
 
+.context-menu {
+	display: initial;
+	opacity: 1;
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 180px;
+	height: auto;
+	padding: 0;
+	overflow: hidden;
+	transform: scale(1);
+}
 
+.context-close {
+	width: 60px;
+	height: 35px;
+	text-align: center;
+	padding: 8px 0px 0px 0px;
+	margin: 0px 0px 0px calc(100% - 60px);
+}
+.context-entry {
+	display: flex;
+	align-items: center;
+	margin: 0;
+	padding: 16px 0px 16px 10px;
+	font-size: 16px;
+}
+
+.cHidden {
+	display: none;
+	
+} 
 
 @media only screen and (max-width: 550px) {
 	.song-tab {

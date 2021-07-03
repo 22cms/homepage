@@ -10,7 +10,7 @@ var searchEngines = [
 ]
 if (localSettings.searchEngines) searchEngines = localSettings.searchEngines;
 
-const engineSelectorScheme = '<picture nm="<arrayPosition>" onmouseover="describeEngine(this)" onmouseleave="hideTip()" onclick="switchEngineTo(this, true)" oncontextmenu="elemContextMenu(this, false); return!1"> <source srcset="https://api.faviconkit.com/<URL>/64"> <img class="search-engine" src="imgs/404.svg"></picture>'
+const engineSelectorScheme = '<picture nm="<arrayPosition>" onmouseover="describeEngine(this)" onmouseleave="hideTip()" onclick="switchEngineTo(this, true)" oncontextmenu="elemContextMenu(event, this, false); return!1"> <source srcset="https://api.faviconkit.com/<URL>/64"> <img class="search-engine" src="imgs/404.svg"></picture>'
 
 var currentEngine = searchEngines[0];
 var currentEngineNum = 0;
@@ -25,11 +25,12 @@ var bookmarks = [
 ]
 if (localSettings.bookmarks) bookmarks = localSettings.bookmarks;
 
-const bookmarkLinkScheme = '<div class="bookmark-link centerbox" nm="<arrayPosition>" onmouseover="describeURL(this)" onmouseleave="hideTip()" onclick="goToBookmarkURL(this)" oncontextmenu="elemContextMenu(this, true); return!1"><div class="bookmark-circle centerbox"><picture> <source srcset="https://api.faviconkit.com/<URL>/64"><img class="bookmark-icon" src="imgs/404.svg"></picture></div><p class="bookmark-title"><title></p></div>';
+const bookmarkLinkScheme = '<div class="bookmark-link centerbox" nm="<arrayPosition>" onmouseover="describeURL(this)" onmouseleave="hideTip()" onclick="goToBookmarkURL(this)" oncontextmenu="elemContextMenu(event, this, true); return!1"><div class="bookmark-circle centerbox"><picture> <source srcset="https://api.faviconkit.com/<URL>/64"><img class="bookmark-icon" src="imgs/404.svg"></picture></div><p class="bookmark-title"><title></p></div>';
 
 const languageSelectScheme = '<option value="<key>"><emoji> <lang></option>'
 
 //Declares the Searchbox and the tip behind it, also declares the Action Tip and the :root for CSS variables, and also the settings overlay objects
+//Declares the contextMenu element and variables related to it
 
 const searchBox = document.getElementById("search-box");
 const searchTip = document.getElementById("search-tip");
@@ -47,6 +48,11 @@ const notifText = document.getElementById("notif-text");
 
 const rootCSS = document.querySelector(":root");
 const themeAdvisor = document.getElementById("theme-advisor");
+
+const contextMenu = document.getElementById("context-menu");
+const contextNewTab = document.getElementById("context-newtab");
+var contextElemType;
+var contextArrayPos;
 
 var maxCharacters;
 
@@ -113,9 +119,10 @@ function toggleEvalMode(toggle) {
 }
 
 //Function: Goes to the URL specified, adding "https://" if needed
-function goToURL(URL) { 
+function goToURL(URL, newTab) { 
 		if (!(URL.includes("://") || URL.includes("about:"))) URL = "https://" + URL;
-		window.location.href = URL;
+		if (!newTab) window.location.href = URL;
+		else window.open(URL, '_blank');
 }
 
 //Function: Goes to the URL of the clicked bookmark.
@@ -154,7 +161,7 @@ document.addEventListener("keyup", function(event) {
 });
 
 
-//Functions: Change the Search Engine to the Engine Specified, from the engine number or
+//Functions: Change the Search Engine to the Engine Specified, from the engine number or the element
 function switchEngineTo(number, isFromElem) {
 	
 	if (!removeMode) {
@@ -402,6 +409,76 @@ notifyRightTheme();
 
 //Function: opens a context menu for the selected Search Engine/Bookmark 
 
-function elemContextMenu(arrayPosition, isBookmark) {
-	alert("it works lol");
+function elemContextMenu(event, arrayPosition, isBookmark) {
+	contextElemType = isBookmark;
+	contextArrayPos = parseInt(arrayPosition.attributes.nm.value, 10);
+	
+	menuHeight = 280;
+	if (isBookmark) {contextNewTab.classList.remove("cHidden"); menuHeight = 350}
+	else contextNewTab.classList.add("cHidden");
+	
+	
+	x = event.clientX;
+	y = event.clientY;
+	if ((x + 180) > screen.availWidth) x = screen.availWidth - 180;
+	if ((y + menuHeight) > screen.availHeight) y = screen.availHeight - menuHeight;
+	
+	contextMenu.classList.remove("cHidden");
+	contextMenu.style.left = x;
+	contextMenu.style.top = y;
+}
+
+//Function: Closes the context menu
+
+function contextClose() {
+	contextMenu.classList.add("cHidden");
+}
+
+//Function: removes a generic element from the context menu
+
+function contextRemoveElem() {
+	if (!contextElemType) removeSpecEngine(contextArrayPos);
+	else removeSpecBookmark(contextArrayPos);
+	
+	contextClose();
+}
+
+//Functions: moves a generic element to the left or to the right
+
+function contextMoveLeft() {
+	workingArray = searchEngines;
+	if (contextElemType) workingArray = bookmarks;
+	
+	element = workingArray[contextArrayPos];
+	workingArray.splice(contextArrayPos, 1);
+	workingArray.splice(contextArrayPos-1, 0, element);
+	
+	if (!contextElemType) searchEngines = workingArray;
+	else bookmarks = workingArray;
+	
+	renderElements();
+	savePreferences();
+	contextClose();
+}
+
+function contextMoveRight() {
+	workingArray = searchEngines;
+	if (contextElemType) workingArray = bookmarks;
+	
+	element = workingArray[contextArrayPos];
+	workingArray.splice(contextArrayPos, 1);
+	workingArray.splice(contextArrayPos+1, 0, element);
+	
+	if (!contextElemType) searchEngines = workingArray;
+	else bookmarks = workingArray;
+	
+	renderElements();
+	savePreferences();
+	contextClose();
+}
+
+//Function: opens a new Tab from a bookmark
+
+function contextTab() {
+	goToURL(bookmarks[contextArrayPos][1], true)
 }
