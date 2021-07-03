@@ -10,7 +10,7 @@ var searchEngines = [
 ]
 if (localSettings.searchEngines) searchEngines = localSettings.searchEngines;
 
-const engineSelectorScheme = '<picture nm="<arrayPosition>" onmouseover="describeEngine(this)" onmouseleave="hideTip()" onclick="switchEngineTo(this, true)"> <source srcset="https://api.faviconkit.com/<URL>/64"> <img class="search-engine" src="imgs/404.svg"></picture>'
+const engineSelectorScheme = '<picture nm="<arrayPosition>" onmouseover="describeEngine(this)" onmouseleave="hideTip()" onclick="switchEngineTo(this, true)" oncontextmenu="elemContextMenu(this, false); return!1"> <source srcset="https://api.faviconkit.com/<URL>/64"> <img class="search-engine" src="imgs/404.svg"></picture>'
 
 var currentEngine = searchEngines[0];
 var currentEngineNum = 0;
@@ -25,7 +25,7 @@ var bookmarks = [
 ]
 if (localSettings.bookmarks) bookmarks = localSettings.bookmarks;
 
-const bookmarkLinkScheme = '<div class="bookmark-link centerbox" nm="<arrayPosition>" onmouseover="describeURL(this)" onmouseleave="hideTip()" onclick="goToBookmarkURL(this)"><div class="bookmark-circle centerbox"><picture> <source srcset="https://api.faviconkit.com/<URL>/64"><img class="bookmark-icon" src="imgs/404.svg"></picture></div><p class="bookmark-title"><title></p></div>';
+const bookmarkLinkScheme = '<div class="bookmark-link centerbox" nm="<arrayPosition>" onmouseover="describeURL(this)" onmouseleave="hideTip()" onclick="goToBookmarkURL(this)" oncontextmenu="elemContextMenu(this, true); return!1"><div class="bookmark-circle centerbox"><picture> <source srcset="https://api.faviconkit.com/<URL>/64"><img class="bookmark-icon" src="imgs/404.svg"></picture></div><p class="bookmark-title"><title></p></div>';
 
 const languageSelectScheme = '<option value="<key>"><emoji> <lang></option>'
 
@@ -398,3 +398,10 @@ function notifyRightTheme() {
 }
 
 notifyRightTheme();
+
+
+//Function: opens a context menu for the selected Search Engine/Bookmark 
+
+function elemContextMenu(arrayPosition, isBookmark) {
+	alert("it works lol");
+}
