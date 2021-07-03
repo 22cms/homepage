@@ -314,6 +314,37 @@ p, input, label, a, span {
 	visibility: hidden;
 }
 
+.context-menu {
+	display: initial;
+	opacity: 1;
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 180px;
+	height: auto;
+	padding: 0;
+	overflow: hidden;
+}
+
+.context-close {
+	width: 60px;
+	height: 35px;
+	text-align: center;
+	padding: 8px 0px 0px 0px;
+	margin: 0px 0px 0px calc(100% - 60px);
+}
+.context-entry {
+	display: flex;
+	align-items: center;
+	margin: 0;
+	padding: 16px 0px 16px 10px;
+	font-size: 16px;
+}
+
+.cHidden {
+	display: none;
+	
+} 
 
 
 @media only screen and (max-width: 550px) {	

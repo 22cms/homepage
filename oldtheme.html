@@ -1,11 +1,12 @@
 <html>
 	<head>
 		<title>Francesco's Home Page</title>
-		<link id="css-id" rel="stylesheet" href="css/index.old.css">
+		<link id="css-id" rel="stylesheet" href="css/oldtheme.css">
 		<link rel="icon" href="imgs/404.svg"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	</head>
 	<body>
+		<p class="Micon" id="settings-icon" onclick="settings()">&#xF08BB </p>
 		<div id="body-centerbox">
 			<div id="searchengines-container"></div>
 			
@@ -19,7 +20,7 @@
 			</div>
 		</div>
 		<div id="settings-overlay" class="settings-overlay centerbox sHidden">
-			<div id="settings-container">
+			<div class="settings-container">
 				<p id="settings-title">Settings</p>
 				<p class="settings-category-title">Search Engines/Bookmarks</p>
 				<form id="add-element-form">
@@ -37,13 +38,13 @@
 						Add as a Bookmark
 					</label><br>
 				</form><br style="font-size: 7px;">
-				<button type="button" class="settings-button red ripple" onclick="removeMode = 1;settings()">REMOVE AN ELEMENT</button>
+				<!--<button type="button" class="settings-button red ripple" onclick="removeMode = 1;settings()">REMOVE AN ELEMENT</button> -->
 				
 				
 				<p class="settings-category-title row">Language and Theme</p>
 				<select class="settings-type" id="language-select" onchange="changeLangTo(this.value)">
 				</select>
-				<p id="theme-advisor" class="radio-label">You're Using the "New" Theme, <a href="oldtheme.html" class="searchbox-url">Click here</a> to use the "Old" Theme</p>
+				<p id="theme-advisor" class="radio-label">You're Using the Default Theme, <a href="oldtheme.html" class="searchbox-url">Click here</a> to use the "Old" Theme</p>
 				
 				<p class="settings category-title">Reset and Import</p>
 				<div class="centerbox row">
@@ -57,6 +58,14 @@
 		</div>
 		<div ontouchstart="this.classList.add('nHidden')" onclick="this.classList.add('nHidden')" id="notif-popup" class="nHidden notification-popup">
 			<span id="notif-text">The actual notification content</span>
+		</div>
+		<div id="context-menu" class="settings-container context-menu cHidden">
+			<p class="context-close ripple Micon" onclick="contextClose()">&#xF05AD;</p>
+			
+			<p id="context-newtab" class="context-entry ripple cHidden" onclick="contextTab()"><span class="Micon">&#xF075C;</span>&nbsp;&nbsp;Open in new Tab</p>
+			<p class="context-entry ripple" onclick="contextMoveLeft()"><span class="Micon">&#xF004D;</span>&nbsp;&nbsp;Move to the left</p>
+			<p class="context-entry ripple" onclick="contextMoveRight()"><span class="Micon">&#xF0054;</span>&nbsp;&nbsp;Move to the right</p>
+			<p class="context-entry ripple" onclick="contextRemoveElem()"><span class="Micon">&#xF01B4;</span>&nbsp;&nbsp;Delete element</p>
 		</div>
 	
 		<script src="js/translations.js"></script> 
