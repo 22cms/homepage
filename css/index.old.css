@@ -108,7 +108,7 @@ p, input, label, a, span {
 #bookmarks-container {
 	height: auto;
 	transition: height 0.7s;
-	margin-bottom: 0px;
+	margin: 0px;
 }
 
 .search-engine, .bookmark-icon {
@@ -310,6 +310,14 @@ p, input, label, a, span {
   transition: background 0s;
 }
 
+#mobile-warning {
+	color: yellow;
+	font-size: 12px;
+	display: none;
+	margin: 8px 0 8px 0;
+	font-style: italic;
+}
+
 .notification-popup {
 	position:fixed;
 	z-index: 2;
@@ -378,6 +386,9 @@ p, input, label, a, span {
 		border-radius: 0px;
 		width: 100%;
 		height: auto;
+	}
+	#mobile-warning {
+		display: inline;
 	}
 }
 

@@ -20,7 +20,7 @@
 			</div>
 		</div>
 		<div id="settings-overlay" class="settings-overlay centerbox sHidden">
-			<div class="settings-container">
+			<div class="settings-container" id="settings-container">
 				<p id="settings-title">Settings</p>
 				<p class="settings-category-title">Search Engines/Bookmarks</p>
 				<form id="add-element-form">
@@ -51,6 +51,7 @@
 					<button type="button" class="settings-button green ripple" onclick="exportToSearchBox();settings()">EXPORT SETTINGS</button>
 					<button type="button" class="settings-button red ripple" onclick="localStorage.clear();location.reload()">RESET ALL SETTINGS</button>
 				</div>
+				<p id="mobile-warning"><b>Note</b>: This website is not meant to be used on mobile devices, most of the features will work just fine, but it won't resemble the best user experience scenario.</p>
 				<div class="reverse-row">
 					<button onclick="settings()" class="settings-cancel ripple">CANCEL</button>
 				</div>
