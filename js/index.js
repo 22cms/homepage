@@ -1,5 +1,7 @@
 //Loads the settings object from localStorage
-var localSettings = {};
+var localSettings = {
+	"showSettingsIcon" : true,
+};
 if (localStorage.getItem("localSettings")) localSettings = JSON.parse(localStorage.getItem("localSettings"));
 
 //Search Engines. The First in the List is the default one
@@ -30,6 +32,7 @@ const bookmarkLinkScheme = '<div class="bookmark-link centerbox" nm="<arrayPosit
 const languageSelectScheme = '<option value="<key>"><emoji> <lang></option>'
 
 //Declares the Searchbox and the tip behind it, also declares the Action Tip and the :root for CSS variables, and also the settings overlay objects
+//Declares the Settings Icon Button
 //Declares the contextMenu element and variables related to it
 
 const searchBox = document.getElementById("search-box");
@@ -48,6 +51,9 @@ const notifText = document.getElementById("notif-text");
 
 const rootCSS = document.querySelector(":root");
 const themeAdvisor = document.getElementById("theme-advisor");
+
+const settingsIcon = document.getElementById("settings-icon");
+const settingsShowIcon = document.getElementById("settings-show-icon")
 
 const contextMenu = document.getElementById("context-menu");
 const contextNewTab = document.getElementById("context-newtab");
@@ -82,6 +88,12 @@ function renderElements() {
 	
 	maxCharacters = Math.floor(screen.width / 64)
 	maxCharacters += Math.floor(maxCharacters/8);
+	
+	if (!localSettings.showSettingsIcon) {
+		settingsIcon.classList.add("fHidden");
+		settingsShowIcon.checked = false;
+	}
+	else settingsIcon.classList.remove("fHidden");
 }
 
 renderElements();
@@ -414,8 +426,8 @@ function elemContextMenu(event, arrayPosition, isBookmark) {
 	contextArrayPos = parseInt(arrayPosition.attributes.nm.value, 10);
 	
 	menuHeight = 280;
-	if (isBookmark) {contextNewTab.classList.remove("cHidden"); menuHeight = 350}
-	else contextNewTab.classList.add("cHidden");
+	if (isBookmark) {contextNewTab.classList.remove("fHidden"); menuHeight = 350}
+	else contextNewTab.classList.add("fHidden");
 	
 	
 	x = event.clientX;
@@ -423,7 +435,7 @@ function elemContextMenu(event, arrayPosition, isBookmark) {
 	if ((x + 180) > screen.availWidth) x = screen.availWidth - 180;
 	if ((y + menuHeight) > screen.availHeight) y = screen.availHeight - menuHeight;
 	
-	contextMenu.classList.remove("cHidden");
+	contextMenu.classList.remove("fHidden");
 	contextMenu.style.left = x;
 	contextMenu.style.top = y;
 }
@@ -431,7 +443,7 @@ function elemContextMenu(event, arrayPosition, isBookmark) {
 //Function: Closes the context menu
 
 function contextClose() {
-	contextMenu.classList.add("cHidden");
+	contextMenu.classList.add("fHidden");
 }
 
 //Function: removes a generic element from the context menu
@@ -481,4 +493,15 @@ function contextMoveRight() {
 
 function contextTab() {
 	goToURL(bookmarks[contextArrayPos][1], true)
+}
+
+//Function: toggles the Settings Icon
+
+function toggleSettingsButton() {
+	localSettings.showSettingsIcon = settingsShowIcon.checked;
+	if (settingsShowIcon.checked) notify(curLang.settingsIconShown);
+	else notify(curLang.settingsIconHidden.replace(".$settings()", "<span class='searchbox-eval'>.$settings()</span>"));
+	
+	savePreferences();
+	renderElements();
 }

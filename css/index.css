@@ -39,7 +39,6 @@ p, input, label, a, span {
 	margin: 0;
 }
 
-
 #body-centerbox, .centerbox {
 	display: flex;
     flex-direction: column;
@@ -50,9 +49,6 @@ p, input, label, a, span {
 	min-height: 100%;
 }
 
-.fHidden {
-	display: none;
-}
 
 .searchbox-container {
 	position: relative;
@@ -389,10 +385,12 @@ p, input, label, a, span {
 	font-size: 16px;
 }
 
-.cHidden {
+
+.fHidden {
 	display: none;
-	
-} 
+}
+
+
 
 @media only screen and (max-width: 550px) {
 	.song-tab {
