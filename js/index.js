@@ -93,7 +93,7 @@ function renderElements() {
 	}
 	else settingsIcon.classList.remove("fHidden");
 	
-	if (localSettings.customColorTheme != undefined) createCustomColorScheme(localSettings.customColorTheme);
+	if (localSettings.customColorTheme) createCustomColorScheme(localSettings.customColorTheme);
 }
 
 renderElements();
@@ -523,8 +523,8 @@ function createCustomColorScheme(hexColor) {
 		colorAction = hexColor + "50";
 		colorPrimary = hexColor;
 	} else {
-		colorTip = hexColor;
-		colorAction = hexColor + "F0";
+		colorTip = rgbToHex(colorInRGB.r + 40, colorInRGB.g + 40, colorInRGB.b + 40);
+		colorAction = rgbToHex(colorInRGB.r + 30, colorInRGB.g + 30, colorInRGB.b + 30);
 		colorPrimary = rgbToHex(correctRGB(colorInRGB.r), correctRGB(colorInRGB.g), correctRGB(colorInRGB.b));
 	}
 	
@@ -539,7 +539,7 @@ function createCustomColorScheme(hexColor) {
 }
 
 function correctRGB(colorValue) {
-	if (colorValue < 128) colorValue = 128;
+	if (colorValue < 128) colorValue = colorValue + 80;
 	return colorValue
 }
 
@@ -561,4 +561,12 @@ function componentToHex(c) {
 
 function rgbToHex(r, g, b) {
   return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+}
+
+//Function: disables the custom color theme
+
+function disableCustomColorScheme() {
+	localSettings.customColorTheme = false;
+	savePreferences();
+	location.reload()
 }

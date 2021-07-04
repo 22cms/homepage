@@ -291,6 +291,9 @@ p, input, label, a, span {
 	font-size: 15px;
 	background-color: #404040;
 	border-radius: 3px;
+	text-align: center;
+	color: white;
+	border: none;
 }
 .green {
 	color: #43a047;
@@ -304,29 +307,27 @@ p, input, label, a, span {
 	border: none;
 }
 
-.row {
+.row, .reverse-row {
 	display: flex;
 	flex-direction: row;
 	width: 100%;
 }
 .reverse-row {
-	display: flex;
-	width: 100%;
 	flex-direction: row-reverse;
 	align-items: center;
 }
 .ripple {
-  background-position: center;
-  transition: background 0.5s;
-  cursor: pointer;
+	background-position: center;
+	transition: background 0.5s;
+	cursor: pointer;
 }
 .ripple:hover {
-  background: #505050 radial-gradient(circle, transparent 1%, #505050 1%) center/15000%;
+	background: #505050 radial-gradient(circle, transparent 1%, #505050 1%) center/15000%;
 }
 .ripple:active {
-  background-color: #707070;
-  background-size: 100%;
-  transition: background 0s;
+	background-color: #707070;
+	background-size: 100%;
+	transition: background 0s;
 }
 
 #mobile-warning {
