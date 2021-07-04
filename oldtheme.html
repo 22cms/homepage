@@ -4,9 +4,11 @@
 		<link id="css-id" rel="stylesheet" href="css/index.old.css">
 		<link rel="icon" href="imgs/404.svg"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+		<meta content="utf-8" http-equiv="encoding">
 	</head>
 	<body>
-		<p class="Micon" id="settings-icon" onclick="settings()">&#xF08BB </p>
+		<p class="Micon" id="settings-icon" onclick="settings()">&#xF08BB;</p>
 		<div id="body-centerbox">
 			<div id="searchengines-container"></div>
 			
@@ -21,49 +23,59 @@
 		</div>
 		<div id="settings-overlay" class="settings-overlay centerbox sHidden">
 			<div class="settings-container" id="settings-container">
-				<p id="settings-title">Settings</p>
-				<p class="settings-category-title">Search Engines/Bookmarks</p>
-				<form id="add-element-form">
-					<input autocomplete="off" name="name" type="text" class="settings-type" placeholder="Googel Search" id="settings-nametype">
-					<input autocomplete="off" name="url" type="text" class="settings-type" placeholder="Use <query> for the engine query" id="settings-urltype">
-					<button type="button" class="settings-button green border ripple" onclick="addFormElem()">ADD</button>
-					<br><br style="font-size: 7px;">
-					
-					<label class="radio-label">
-						<input for="searchEngine" type="radio" id="engine-radio" name="elementType" value="searchEngine" checked="checked">
-						Add as a Search Engine
-					</label><br>
-					<label class="radio-label">
-						<input for="bookmark" type="radio" id="bookmark-radio" name="elementType" value="bookmark">
-						Add as a Bookmark
-					</label><br>
-				</form><br style="font-size: 7px;">
-				<!--<button type="button" class="settings-button red ripple" onclick="removeMode = 1;settings()">REMOVE AN ELEMENT</button> -->
+				<div class="scrollablebox">
+					<p id="settings-title">Settings</p>
+					<p class="settings-category-title">Search Engines/Bookmarks</p>
+					<form id="add-element-form">
+						<input autocomplete="off" name="name" type="text" class="settings-type" placeholder="Googel Search" id="settings-nametype">
+						<input autocomplete="off" name="url" type="text" class="settings-type" placeholder="Use <query> for the engine query" id="settings-urltype">
+						<button type="button" class="settings-button green border ripple" onclick="addFormElem()">ADD</button>
+						<br><br style="font-size: 7px;">
+						
+						<label class="radio-label">
+							<input for="searchEngine" type="radio" id="engine-radio" name="elementType" value="searchEngine" checked="checked">
+							Add as a Search Engine
+						</label><br>
+						<label class="radio-label">
+							<input for="bookmark" type="radio" id="bookmark-radio" name="elementType" value="bookmark">
+							Add as a Bookmark
+						</label><br>
+					</form><br style="font-size: 7px;">
+					<!--<button type="button" class="settings-button red ripple" onclick="removeMode = 1;settings()">REMOVE AN ELEMENT</button> -->
 				
 				
-				<p class="settings-category-title row">Language and Theme</p>
-				<select class="settings-type" id="language-select" onchange="changeLangTo(this.value)">
-				</select>
-				<p id="theme-advisor" class="radio-label">You're Using the Default Theme, <a href="oldtheme.html" class="searchbox-url">Click here</a> to use the "Old" Theme</p>
+					<p class="settings-category-title row">Language and Theme</p>
+					<select class="settings-type" id="language-select" onchange="changeLangTo(this.value)">
+					</select>
+					<p id="theme-advisor" class="radio-label">You're Using the Default Theme, <a href="oldtheme.html" class="searchbox-url">Click here</a> to use the "Old" Theme</p>
+					<form>
+						<input onchange="toggleSettingsButton()" type="checkbox" id="settings-show-icon" name="settings-show-icon" value="true" checked>
+						<label class="radio-label" for="settings-show-icon">Show the Settings Icon on the top-right corner </label><br>
+					</form>
+					<input onchange="createCustomColorScheme(this.value)" class="fHidden" type="color" id="custom-color-picker" name="custom-color-picker"value="#BDE6FB"></input>
+					<label class="settings-button ripple green" style="text-align:center;" for="custom-color-picker"><span style="font-size:7"><br></span>APPLY A CUSTOM COLOR THEME (TELEGRAM-LIKE)</label>
 				
-				<p class="settings category-title">Reset and Import</p>
-				<div class="centerbox row">
-					<button type="button" class="settings-button green ripple" onclick="exportToSearchBox();settings()">EXPORT SETTINGS</button>
-					<button type="button" class="settings-button red ripple" onclick="localStorage.clear();location.reload()">RESET ALL SETTINGS</button>
+					<p class="settings category-title">Reset and Import</p>
+					<div class="centerbox row">
+						<button type="button" class="settings-button green ripple" onclick="exportToSearchBox();settings()">EXPORT SETTINGS</button>
+						<button type="button" class="settings-button red ripple" onclick="localStorage.clear();location.reload()">RESET ALL SETTINGS</button>
+					</div>
+					<p id="mobile-warning"><b>Note</b>: This website is not meant to be used on mobile devices, most of the features will work just fine, but it won't resemble the best user experience scenario.</p>
 				</div>
-				<p id="mobile-warning"><b>Note</b>: This website is not meant to be used on mobile devices, most of the features will work just fine, but it won't resemble the best user experience scenario.</p>
 				<div class="reverse-row">
 					<button onclick="settings()" class="settings-cancel ripple">CANCEL</button>
 				</div>
 			</div>
 		</div>
+		
 		<div ontouchstart="this.classList.add('nHidden')" onclick="this.classList.add('nHidden')" id="notif-popup" class="nHidden notification-popup">
 			<span id="notif-text">The actual notification content</span>
 		</div>
-		<div id="context-menu" class="settings-container context-menu cHidden">
+		
+		<div id="context-menu" class="settings-container context-menu fHidden">
 			<p class="context-close ripple Micon" onclick="contextClose()">&#xF05AD;</p>
 			
-			<p id="context-newtab" class="context-entry ripple cHidden" onclick="contextTab()"><span class="Micon">&#xF075C;</span>&nbsp;&nbsp;Open in new Tab</p>
+			<p id="context-newtab" class="context-entry ripple fHidden" onclick="contextTab()"><span class="Micon">&#xF075C;</span>&nbsp;&nbsp;Open in new Tab</p>
 			<p class="context-entry ripple" onclick="contextMoveLeft()"><span class="Micon">&#xF004D;</span>&nbsp;&nbsp;Move to the left</p>
 			<p class="context-entry ripple" onclick="contextMoveRight()"><span class="Micon">&#xF0054;</span>&nbsp;&nbsp;Move to the right</p>
 			<p class="context-entry ripple" onclick="contextRemoveElem()"><span class="Micon">&#xF01B4;</span>&nbsp;&nbsp;Delete element</p>

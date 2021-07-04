@@ -3,6 +3,14 @@
 	--searchtype-sizeorig:128px; /*Set here the default font size*/
 	--searchtype-size:128px; /*And here too*/
 	--searchtype-onecharsize:64px; /*Set here the average character size, it'll be used in the auto fontsize regulation.*/
+	
+	/*Customizable color scheme. It's probably the best to keep them all in an Hexadecimal Format*/
+	--customize-primary:#BDE6FB; /*The Primary color, which will be used to calculate all the other colors*/
+	--customize-background:#191F22; /*Background Color*/
+	--customize-searchtip:#BDE6FB60; /*Dimmed Primary color*/
+	--customize-searchaction:#BDE6FB50; /*Even more dimmed Primary color*/
+	--customize-circles:#3D4C52; /*Dimmued primary color, but instead of opacity, the actual RGB Values are changed*/
+	--customize-hoverbookmark:#65656550; /*The Color used to highlight the bookmarks when they're hovered*/
 }
 
 @font-face {
@@ -15,7 +23,7 @@
 }
 
 html {
-	background-color: #191f22;
+	background-color: var(--customize-background);
 	height: 100%;
 	width: 100%
 }
@@ -61,16 +69,16 @@ p, input, label, a, span {
 	height: 152px;
 	background-color: rgba(0, 0, 0, 0);
 	border: none;
-	color: #bde6fb;
+	color: var(--customize-primary);
 	font-size: var(--searchtype-size);
 	text-align: center;
 	outline: none;
-	caret-color: #bde6fb;
+	caret-color: var(--customize-primary);
 	overflow: hidden;
 }
 
 #search-tip {
-	color: #bde6fb60;
+	color: var(--customize-searchtip);
 	margin: 0;
 	height: initial;
 	white-space: nowrap;
@@ -91,7 +99,7 @@ p, input, label, a, span {
 }
 
 #searchbox-action {
-	color: #bde6fb50;
+	color: var(--customize-searchaction);
 	margin-top: 20px;
 }
 
@@ -144,7 +152,7 @@ p, input, label, a, span {
 	margin: 2px;
 }
 .bookmark-link:hover {
-	background-color: #65656550;
+	background-color: var(--customize-hoverbookmark);
 	cursor: pointer;
 	transition: initial;
 }
@@ -152,10 +160,10 @@ p, input, label, a, span {
 	width: 46px;
 	height: 46px;
 	border-radius: 46px;
-	background-color: #3D4C52;
+	background-color: var(--customize-circles);
 }
 .bookmark-title {
-	color: #A0A0A0;
+	color: #AAAAAAF0;
 	margin: 0;
 	margin-top: 14px;
 	font-size: 12.5px;
@@ -210,6 +218,7 @@ p, input, label, a, span {
 	box-shadow: 0px 5px 10px #212121;
 	width: auto;
 	height: auto;
+	max-height: 100%;
 	border-radius: 4px;
 	padding: 12px;
 	transition: backdrop-filter 0.4s, background-color 0.4s;
@@ -227,6 +236,18 @@ p, input, label, a, span {
 		background-color: #50505060;
 	}
 }
+
+.scrollablebox::-webkit-scrollbar {
+	display: none;
+}
+.scrollablebox {
+	display: flex;
+	flex-direction: column;
+	overflow: scroll;
+	-ms-overflow-style: none; 
+	scrollbar-width: none; 
+}
+
 #settings-title {
 	font-size: 30px;
 	margin: 16px;
@@ -280,11 +301,11 @@ p, input, label, a, span {
 	font-size: 14px;
 }
 .settings-button {
+	display: inline-block;
 	cursor: pointer;
-	height: 35px;
+	min-height: 35px;
 	width: auto;
-	padding-left: 20px;
-	padding-right: 20px;
+	padding: 0px 20px 0px 20px;
 	margin: 2px;
 	font-size: 15px;
 	background-color: #40404040;

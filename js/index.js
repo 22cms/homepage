@@ -1,7 +1,5 @@
 //Loads the settings object from localStorage
-var localSettings = {
-	"showSettingsIcon" : true,
-};
+var localSettings = {"showSettingsIcon" : true};
 if (localStorage.getItem("localSettings")) localSettings = JSON.parse(localStorage.getItem("localSettings"));
 
 //Search Engines. The First in the List is the default one
@@ -94,6 +92,8 @@ function renderElements() {
 		settingsShowIcon.checked = false;
 	}
 	else settingsIcon.classList.remove("fHidden");
+	
+	if (localSettings.customColorTheme != undefined) createCustomColorScheme(localSettings.customColorTheme);
 }
 
 renderElements();
@@ -504,4 +504,61 @@ function toggleSettingsButton() {
 	
 	savePreferences();
 	renderElements();
+}
+
+
+//Function: Applies a custom color scheme in a Telegram-like style, basing it on a given Hexadecimal color
+
+function createCustomColorScheme(hexColor) {
+	colorInRGB = hexToRgb(hexColor);
+	
+	colorBackground = [Math.floor(colorInRGB.r*25/189), Math.floor(colorInRGB.g*32/230), Math.floor(colorInRGB.b*34/251)];
+	colorBackground = rgbToHex(colorBackground[0], colorBackground[1], colorBackground[2]);
+	
+	colorCircles = [Math.floor(colorInRGB.r*61/189), Math.floor(colorInRGB.g*76/230), Math.floor(colorInRGB.b*82/251)];
+	colorCircles = rgbToHex(colorCircles[0], colorCircles[1], colorCircles[2]);
+	
+	if ((colorInRGB.r + colorInRGB.g + colorInRGB.b) > 160) {
+		colorTip = hexColor + "60";
+		colorAction = hexColor + "50";
+		colorPrimary = hexColor;
+	} else {
+		colorTip = hexColor;
+		colorAction = hexColor + "F0";
+		colorPrimary = rgbToHex(correctRGB(colorInRGB.r), correctRGB(colorInRGB.g), correctRGB(colorInRGB.b));
+	}
+	
+	rootCSS.style.setProperty ("--customize-primary", colorPrimary);
+	rootCSS.style.setProperty ("--customize-background", colorBackground);
+	rootCSS.style.setProperty ("--customize-circles", colorCircles);
+	rootCSS.style.setProperty ("--customize-searchtip", colorTip);
+	rootCSS.style.setProperty ("--customize-searchaction", colorAction);
+	
+	localSettings.customColorTheme = hexColor;
+	savePreferences();
+}
+
+function correctRGB(colorValue) {
+	if (colorValue < 128) colorValue = 128;
+	return colorValue
+}
+
+//Took from here: https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
+
+function hexToRgb(hex) {
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  } : null;
+}
+
+function componentToHex(c) {
+  var hex = c.toString(16);
+  return hex.length == 1 ? "0" + hex : hex;
+}
+
+function rgbToHex(r, g, b) {
+  return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
