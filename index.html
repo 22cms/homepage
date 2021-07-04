@@ -52,7 +52,7 @@
 						<input onchange="toggleSettingsButton()" type="checkbox" id="settings-show-icon" name="settings-show-icon" value="true" checked>
 						<label class="radio-label" for="settings-show-icon">Show the Settings Icon on the top-right corner </label><br>
 					</form>
-					<input onchange="createCustomColorScheme(this.value)" class="fHidden" type="color" id="custom-color-picker" name="custom-color-picker"value="#BDE6FB"></input>
+					<input oninput="createCustomColorScheme(this.value)" class="fHidden" type="color" id="custom-color-picker" name="custom-color-picker"value="#BDE6FB"></input>
 					<label class="settings-button ripple green" style="text-align:center;" for="custom-color-picker"><span style="font-size:7"><br></span>APPLY A CUSTOM COLOR THEME (TELEGRAM-LIKE)</label>
 				
 					<p class="settings category-title">Reset and Import</p>
