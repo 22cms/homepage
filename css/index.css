@@ -37,7 +37,7 @@ body {
 	
 }
 
-p, input, label, a, span {
+p, input, label, a, #notif-text {
 	font-family: Arial, Inter, sans-serif;
 	color: white;
 }

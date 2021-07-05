@@ -18,6 +18,25 @@ var translations = {
 		"exportNotif" : "Settings got exported succesfully, just copy this code and execute it where you want to restore them all.",
 		"settingsIconHidden" : "To open the settings page, type .$settings() in the Search Bar",
 		"settingsIconShown" : "The settings icon will be now shown again.",
+		
+		"settings" : "Settings",
+		"enginesAndBookmarks" : "Search Engines/Bookmarks",
+		"addElem" : "ADD",
+		"addAsEngine" : "Add as a Search Engine",
+		"addAsBookmark" : "Add as a Bookmark",
+		"langAndTheme" : "Languages and Theming",
+		"showSettingsIcon" : "Show the Settings Icon on the top-right corner",
+		"applyColorTheme" : "APPLY A CUSTOM COLOR THEME (TELEGRAM-LIKE)",
+		"resetAndImport" : "Reset and Import",
+		"settingsExport" : "EXPORT SETTINGS",
+		"settingsReset" : "RESET  ALL SETTINGS",
+		"settingsClose" : "CLOSE",
+		"contextNewTab" : "Open in new Tab",
+		"contextLeft" : "Move to the left",
+		"contextRight" : "Move to the right",
+		"contextDelete" : "Delete element",
+		"mobileDisclaimerNote" : "Note",
+		"mobileDisclaimerText" : "This website is not meant to be used on mobile devices. Most of the features will work just fine, but it won't resemble the best user experience scenario.",
 	},
 	"it" : {
 		"languageName" : "Italiano",
@@ -37,6 +56,25 @@ var translations = {
 		"exportNotif" : "Le tue impostazioni sono state esportate, copia il codice che si trova nella barra di ricerca ed eseguilo dove vuoi per ripristinarle",
 		"settingsIconHidden" : "Per aprire le impostazioni, digita .$settings() nella Barra di Ricerca",
 		"settingsIconShown" : "L'icona delle impostazioni sarà mostrata di nuovo",
+	
+		"settings" : "Impostazioni",
+		"enginesAndBookmarks" : "Motori di Ricerca/Segnalibri",
+		"addElem" : "AGGIUNGI",
+		"addAsEngine" : "Aggiungi come Motore di Ricerca",
+		"addAsBookmark" : "Aggiungi come Segnalibro",
+		"langAndTheme" : "Lingua e personalizzazione",
+		"showSettingsIcon" : "Mostra l'icona delle Impostazioni nell'angolo nord-est",
+		"applyColorTheme" : "APPLICA UN COLORE DI BASE AL TEMA (ALLA TELEGRAM)",
+		"resetAndImport" : "Reset e Importazione",
+		"settingsExport" : "ESPORTA IMPOSTAZIONI",
+		"settingsReset" : "RIPRISTINA TUTTE LE IMPOSTAZIONI",
+		"settingsClose" : "CHIUDI",
+		"contextNewTab" : "Apri in nuova scheda",
+		"contextLeft" : "Sposta a sinistra",
+		"contextRight" : "Sposta a destra",
+		"contextDelete" : "Elimina elemento",
+		"mobileDisclaimerNote" : "Nota",
+		"mobileDisclaimerText" : "Questo sito non è stato pensato per essere utilizzato da mobile. 'Dovrebbe' funzionare tutto normalmente, ma non ti posso assicurare nulla.",
 	},
 	"nap" : {
 		"languageName" : "Napulitano",
@@ -56,6 +94,25 @@ var translations = {
 		"exportNotif" : "'E preferenze toje anna state esportate, mietti 'stu codice e seguiscilo addò vuò tu ppe recuperà.",
 		"settingsIconHidden" : "P'arapì 'a paggena 'dde preferenze, scrive .$settings() dinte 'a barra e ricirca",
 		"settingsIconShown" : "L'icona 'dde preferenze mo vene mustrata",
+		
+		"settings" : "'E Preferenze",
+		"enginesAndBookmarks" : "Mutori e Ricirca/Signalibbri",
+		"addElem" : "MIETTE",
+		"addAsEngine" : "Miette comme Mutore e Ricirca",
+		"addAsBookmark" : "Miette comme Signalibbro",
+		"langAndTheme" : "Lengua e personalizzazione",
+		"showSettingsIcon" : "Mustra l'icona 'dde preferenze ',ngopp a destra",
+		"applyColorTheme" : "CAGNA CULORE O TEMA (COMME FA TELEGRAM)",
+		"resetAndImport" : "Reset e 'mpurtazione",
+		"settingsExport" : "ESPORTA PREFERENZE",
+		"settingsReset" : "CANCIELLA TUTT'E PREFERENZE",
+		"settingsClose" : "CHIURE",
+		"contextNewTab" : "Arape n'ata scheda",
+		"contextLeft" : "Spuosta a sinistra",
+		"contextRight" : "Spuosta a destra",
+		"contextDelete" : "Canciella 'o piezzo",
+		"mobileDisclaimerNote" : "Nota",
+		"mobileDisclaimerText" : "'Stu sito n'essa essere usato a 'ngopp o telefonino. Essa funzionà tutte cose, ma ij nun t'assicuro niente.",
 	},
 }
 
@@ -74,3 +131,14 @@ if (localStorage.getItem('curLang')) {
 }
 
 localStorage.setItem("curLang", curLangCode)
+
+//And translates Fixed Elements
+
+function applyFixedTranslations() {
+	fixedElements = document.getElementsByClassName("translatable");
+	
+	for (var i = 0; i < fixedElements.length; i++) {
+		fixedElements[i].innerText = curLang[fixedElements[i].attributes.stringid.value];
+	} 
+}
+applyFixedTranslations()

@@ -373,6 +373,7 @@ function changeLangTo() {
 	curLangCode = newLang;
 	
 	renderElements();
+	applyFixedTranslations();
 	localStorage.setItem("curLang", curLangCode)
 }
 
@@ -492,7 +493,8 @@ function contextMoveRight() {
 //Function: opens a new Tab from a bookmark
 
 function contextTab() {
-	goToURL(bookmarks[contextArrayPos][1], true)
+	goToURL(bookmarks[contextArrayPos][1], true);
+	contextClose();
 }
 
 //Function: toggles the Settings Icon
