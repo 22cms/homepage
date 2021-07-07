@@ -9,7 +9,7 @@
 	--customize-background:#191F22; /*Background Color*/
 	--customize-searchtip:#BDE6FB60; /*Dimmed Primary color*/
 	--customize-searchaction:#BDE6FB50; /*Even more dimmed Primary color*/
-	--customize-circles:#3D4C52; /*Dimmued primary color, but instead of opacity, the actual RGB Values are changed*/
+	--customize-circles:#3D4C52; /*Dimmed primary color, but instead of opacity, the actual RGB Values are changed*/
 	--customize-hoverbookmark:#65656550; /*The Color used to highlight the bookmarks when they're hovered*/
 }
 
@@ -277,6 +277,7 @@ p, input, label, a, #notif-text {
 	border-radius: 2.5px;
 	width: 220px;
 	height: 40px;
+	min-height: 40px;
 	margin-right: 6px;
 	margin-bottom: 4px;
 	padding: 12px;
