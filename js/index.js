@@ -1,14 +1,24 @@
 //Loads the settings object from localStorage
-var localSettings = {"showSettingsIcon" : true};
+
+var localSettings = {
+		"searchEngines" : [
+			["Google", "https://www.google.com/search?q=<query>"],
+			["Wikipedia", "https://en.wikipedia.org/w/index.php?search=<query>"],
+			["Deezer", "https://www.deezer.com/search/<query>"],
+		],
+		"bookmarks" : [
+			["YouTube", "https://www.youtube.com"],
+			["Deezer", "https://www.deezer.com"],
+		],
+		"showSettingsIcon" : true,
+		"resizeSearchFont" : true,
+};
+
 if (localStorage.getItem("localSettings")) localSettings = JSON.parse(localStorage.getItem("localSettings"));
 
 //Search Engines. The First in the List is the default one
-var searchEngines = [
-	["Google", "https://www.google.com/search?q=<query>"],
-	["Wikipedia", "https://en.wikipedia.org/w/index.php?search=<query>"],
-	["Deezer", "https://www.deezer.com/search/<query>"],
-]
-if (localSettings.searchEngines) searchEngines = localSettings.searchEngines;
+
+searchEngines = localSettings.searchEngines;
 
 const engineSelectorScheme = '<picture nm="<arrayPosition>" onmouseover="describeEngine(this)" onmouseleave="hideTip()" onclick="switchEngineTo(this, true)" oncontextmenu="elemContextMenu(event, this, false); return!1"> <source srcset="https://api.faviconkit.com/<URL>/64"> <img class="search-engine" src="imgs/404.svg"></picture>'
 
@@ -19,11 +29,8 @@ var evalMode = false;
 var removeMode = 0;
 
 //Bookmarks. Alias links to some external website
-var bookmarks = [
-	["YouTube", "https://www.youtube.com"],
-	["Deezer", "https://www.deezer.com"],
-]
-if (localSettings.bookmarks) bookmarks = localSettings.bookmarks;
+
+bookmarks = localSettings.bookmarks;
 
 const bookmarkLinkScheme = '<div class="bookmark-link centerbox" nm="<arrayPosition>" onmouseover="describeURL(this)" onmouseleave="hideTip()" onclick="goToBookmarkURL(this)" oncontextmenu="elemContextMenu(event, this, true); return!1"><div class="bookmark-circle centerbox"><picture> <source srcset="https://api.faviconkit.com/<URL>/64"><img class="bookmark-icon" src="imgs/404.svg"></picture></div><p class="bookmark-title"><title></p></div>';
 
@@ -61,13 +68,14 @@ var contextArrayPos;
 var maxCharacters;
 
 
-//On Load Function: Renders all the right buttons for every search engine/bookmark
+//On Load Function: Renders all the elements of the page (should probably be splitten)
 
 function renderElements() {
+	//Deletes every pre-rendered element
 	searchEnginesContainer.innerHTML = "";
 	bookmarksContainer.innerHTML = "";
 	settingsLanguageSelect.innerHTML = "";
-	
+	//Generates every element, sets the default search engine and starts hideTip()
 	var i;
 	for (i = 0; i < searchEngines.length; i++) {
 		searchEnginesContainer.innerHTML += genSearchElement(i);
@@ -78,22 +86,23 @@ function renderElements() {
 	document.getElementsByClassName("search-engine")[0].classList.add("in-use")
 	currentEngine = searchEngines[0];
 	hideTip();
-	
+	//Generates the Language Selector Entries
 	for (i = 0; i < Object.keys(translations).length; i++) {
 		settingsLanguageSelect.innerHTML += genLanguageElement(i)
 	}
 	settingsLanguageSelect.value = curLangCode;
-	
+	//Calculates the Screen size for font regulation
 	maxCharacters = Math.floor(screen.width / 64)
 	maxCharacters += Math.floor(maxCharacters/8);
-	
+	//Hides the settings button if it's set to
 	if (!localSettings.showSettingsIcon) {
 		settingsIcon.classList.add("fHidden");
-		settingsShowIcon.checked = false;
 	}
 	else settingsIcon.classList.remove("fHidden");
-	
+	//Applies the custom color scheme if it's set to
 	if (localSettings.customColorTheme) createCustomColorScheme(localSettings.customColorTheme);
+	//Runs loadCheckboxes
+	loadCheckboxes();
 }
 
 renderElements();
@@ -112,6 +121,16 @@ function hideTip() {
 	if (validURL(searchBox.value)) { toggleURLMode(true); searchAction.innerText = curLang.goToTheURL }
 	else if (validCommand(searchBox.value)) { toggleEvalMode(true); searchAction.innerText = curLang.evalJSCode }
 	else { toggleURLMode(false), toggleEvalMode(false); };
+}
+
+//Function: Sets every checkbox element to the right value, accordingly to the how localSettings has been set to
+function loadCheckboxes() {
+	fixedElements = document.getElementsByClassName("settings-checkbox");
+	var i;
+	for (i = 0; i < fixedElements.length; i++) {
+		varid = fixedElements[i].attributes.varid.value;
+		fixedElements[i].checked = localSettings[varid]
+	}
 }
 
 //Function: Enables/Disabls the URL Mode for the searchbox
@@ -157,9 +176,11 @@ function goToBookmarkURL(element) {
 document.addEventListener("keyup", function(event) {
     switch (event.keyCode) {
 		case 13:
-			if (evalMode) searchAction.innerText = eval(searchBox.value.slice(2));
-			else if (!URLMode) window.location.href = currentEngine[1].replace("<query>", encodeURIComponent(searchBox.value));
-			else goToURL(searchBox.value);
+			if (searchBox === document.activeElement) {
+				if (evalMode) searchAction.innerText = eval(searchBox.value.slice(2));
+				else if (!URLMode) searchViaBox();
+				else goToURL(searchBox.value);
+			}
 		break;
 		case 38:
 			if (currentEngineNum == 0) switchEngineTo(searchEngines.length-1, false);
@@ -171,6 +192,14 @@ document.addEventListener("keyup", function(event) {
 		break;
 	};
 });
+
+//Function: Search using the current Search Engine 
+function searchViaBox() {
+	searchBoxText = searchBox.value;
+	if (searchBoxText.charAt(0) == ".") searchBoxText = searchBoxText.substring(1)
+	
+	window.location.href = currentEngine[1].replace("<query>", encodeURIComponent(searchBoxText));
+}
 
 
 //Functions: Change the Search Engine to the Engine Specified, from the engine number or the element
@@ -304,6 +333,12 @@ function removeSpecBookmark(arrayPosition) {
 function savePreferences() {
 	localSettings.searchEngines = searchEngines;
 	localSettings.bookmarks = bookmarks;
+	fixedElements = document.getElementsByClassName("settings-checkbox");
+	for (var i = 0; i < fixedElements.length; i++) {
+		varid = fixedElements[i].attributes.varid.value;
+		localSettings[varid] = fixedElements[i].checked;
+	}
+	
 	localStorage.setItem("localSettings", JSON.stringify(localSettings));
 }
 
@@ -330,7 +365,6 @@ function describeEngine(element) {
 
 //Function: Regulates the font size accordingly to its length, if it exceeds a precise number of characterSet
 var newCharSize;
-var maxCharacters;
 
 function getThemeInfo() {
 	newCharSize = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--searchtype-onecharsize').replace("px", ""), 10)
@@ -340,13 +374,15 @@ function getThemeInfo() {
 getThemeInfo();
 
 function regulateSearchFontSize(baseElem) {
-	newFontSize = getComputedStyle(document.documentElement).getPropertyValue('--searchtype-sizeorig');
-	fontSizeInt = parseInt(newFontSize.replace("px", ""), 10);
-	if (baseElem.length > maxCharacters) {
-		newFontSize = (fontSizeInt / 2 * (maxCharacters / baseElem.length) *2).toString() + "px"
+	if (localSettings.resizeSearchFont) {
+		newFontSize = getComputedStyle(document.documentElement).getPropertyValue('--searchtype-sizeorig');
+		fontSizeInt = parseInt(newFontSize.replace("px", ""), 10);
+		if (baseElem.length > maxCharacters) {
+			newFontSize = (fontSizeInt / 2 * (maxCharacters / baseElem.length) *2).toString() + "px"
+		}
+		
+		rootCSS.style.setProperty ("--searchtype-size", newFontSize)
 	}
-	
-	rootCSS.style.setProperty ("--searchtype-size", newFontSize)
 }
 
 //Function: Opens/Hides the settings page {
@@ -403,6 +439,10 @@ function exportToSearchBox() {
 	searchBox.value = ".$" + "localStorage.setItem('localSettings','" + setString + "');" + "localStorage.setItem('curLang','" 
 	+ curLangCode + "');" + "location.reload()";
 	hideTip();
+	
+	searchBox.select();
+	searchBox.setSelectionRange(0, 99999);
+	document.execCommand("copy");
 	
 	notify(curLang.exportNotif);
 }
@@ -500,7 +540,6 @@ function contextTab() {
 //Function: toggles the Settings Icon
 
 function toggleSettingsButton() {
-	localSettings.showSettingsIcon = settingsShowIcon.checked;
 	if (settingsShowIcon.checked) notify(curLang.settingsIconShown);
 	else notify(curLang.settingsIconHidden.replace(".$settings()", "<span class='searchbox-eval'>.$settings()</span>"));
 	

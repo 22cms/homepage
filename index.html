@@ -23,8 +23,8 @@
 		</div>
 		<div id="settings-overlay" class="settings-overlay centerbox sHidden">
 			<div class="settings-container" id="settings-container">
+				<p id="settings-title" class="translatable" stringid="settings">Settings</p>
 				<div class="scrollablebox">
-					<p id="settings-title" class="translatable" stringid="settings">Settings</p>
 					<p class="settings-category-title translatable" stringid="enginesAndBookmarks">Search Engines/Bookmarks</p>
 					<form id="add-element-form">
 						<input autocomplete="off" name="name" type="text" class="settings-type" placeholder="Googel Search" id="settings-nametype">
@@ -49,8 +49,10 @@
 					</select>
 					<p id="theme-advisor" class="radio-label">You're Using the Default Theme, <a href="oldtheme.html" class="searchbox-url">Click here</a> to use the "Old" Theme</p>
 					<form>
-						<input onchange="toggleSettingsButton()" type="checkbox" id="settings-show-icon" name="settings-show-icon" value="true" checked>
+						<input onchange="toggleSettingsButton()" class="settings-checkbox" varid="showSettingsIcon" type="checkbox" id="settings-show-icon" value="true" checked>
 						<label class="radio-label translatable" stringid="showSettingsIcon" for="settings-show-icon">Show the Settings Icon on the top-right corner</label><br>
+						<input onchange="savePreferences()" class="settings-checkbox" varid="resizeSearchFont" id="settings-font-resize" type="checkbox" value="true" checked>
+						<label class="radio-label translatable" stringid="resizeSearchFont" for="settings-font-resize">Resize the font size while typing (if supported from the theme)</label><br>
 					</form>
 					<div class="row">
 						<input oninput="createCustomColorScheme(this.value)" class="fHidden" type="color" id="custom-color-picker" name="custom-color-picker"value="#BDE6FB"></input>

@@ -387,7 +387,7 @@ p, input, label, a, #notif-text {
 	position: fixed;
 	left: 0;
 	top: 0;
-	width: 180px;
+	width: auto;
 	height: auto;
 	padding: 0;
 	overflow: hidden;
@@ -404,7 +404,7 @@ p, input, label, a, #notif-text {
 	display: flex;
 	align-items: center;
 	margin: 0;
-	padding: 16px 0px 16px 10px;
+	padding: 16px 10px 16px 10px;
 	font-size: 16px;
 }
 
