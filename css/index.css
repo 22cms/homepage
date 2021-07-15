@@ -475,4 +475,17 @@ p, input, label, a, #notif-text {
 	.nHidden {
 		bottom: -50px;
 	}
+	
+	.context-close {
+		height: 35px;
+		font-size: 26px;
+	}
+	
+	.context-entry {
+		padding: 16px 10px 16px 10px;
+		font-size: 16px;
+	}
+	.context-entry .mIcon {
+		font-size: 26px;
+	}
 }

@@ -547,11 +547,11 @@ function contextTab() {
 function toggleSettingsButton() {
 	if (settingsShowIcon.checked) {
 		notify(curLang.settingsIconShown);
-		settingsIcon.classList.add("fHidden");
+		settingsIcon.classList.remove("fHidden");
 	}
 	else {
 		notify(curLang.settingsIconHidden.replace(".$settings()", "<span class='searchbox-eval'>.$settings()</span>"));
-		settingsIcon.classList.remove("fHidden");
+		settingsIcon.classList.add("fHidden");
 	}
 	savePreferences();
 }

@@ -276,12 +276,18 @@ p, input, label, a, #notif-text {
 	border: 1px solid white;
 	background-color: #404040;
 }
+
 .no-margin {
 	margin: 0;
 }
+
 .radio-label {
 	font-size: 14px;
 }
+.radio-label:hover {
+	color: #C0C0C0;
+}
+
 .settings-button {
 	display: inline-block;
 	cursor: pointer;
