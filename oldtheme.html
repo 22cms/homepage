@@ -26,7 +26,7 @@
 				<p id="settings-title" class="translatable" stringid="settings">Settings</p>
 				<div class="scrollablebox">
 					<p class="settings-category-title translatable" stringid="enginesAndBookmarks">Search Engines/Bookmarks</p>
-					<form id="add-element-form">
+					<form id="add-element-form" class="no-margin">
 						<input autocomplete="off" name="name" type="text" class="settings-type" placeholder="Googel Search" id="settings-nametype">
 						<input autocomplete="off" name="url" type="text" class="settings-type" placeholder="Use <query> for the engine query" id="settings-urltype">
 						<button type="button" class="settings-button green border ripple translatable" stringid="addElem" onclick="addFormElem()">ADD</button>
@@ -40,7 +40,13 @@
 							<input for="bookmark" type="radio" id="bookmark-radio" name="elementType" value="bookmark">
 							<span class="radio-label translatable" stringid="addAsBookmark">Add as a Bookmark</span>
 						</label><br>
-					</form><br style="font-size: 7px;">
+					</form>
+					<br style="font-size: 7px;">
+					<form class="no-margin">
+						<input onchange="savePreferences()" class="settings-checkbox" varid="switchEngineWithArrows" id="settings-switch-via-arrows" type="checkbox" value="true" checked>
+						<label class="radio-label" stringid="switchEngineWithArrows" for="settings-switch-via-arrows">Switch Search Engines using 🠕 and 🠗 arrow keys</label><br>
+					</form>
+					<br style="font-size: 7px;">
 					<!--<button type="button" class="settings-button red ripple" onclick="removeMode = 1;settings()">REMOVE AN ELEMENT</button> -->
 				
 				

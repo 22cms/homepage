@@ -12,6 +12,7 @@ var localSettings = {
 		],
 		"showSettingsIcon" : true,
 		"resizeSearchFont" : true,
+		"switchEngineWithArrows" : true,
 };
 
 if (localStorage.getItem("localSettings")) localSettings = JSON.parse(localStorage.getItem("localSettings"));
@@ -183,12 +184,16 @@ document.addEventListener("keyup", function(event) {
 			}
 		break;
 		case 38:
-			if (currentEngineNum == 0) switchEngineTo(searchEngines.length-1, false);
-			else switchEngineTo(currentEngineNum-1, false);
+			if (localSettings.switchEngineWithArrows) {
+				if (currentEngineNum == 0) switchEngineTo(searchEngines.length-1, false);
+				else switchEngineTo(currentEngineNum-1, false);
+			}
 		break;
 		case 40: 
-			if (currentEngineNum == searchEngines.length-1) switchEngineTo(0, false);
-			else switchEngineTo(currentEngineNum+1, false);
+			if (localSettings.switchEngineWithArrows) {
+				if (currentEngineNum == searchEngines.length-1) switchEngineTo(0, false);
+				else switchEngineTo(currentEngineNum+1, false);
+			}
 		break;
 	};
 });
@@ -206,7 +211,7 @@ function searchViaBox() {
 function switchEngineTo(number, isFromElem) {
 	
 	if (!removeMode) {
-		if (isFromElem == true) {
+		if (isFromElem) {
 			var engine = parseInt(number.attributes.nm.value, 10);
 			currentEngine = searchEngines[engine];
 			currentEngineNum = engine;
@@ -540,11 +545,15 @@ function contextTab() {
 //Function: toggles the Settings Icon
 
 function toggleSettingsButton() {
-	if (settingsShowIcon.checked) notify(curLang.settingsIconShown);
-	else notify(curLang.settingsIconHidden.replace(".$settings()", "<span class='searchbox-eval'>.$settings()</span>"));
-	
+	if (settingsShowIcon.checked) {
+		notify(curLang.settingsIconShown);
+		settingsIcon.classList.add("fHidden");
+	}
+	else {
+		notify(curLang.settingsIconHidden.replace(".$settings()", "<span class='searchbox-eval'>.$settings()</span>"));
+		settingsIcon.classList.remove("fHidden");
+	}
 	savePreferences();
-	renderElements();
 }
 
 

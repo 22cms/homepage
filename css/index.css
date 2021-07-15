@@ -262,7 +262,7 @@ p, input, label, a, #notif-text {
 	color: #f44336;
 	font-size: 15px;
 	font-weight: 500;
-	background-color: #404040;
+	background-color: #40404040;
 	padding: 8px;
 	padding-left: 10px;
 	padding-right: 10px;
@@ -295,12 +295,18 @@ p, input, label, a, #notif-text {
 	border: 1px solid white;
 	background-color: #404040;
 }
-#add-element-form {
+
+.no-margin {
 	margin: 0;
 }
+
 .radio-label {
 	font-size: 14px;
 }
+.radio-label:hover {
+	color: #C0C0C0;
+}
+
 .settings-button {
 	display: inline-block;
 	cursor: pointer;
@@ -342,7 +348,7 @@ p, input, label, a, #notif-text {
 	cursor: pointer;
 }
 .ripple:hover {
-  background: #505050 radial-gradient(circle, transparent 1%, #505050 1%) center/15000%;
+  background: #50505090 radial-gradient(circle, transparent 1%, #505050 1%) center/15000%;
 }
 .ripple:active {
   background-color: #707070;
@@ -395,17 +401,23 @@ p, input, label, a, #notif-text {
 
 .context-close {
 	width: 60px;
-	height: 35px;
+	height: 30px;
 	text-align: center;
-	padding: 8px 0px 0px 0px;
+	padding: 6px 0px 0px 0px;
 	margin: 0px 0px 0px calc(100% - 60px);
+	font-size: 22px;
+	transition: background 0.1s;
 }
 .context-entry {
 	display: flex;
 	align-items: center;
 	margin: 0;
-	padding: 16px 10px 16px 10px;
-	font-size: 16px;
+	padding: 12px 8px 12px 8px;
+	font-size: 15px;
+	transition: background 0.1s;
+}
+.context-entry .mIcon {
+	font-size: 22px;
 }
 
 
