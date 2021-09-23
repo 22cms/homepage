@@ -63,6 +63,7 @@ const settingsShowIcon = document.getElementById("settings-show-icon")
 
 const contextMenu = document.getElementById("context-menu");
 const contextNewTab = document.getElementById("context-newtab");
+const contextDefault = document.getElementById("context-default");
 var contextElemType;
 var contextArrayPos;
 
@@ -177,7 +178,7 @@ function goToBookmarkURL(element) {
 document.addEventListener("keyup", function(event) {
     switch (event.keyCode) {
 		case 13:
-			if (searchBox === document.activeElement) {
+			if (searchBox === document.activeElement & searchBox.value != "") {
 				if (evalMode) searchAction.innerText = eval(searchBox.value.slice(2));
 				else if (!URLMode) searchViaBox();
 				else goToURL(searchBox.value);
@@ -471,9 +472,28 @@ function elemContextMenu(event, arrayPosition, isBookmark) {
 	contextElemType = isBookmark;
 	contextArrayPos = parseInt(arrayPosition.attributes.nm.value, 10);
 	
-	menuHeight = 280;
-	if (isBookmark) {contextNewTab.classList.remove("fHidden"); menuHeight = 350}
+	/*if (isBookmark) contextNewTab.classList.remove("fHidden");
 	else contextNewTab.classList.add("fHidden");
+	
+	var menuHeight = contextMenu.clientHeight;
+	var menuWidth = contextMenu.clientWidth;
+	console.log("menuHeight: " + menuHeight);
+	
+	var x = event.clientX;
+	var y = event.clientY;
+	console.log(y);
+	if ((x + menuWidth) > screen.availWidth) x = screen.availWidth - menuWidth;
+	if ((y + menuHeight) > screen.availHeight) y = screen.availHeight - menuHeight;
+	console.log(y);*/
+	
+	contextNewTab.classList.add("fHidden");
+	contextDefault.classList.remove("fHidden");
+	menuHeight = 280;
+	if (isBookmark) {
+		contextNewTab.classList.remove("fHidden"); 
+		contextDefault.classList.add("fHidden"); 
+		menuHeight = 350
+	};
 	
 	
 	x = event.clientX;
@@ -481,7 +501,7 @@ function elemContextMenu(event, arrayPosition, isBookmark) {
 	if ((x + 180) > screen.availWidth) x = screen.availWidth - 180;
 	if ((y + menuHeight) > screen.availHeight) y = screen.availHeight - menuHeight;
 	
-	contextMenu.classList.remove("fHidden");
+	contextMenu.classList.remove("vHidden");
 	contextMenu.style.left = x;
 	contextMenu.style.top = y;
 }
@@ -489,7 +509,7 @@ function elemContextMenu(event, arrayPosition, isBookmark) {
 //Function: Closes the context menu
 
 function contextClose() {
-	contextMenu.classList.add("fHidden");
+	contextMenu.classList.add("vHidden");
 }
 
 //Function: removes a generic element from the context menu
@@ -529,6 +549,22 @@ function contextMoveRight() {
 	
 	if (!contextElemType) searchEngines = workingArray;
 	else bookmarks = workingArray;
+	
+	renderElements();
+	savePreferences();
+	contextClose();
+}
+
+//Function: sets the choosen Search Engine as the default one (by making it the first one)
+
+function contextMakeDefault() {
+	workingArray = searchEngines;
+	
+	element = workingArray[contextArrayPos];
+	workingArray.splice(contextArrayPos, 1);
+	workingArray.splice(0, 0, element);
+	
+	searchEngines = workingArray;
 	
 	renderElements();
 	savePreferences();

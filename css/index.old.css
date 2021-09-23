@@ -159,13 +159,13 @@ p, input, label, a, #notif-text {
 }
 .bookmark-title {
 	color: #A0A0A0;
-	margin: 0;
-	margin-top: 14px;
+	margin: 14px 0 0 0;
 	font-size: 12.5px;
 	text-align: center;
 	overflow: hidden;
+	white-space: nowrap;
 	text-overflow: ellipsis;
-	width: 100%;
+	width: 90px;
 }
 .bookmark-link:hover .bookmark-icon {
 	filter: grayscale(0%);
@@ -369,6 +369,7 @@ p, input, label, a, #notif-text {
 
 .context-menu {
 	display: initial;
+	visibility: visible;
 	opacity: 1;
 	position: fixed;
 	left: 0;
@@ -396,11 +397,20 @@ p, input, label, a, #notif-text {
 	padding: 16px 10px 16px 10px;
 	font-size: 16px;
 }
+.context-entry:hover, .context-close:hover {
+	background-color: #FFFFFF1A;
+}
 
 
 .fHidden {
 	display: none;
 }
+.vHidden {
+	visibility: hidden;
+}
+.mHidden {
+	display: initial;
+	}
 
 
 
@@ -420,6 +430,10 @@ p, input, label, a, #notif-text {
 	}
 	#mobile-warning {
 		display: inline;
+	}
+	
+	.mHidden {
+		display: none;
 	}
 }
 
