@@ -1,18 +1,19 @@
 //Loads the settings object from localStorage
 
 var localSettings = {
-		"searchEngines" : [
-			["Google", "https://www.google.com/search?q=<query>"],
-			["Wikipedia", "https://en.wikipedia.org/w/index.php?search=<query>"],
-			["Deezer", "https://www.deezer.com/search/<query>"],
-		],
-		"bookmarks" : [
-			["YouTube", "https://www.youtube.com"],
-			["Deezer", "https://www.deezer.com"],
-		],
-		"showSettingsIcon" : true,
-		"resizeSearchFont" : true,
-		"switchEngineWithArrows" : true,
+	"searchEngines" : [
+		["Google", "https://www.google.com/search?q=<query>"],
+		["Wikipedia", "https://en.wikipedia.org/w/index.php?search=<query>"],
+		["Deezer", "https://www.deezer.com/search/<query>"],
+	],
+	"bookmarks" : [
+		["YouTube", "https://www.youtube.com"],
+		["Deezer", "https://www.deezer.com"],
+	],
+	"showSettingsIcon" : true,
+	"resizeSearchFont" : true,
+	"switchEngineWithArrows" : true,
+	"useFaviconIco" : false,
 };
 
 if (localStorage.getItem("localSettings")) localSettings = JSON.parse(localStorage.getItem("localSettings"));
@@ -21,7 +22,7 @@ if (localStorage.getItem("localSettings")) localSettings = JSON.parse(localStora
 
 searchEngines = localSettings.searchEngines;
 
-const engineSelectorScheme = '<picture nm="<arrayPosition>" onmouseover="describeEngine(this)" onmouseleave="hideTip()" onclick="switchEngineTo(this, true)" oncontextmenu="elemContextMenu(event, this, false); return!1"> <source srcset="https://api.faviconkit.com/<URL>/64"> <img class="search-engine" src="imgs/404.svg"></picture>'
+const engineSelectorScheme = '<picture nm="<arrayPosition>" onmouseover="describeEngine(this)" onmouseleave="hideTip()" onclick="switchEngineTo(this, true)" oncontextmenu="elemContextMenu(event, this, false); return!1"> <source srcset="<URL>"> <img class="search-engine" src="imgs/404.svg"></picture>'
 
 var currentEngine = searchEngines[0];
 var currentEngineNum = 0;
@@ -33,7 +34,7 @@ var removeMode = 0;
 
 bookmarks = localSettings.bookmarks;
 
-const bookmarkLinkScheme = '<div class="bookmark-link centerbox" nm="<arrayPosition>" onmouseover="describeURL(this)" onmouseleave="hideTip()" onclick="goToBookmarkURL(this)" oncontextmenu="elemContextMenu(event, this, true); return!1"><div class="bookmark-circle centerbox"><picture> <source srcset="https://api.faviconkit.com/<URL>/64"><img class="bookmark-icon" src="imgs/404.svg"></picture></div><p class="bookmark-title"><title></p></div>';
+const bookmarkLinkScheme = '<div class="bookmark-link centerbox" nm="<arrayPosition>" onmouseover="describeURL(this)" onmouseleave="hideTip()" onclick="goToBookmarkURL(this)" oncontextmenu="elemContextMenu(event, this, true); return!1"><div class="bookmark-circle centerbox"><picture> <source srcset="<URL>"><img class="bookmark-icon" src="imgs/404.svg"></picture></div><p class="bookmark-title"><title></p></div>';
 
 const languageSelectScheme = '<option value="<key>"><emoji> <lang></option>'
 
@@ -263,7 +264,7 @@ function genSearchElement(arrayPosition) {
 	URL = URL.split("/")[0];
 	
 	var engineSelector = engineSelectorScheme.replace("<arrayPosition>", arrayPosition);
-	engineSelector = engineSelector.replace("<URL>", URL);
+	engineSelector = engineSelector.replace("<URL>", fetchFaviconFromAPI(URL));
 	
 	return engineSelector;
 }
@@ -276,7 +277,7 @@ function genBookmarkElement(arrayPosition) {
 	var title = bookmark[0]
 	
 	var bookmarkSelector = bookmarkLinkScheme.replace("<arrayPosition>", arrayPosition);
-	bookmarkSelector = bookmarkSelector.replace("<URL>", URL).replace("<title>", title);
+	bookmarkSelector = bookmarkSelector.replace("<URL>", fetchFaviconFromAPI(URL)).replace("<title>", title);
 	
 	return bookmarkSelector;
 }
@@ -290,6 +291,13 @@ function genLanguageElement(keyNum) {
 	languageSelector = languageSelector.replace("<emoji>", language.languageEmoji).replace("<lang>", language.languageName);
 	
 	return languageSelector;
+}
+
+//Function: Selects the right Favicon API and generates the URL
+function fetchFaviconFromAPI(URL) {
+	API = (localSettings.useFaviconIco) ? "https://<URL>/favicon.ico" : "https://api.faviconkit.com/<URL>/64";
+	
+	return API.replace("<URL>", URL)
 }
 
 
@@ -590,6 +598,12 @@ function toggleSettingsButton() {
 		settingsIcon.classList.add("fHidden");
 	}
 	savePreferences();
+}
+
+//Function: switches the Favicon API in use
+function settingsSwitchFavicon() {
+	savePreferences();
+	renderElements();
 }
 
 
