@@ -47,7 +47,7 @@ p, input, label, a, #notif-text {
 	margin: 0;
 }
 
-#body-centerbox, .centerbox, picture {
+#body-centerbox, .centerbox {
 	display: flex;
     flex-direction: column;
     align-items: center;
@@ -129,6 +129,7 @@ p, input, label, a, #notif-text {
 	transition: filter 0.2s, opacity 0.2s;
 	cursor: pointer;
 	border-radius: 5px;
+	object-fit: contain;
 }
 .bookmark-icon {
 	max-width: 24px;

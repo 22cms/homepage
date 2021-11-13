@@ -22,7 +22,7 @@ if (localStorage.getItem("localSettings")) localSettings = JSON.parse(localStora
 
 searchEngines = localSettings.searchEngines;
 
-const engineSelectorScheme = '<picture nm="<arrayPosition>" onmouseover="describeEngine(this)" onmouseleave="hideTip()" onclick="switchEngineTo(this, true)" oncontextmenu="elemContextMenu(event, this, false); return!1"> <source srcset="<URL>"> <img class="search-engine" src="imgs/404.svg"></picture>'
+const engineSelectorScheme = '<img src="<URL>" class="search-engine" onerror="this.src=\'imgs/404.svg\'" nm="<arrayPosition>" onmouseover="describeEngine(this)" onmouseleave="hideTip()" onclick="switchEngineTo(this, true)" oncontextmenu="elemContextMenu(event, this, false); return!1">'
 
 var currentEngine = searchEngines[0];
 var currentEngineNum = 0;
@@ -34,7 +34,7 @@ var removeMode = 0;
 
 bookmarks = localSettings.bookmarks;
 
-const bookmarkLinkScheme = '<div class="bookmark-link centerbox" nm="<arrayPosition>" onmouseover="describeURL(this)" onmouseleave="hideTip()" onclick="goToBookmarkURL(this)" oncontextmenu="elemContextMenu(event, this, true); return!1"><div class="bookmark-circle centerbox"><picture> <source srcset="<URL>"><img class="bookmark-icon" src="imgs/404.svg"></picture></div><p class="bookmark-title"><title></p></div>';
+const bookmarkLinkScheme = '<div class="bookmark-link centerbox" nm="<arrayPosition>" onmouseover="describeURL(this)" onmouseleave="hideTip()" onclick="goToBookmarkURL(this)" onauxclick="goToBookmarkURL(this, event)" oncontextmenu="elemContextMenu(event, this, true); return!1"><div class="bookmark-circle centerbox"><img src="<URL>" class="bookmark-icon" onerror="this.src=\'imgs/404.svg\'"></div><p class="bookmark-title"><title></p></div>';
 
 const languageSelectScheme = '<option value="<key>"><emoji> <lang></option>'
 
@@ -117,8 +117,7 @@ function hideTip() {
 	searchBox.focus();
 	regulateSearchFontSize(searchBox.value);
 	
-	if (searchBox.value) searchTip.innerText = "";
-	else searchTip.innerText = curLang.typeHere;
+	searchTip.innerText = (!searchBox.value) ? curLang.typeHere : "";
 	searchAction.innerText = curLang.searchOn.replace("<engine>", currentEngine[0]);
 	
 	if (validURL(searchBox.value)) { toggleURLMode(true); searchAction.innerText = curLang.goToTheURL }
@@ -160,12 +159,13 @@ function goToURL(URL, newTab) {
 }
 
 //Function: Goes to the URL of the clicked bookmark.
-function goToBookmarkURL(element) {
+function goToBookmarkURL(element, event) {
 	arrayPosition = parseInt(element.attributes.nm.value, 10);
 	
 	if (!removeMode) {
 		URL = bookmarks[arrayPosition][1];
-		goToURL(URL);
+		if (event && event.which != 2) goToURL(URL);
+		else goToURL(URL, true)
 	}
 	else {
 		removeSpecBookmark(arrayPosition);
@@ -218,7 +218,7 @@ function switchEngineTo(number, isFromElem) {
 			currentEngine = searchEngines[engine];
 			currentEngineNum = engine;
 			document.getElementsByClassName("in-use")[0].classList.remove("in-use");
-			number.children[1].classList.add("in-use");
+			number.classList.add("in-use");
 		}
 		else {
 			currentEngine = searchEngines[number];
@@ -247,7 +247,7 @@ function validURL(str) {
   return !!pattern.test(str); */
 	strArray = str.split(":")[0].split(".");
 	var result = false;
-	if ((strArray[0].length != "") && (str.includes("://") || (strArray.length > 1 && strArray[strArray.length - 1].length > 0 && (strArray[strArray.length - 1].length != "") && !(strArray[strArray.length - 1].includes(" "))))) result = true;
+	if ((strArray[0] != "" || str.includes("://")) && !str.includes(" ")) result = true; 
 	return result;
 }
 
@@ -292,6 +292,30 @@ function genLanguageElement(keyNum) {
 	
 	return languageSelector;
 }
+
+
+//Functions: Adds the correct eventListeners for the specified Search Engine/Bookmark
+/*function makeEngineListen(elem) {
+	elem.addEventListener("mouseover", function(e){ 
+		var origElem = e.srcElement || e.originalTarget;
+		describeEngine(origElem);
+	});
+	elem.addEventListener("mouseleave", function(e){ 
+		hideTip();
+	});
+	elem.addEventListener("click", function(e){ 
+		var origElem = e.srcElement || e.originalTarget;
+		switchEngineTo(origElem, true)
+	});
+	elem.addEventListener("contextmenu", function(e){ 
+		e.preventDefault();
+		var origElem = e.srcElement || e.originalTarget;
+		elemContextMenu(e, origElem, false);
+	});
+}*/
+
+
+
 
 //Function: Selects the right Favicon API and generates the URL
 function fetchFaviconFromAPI(URL) {

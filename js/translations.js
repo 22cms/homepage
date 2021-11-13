@@ -40,7 +40,7 @@ var translations = {
 		"contextDelete" : "Delete element",
 		"mobileDisclaimerNote" : "Note",
 		"mobileDisclaimerText" : "This website is not meant to be used on mobile devices. Most of the features will work just fine, but it won't resemble the best user experience scenario.",
-		"useFaviconIco" : "Use favicon.ico instead of FaviconKit",
+		"useFaviconIco" : "Use favicon.ico instead of Favicon Kit",
 	},
 	"it" : {
 		"languageName" : "Italiano",
@@ -82,7 +82,7 @@ var translations = {
 		"contextDelete" : "Elimina elemento",
 		"mobileDisclaimerNote" : "Nota",
 		"mobileDisclaimerText" : "Questo sito non è stato pensato per essere utilizzato da mobile. 'Dovrebbe' funzionare tutto normalmente, ma non ti posso assicurare nulla.",
-		"useFaviconIco" : "Usa favicon.ico al posto di FaviconKit",
+		"useFaviconIco" : "Usa favicon.ico al posto di Favicon Kit",
 	},
 	"nap" : {
 		"languageName" : "Napulitano",
@@ -124,7 +124,7 @@ var translations = {
 		"contextDelete" : "Canciella 'o piezzo",
 		"mobileDisclaimerNote" : "Nota",
 		"mobileDisclaimerText" : "'Stu sito n'essa essere usato a 'ngopp o telefonino. Essa funzionà tutte cose, ma ij nun t'assicuro niente.",
-		"useFaviconIco" : "Usa favicon.ico appost' 'e FaviconKit",
+		"useFaviconIco" : "Usa favicon.ico appost' 'e Favicon Kit",
 	},
 }
 
