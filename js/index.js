@@ -247,7 +247,7 @@ function validURL(str) {
   return !!pattern.test(str); */
 	strArray = str.split(":")[0].split(".");
 	var result = false;
-	if ((strArray[0] != "" || str.includes("://")) && !str.includes(" ")) result = true; 
+	if ((strArray[0] != "" || str.includes("://")) && !str.includes(" ") && str.includes(".") && strArray[strArray.length-1] != "") result = true; 
 	return result;
 }
 
