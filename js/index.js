@@ -163,9 +163,9 @@ function goToBookmarkURL(element, event) {
 	arrayPosition = parseInt(element.attributes.nm.value, 10);
 	
 	if (!removeMode) {
-		URL = bookmarks[arrayPosition][1];
-		if (event && event.which != 2) goToURL(URL);
-		else goToURL(URL, true)
+		URL = bookmarks[arrayPosition][1]; console.log(!event);
+		if (event && event.which == 2) goToURL(URL, true);
+		else goToURL(URL);
 	}
 	else {
 		removeSpecBookmark(arrayPosition);
