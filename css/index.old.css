@@ -148,6 +148,9 @@ p, input, label, a, #notif-text {
 	border-radius: 5px;
 	margin: 2px;
 }
+.bookmark-link * {
+	pointer-events: none;
+}
 .bookmark-link:hover {
 	background-color: var(--customize-hoverbookmark);
 	cursor: pointer;
@@ -382,6 +385,7 @@ p, input, label, a, #notif-text {
 	background-color: var(--customize-background);
 	filter: brightness(1.5);
 	box-shadow: 0px 5px 10px #121212;
+	box-sizing: border-box;
 }
 
 .context-close {
@@ -393,10 +397,12 @@ p, input, label, a, #notif-text {
 }
 .context-entry {
 	display: flex;
+	height: 28px;
 	align-items: center;
 	margin: 0;
 	padding: 16px 10px 16px 10px;
 	font-size: 16px;
+	
 }
 .context-entry:hover, .context-close:hover {
 	background-color: #FFFFFF1A;

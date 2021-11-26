@@ -13,7 +13,7 @@ var localSettings = {
 	"showSettingsIcon" : true,
 	"resizeSearchFont" : true,
 	"switchEngineWithArrows" : true,
-	"useFaviconIco" : false,
+	"useFaviconIco" : true,
 };
 
 if (localStorage.getItem("localSettings")) localSettings = JSON.parse(localStorage.getItem("localSettings"));
@@ -22,19 +22,19 @@ if (localStorage.getItem("localSettings")) localSettings = JSON.parse(localStora
 
 searchEngines = localSettings.searchEngines;
 
-const engineSelectorScheme = '<img src="<URL>" class="search-engine" onerror="this.src=\'imgs/404.svg\'" nm="<arrayPosition>" onmouseover="describeEngine(this)" onmouseleave="hideTip()" onclick="switchEngineTo(this, true)" oncontextmenu="elemContextMenu(event, this, false); return!1">'
+const engineSelectorScheme = '<img src="<URL>" id="<id>" class="search-engine" onerror="this.src=\'imgs/404.svg\'" nm="<arrayPosition>">'
 
 var currentEngine = searchEngines[0];
 var currentEngineNum = 0;
 var URLMode = false;
 var evalMode = false;
-var removeMode = 0;
+var removeMode = 0; //removeMode is deprecated
 
 //Bookmarks. Alias links to some external website
 
 bookmarks = localSettings.bookmarks;
 
-const bookmarkLinkScheme = '<div class="bookmark-link centerbox" nm="<arrayPosition>" onmouseover="describeURL(this)" onmouseleave="hideTip()" onclick="goToBookmarkURL(this)" onauxclick="goToBookmarkURL(this, event)" oncontextmenu="elemContextMenu(event, this, true); return!1"><div class="bookmark-circle centerbox"><img src="<URL>" class="bookmark-icon" onerror="this.src=\'imgs/404.svg\'"></div><p class="bookmark-title"><title></p></div>';
+const bookmarkLinkScheme = '<div id="<id>" class="bookmark-link centerbox" nm="<arrayPosition>"><div class="bookmark-circle centerbox"><img src="<URL>" class="bookmark-icon" onerror="this.src=\'imgs/404.svg\'"></div><p class="bookmark-title"><title></p></div>';
 
 const languageSelectScheme = '<option value="<key>"><emoji> <lang></option>'
 
@@ -42,9 +42,11 @@ const languageSelectScheme = '<option value="<key>"><emoji> <lang></option>'
 //Declares the Settings Icon Button
 //Declares the contextMenu element and variables related to it
 
+const body = document.body;
 const searchBox = document.getElementById("search-box");
 const searchTip = document.getElementById("search-tip");
 const searchAction = document.getElementById("searchbox-action");
+var maxCharacters;
 
 const searchEnginesContainer = document.getElementById("searchengines-container");
 const bookmarksContainer = document.getElementById("bookmarks-container");
@@ -67,8 +69,8 @@ const contextNewTab = document.getElementById("context-newtab");
 const contextDefault = document.getElementById("context-default");
 var contextElemType;
 var contextArrayPos;
+var contextVisible;
 
-var maxCharacters;
 
 
 //On Load Function: Renders all the elements of the page (should probably be splitten)
@@ -78,7 +80,7 @@ function renderElements() {
 	searchEnginesContainer.innerHTML = "";
 	bookmarksContainer.innerHTML = "";
 	settingsLanguageSelect.innerHTML = "";
-	//Generates every element, sets the default search engine and starts hideTip()
+	//Generates every element, adds adds event listener for every one of them, sets the default search engine and starts hideTip()
 	var i;
 	for (i = 0; i < searchEngines.length; i++) {
 		searchEnginesContainer.innerHTML += genSearchElement(i);
@@ -86,6 +88,16 @@ function renderElements() {
 	for (i = 0; i < bookmarks.length; i++) {
 		bookmarksContainer.innerHTML += genBookmarkElement(i);
 	}
+	//Adds Event Listeners
+	for (i = 0; i < searchEngines.length; i++) {
+		id = "search-engine-" + i.toString();
+		makeEngineListen(id);
+	}
+	for (i = 0; i < bookmarks.length; i++) {
+		id = "bookmark-" + i.toString();
+		makeBookmarkListen(id);
+	}
+	
 	document.getElementsByClassName("search-engine")[0].classList.add("in-use")
 	currentEngine = searchEngines[0];
 	hideTip();
@@ -159,13 +171,12 @@ function goToURL(URL, newTab) {
 }
 
 //Function: Goes to the URL of the clicked bookmark.
-function goToBookmarkURL(element, event) {
+function goToBookmarkURL(element, newTab) {
 	arrayPosition = parseInt(element.attributes.nm.value, 10);
 	
 	if (!removeMode) {
 		URL = bookmarks[arrayPosition][1]; console.log(!event);
-		if (event && event.which == 2) goToURL(URL, true);
-		else goToURL(URL);
+		goToURL(URL, newTab);
 	}
 	else {
 		removeSpecBookmark(arrayPosition);
@@ -262,9 +273,10 @@ function genSearchElement(arrayPosition) {
 	var engine = searchEngines[arrayPosition];
 	var URL = engine[1].replace("https://", "").replace("http://", "");
 	URL = URL.split("/")[0];
+	var id = "search-engine-" + arrayPosition.toString();
 	
 	var engineSelector = engineSelectorScheme.replace("<arrayPosition>", arrayPosition);
-	engineSelector = engineSelector.replace("<URL>", fetchFaviconFromAPI(URL));
+	engineSelector = engineSelector.replace("<URL>", fetchFaviconFromAPI(URL)).replace("<id>", id)
 	
 	return engineSelector;
 }
@@ -274,9 +286,10 @@ function genBookmarkElement(arrayPosition) {
 	var bookmark = bookmarks[arrayPosition];
 	var URL = bookmark[1].replace("https://", "").replace("http://", "");
 	URL = URL.split("/")[0];
-	var title = bookmark[0]
+	var title = bookmark[0];
+	var id = "bookmark-" + arrayPosition.toString();
 	
-	var bookmarkSelector = bookmarkLinkScheme.replace("<arrayPosition>", arrayPosition);
+	var bookmarkSelector = bookmarkLinkScheme.replace("<arrayPosition>", arrayPosition).replace("<id>", id);
 	bookmarkSelector = bookmarkSelector.replace("<URL>", fetchFaviconFromAPI(URL)).replace("<title>", title);
 	
 	return bookmarkSelector;
@@ -293,28 +306,52 @@ function genLanguageElement(keyNum) {
 	return languageSelector;
 }
 
-
 //Functions: Adds the correct eventListeners for the specified Search Engine/Bookmark
-/*function makeEngineListen(elem) {
-	elem.addEventListener("mouseover", function(e){ 
+function makeBookmarkListen(id) {
+	elem = document.getElementById(id);
+	
+	elem.addEventListener("mouseenter", function(e){ 
+		var origElem = e.srcElement || e.originalTarget; 
+		describeURL(origElem);
+	});
+	elem.addEventListener("mouseleave", function(e){ 
+		hideTip();
+	});
+	elem.addEventListener("click", function(e){
 		var origElem = e.srcElement || e.originalTarget;
+		goToBookmarkURL(origElem);
+	});
+	elem.addEventListener("contextmenu", function(e){ 
+		e.preventDefault();
+		var origElem = e.srcElement || e.originalTarget;
+		elemContextMenu(e, origElem, true);
+	});
+	elem.addEventListener("auxclick", function(e){
+		var origElem = e.srcElement || e.originalTarget;
+		if(e.which == 2) goToBookmarkURL(origElem, true);
+	});
+}
+
+function makeEngineListen(id) {
+	elem = document.getElementById(id);
+	
+	elem.addEventListener("mouseenter", function(e){ 
+		var origElem = e.srcElement || e.originalTarget; 
 		describeEngine(origElem);
 	});
 	elem.addEventListener("mouseleave", function(e){ 
 		hideTip();
 	});
-	elem.addEventListener("click", function(e){ 
+	elem.addEventListener("click", function(e){
 		var origElem = e.srcElement || e.originalTarget;
-		switchEngineTo(origElem, true)
+		switchEngineTo(origElem, true);
 	});
 	elem.addEventListener("contextmenu", function(e){ 
 		e.preventDefault();
 		var origElem = e.srcElement || e.originalTarget;
 		elemContextMenu(e, origElem, false);
 	});
-}*/
-
-
+}
 
 
 //Function: Selects the right Favicon API and generates the URL
@@ -498,49 +535,52 @@ function notifyRightTheme() {
 notifyRightTheme();
 
 
-//Function: opens a context menu for the selected Search Engine/Bookmark 
 
-function elemContextMenu(event, arrayPosition, isBookmark) {
+//Functions: opens a context menu for the selected Search Engine/Bookmark and calculates the right coordinates to not go otside the screen
+
+function elemContextMenu(event, elem, isBookmark) {
+	contextVisible = true;
 	contextElemType = isBookmark;
-	contextArrayPos = parseInt(arrayPosition.attributes.nm.value, 10);
+	contextArrayPos = parseInt(elem.attributes.nm.value, 10);
 	
-	/*if (isBookmark) contextNewTab.classList.remove("fHidden");
-	else contextNewTab.classList.add("fHidden");
-	
-	var menuHeight = contextMenu.clientHeight;
-	var menuWidth = contextMenu.clientWidth;
-	console.log("menuHeight: " + menuHeight);
-	
-	var x = event.clientX;
-	var y = event.clientY;
-	console.log(y);
-	if ((x + menuWidth) > screen.availWidth) x = screen.availWidth - menuWidth;
-	if ((y + menuHeight) > screen.availHeight) y = screen.availHeight - menuHeight;
-	console.log(y);*/
-	
-	contextNewTab.classList.add("fHidden");
-	contextDefault.classList.remove("fHidden");
-	menuHeight = 280;
 	if (isBookmark) {
 		contextNewTab.classList.remove("fHidden"); 
 		contextDefault.classList.add("fHidden"); 
-		menuHeight = 350
-	};
-	
+	}
+	else {
+		contextNewTab.classList.add("fHidden");
+		contextDefault.classList.remove("fHidden");
+	}
 	
 	x = event.clientX;
 	y = event.clientY;
-	if ((x + 180) > screen.availWidth) x = screen.availWidth - 180;
-	if ((y + menuHeight) > screen.availHeight) y = screen.availHeight - menuHeight;
-	
+	const {normalizedX, normalizedY} = normalizePosition(x, y); 
 	contextMenu.classList.remove("vHidden");
-	contextMenu.style.left = x;
-	contextMenu.style.top = y;
+	contextMenu.style.left = `${normalizedX}px`;
+	contextMenu.style.top = `${normalizedY}px`;
+}
+
+function normalizePosition(mouseX, mouseY) {
+	outOfBoundsOnX = mouseX + contextMenu.clientWidth > body.clientWidth;	
+	outOfBoundsOnY = mouseY + contextMenu.clientHeight > body.clientHeight;
+	
+	normalizedX = mouseX;
+	normalizedY = mouseY;
+	
+	if (outOfBoundsOnX) {
+		normalizedX = body.clientWidth - contextMenu.clientWidth;
+  }
+	if (outOfBoundsOnY) {
+		normalizedY = body.clientHeight - contextMenu.clientHeight;
+  }
+
+  return {normalizedX, normalizedY};
 }
 
 //Function: Closes the context menu
 
 function contextClose() {
+	contextVisible = false;
 	contextMenu.classList.add("vHidden");
 }
 
@@ -609,6 +649,12 @@ function contextTab() {
 	goToURL(bookmarks[contextArrayPos][1], true);
 	contextClose();
 }
+
+//Listener: when somewhere else is clicked, the context menu gets closed
+body.addEventListener("click", (e) => {
+	if (contextVisible) contextClose();
+});
+
 
 //Function: toggles the Settings Icon
 
