@@ -10,15 +10,19 @@
 	<body>
 		<p class="Micon" id="settings-icon" onclick="settings()">&#xF08BB;</p>
 		<div id="body-centerbox">
-			<div id="searchengines-container"></div>
+			<div id="searchengines-container" class="centerbox"></div>
 			
 			<div class="searchbox-container centerbox" class="centerbox">
 				<p id="search-tip">Type here</p>
 				<input autocomplete="off" onclick="if(URLMode) goToURL(this.value)" oninput="hideTip()" id="search-box" type="text">
 			</div>
 			<p id="searchbox-action">Search on Google</p>
-			<div id="bookmarks-container" class="centerbox">
+			<div id="bookmarks-container" class="bookmark-like-container centerbox">
 				
+			</div>
+			<div id="folder-container" class="bookmark-like-container centerbox fHidden">
+				<div id="hide-folder-button" class="bookmark-link centerbox"><div class="bookmark-circle centerbox"><div class="centerbox" style="color: white; text-shadow: 0px 2px 6px white;"><a class="Micon folder-icon">&#xF004D;</a></div></div><p class="bookmark-title translatable" stringid="goBack">Go back</p></div>
+				<div id="folder-content-container" class="bookmark-like-container"></div>
 			</div>
 		</div>
 		<div id="settings-overlay" class="settings-overlay centerbox sHidden">

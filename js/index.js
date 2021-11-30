@@ -9,6 +9,11 @@ var localSettings = {
 	"bookmarks" : [
 		["YouTube", "https://www.youtube.com"],
 		["Deezer", "https://www.deezer.com"],
+		/*["folder", "Example Folder", "#DE0085", "F0256", [
+				["Google", "https://www.google.com"],
+				["Wikipedia", "https://en.wikipedia.org"],
+			] 
+		],Example Folder scheme*/
 	],
 	"showSettingsIcon" : true,
 	"resizeSearchFont" : true,
@@ -35,10 +40,12 @@ var removeMode = 0; //removeMode is deprecated
 bookmarks = localSettings.bookmarks;
 
 const bookmarkLinkScheme = '<div id="<id>" class="bookmark-link centerbox" nm="<arrayPosition>"><div class="bookmark-circle centerbox"><img src="<URL>" class="bookmark-icon" onerror="this.src=\'imgs/404.svg\'"></div><p class="bookmark-title"><title></p></div>';
+const folderScheme = '<div id="<id>" nm="<arrayPosition>" class="bookmark-link centerbox"><div class="bookmark-circle centerbox"><div class="centerbox" style="color: <color>; text-shadow: 0px 2px 6px <color>;"><a class="Micon folder-icon">&#x<icon>;</a></div></div><p class="bookmark-title"><title></p></div>'
 
 const languageSelectScheme = '<option value="<key>"><emoji> <lang></option>'
 
 //Declares the Searchbox and the tip behind it, also declares the Action Tip and the :root for CSS variables, and also the settings overlay objects
+//Declares Search Engines, Bookmarks and Folder View containers 
 //Declares the Settings Icon Button
 //Declares the contextMenu element and variables related to it
 
@@ -51,6 +58,10 @@ var maxCharacters;
 const searchEnginesContainer = document.getElementById("searchengines-container");
 const bookmarksContainer = document.getElementById("bookmarks-container");
 
+const folderContainer = document.getElementById("folder-container");
+const folderContentContainer = document.getElementById("folder-content-container");
+var currentFolder;
+
 const settingsOverlay = document.getElementById("settings-overlay");
 const settingsAddElementForm = document.getElementById("add-element-form");
 const settingsLanguageSelect = document.getElementById("language-select");
@@ -62,7 +73,9 @@ const rootCSS = document.querySelector(":root");
 const themeAdvisor = document.getElementById("theme-advisor");
 
 const settingsIcon = document.getElementById("settings-icon");
-const settingsShowIcon = document.getElementById("settings-show-icon")
+const settingsShowIcon = document.getElementById("settings-show-icon");
+
+const hideFolderButton = document.getElementById("hide-folder-button")
 
 const contextMenu = document.getElementById("context-menu");
 const contextNewTab = document.getElementById("context-newtab");
@@ -86,7 +99,9 @@ function renderElements() {
 		searchEnginesContainer.innerHTML += genSearchElement(i);
 	}
 	for (i = 0; i < bookmarks.length; i++) {
-		bookmarksContainer.innerHTML += genBookmarkElement(i);
+		if (bookmarks[i][0] == "folder")
+			bookmarksContainer.innerHTML += genFolderElement(i);
+		else bookmarksContainer.innerHTML += genBookmarkElement(i);
 	}
 	//Adds Event Listeners
 	for (i = 0; i < searchEngines.length; i++) {
@@ -94,8 +109,14 @@ function renderElements() {
 		makeEngineListen(id);
 	}
 	for (i = 0; i < bookmarks.length; i++) {
-		id = "bookmark-" + i.toString();
-		makeBookmarkListen(id);
+		if (bookmarks[i][0] == "folder") {
+			id = "folder-" + i.toString();
+			makeFolderListen(id);
+		}
+		else {
+			id = "bookmark-" + i.toString();
+			makeBookmarkListen(id);
+		}
 	}
 	
 	document.getElementsByClassName("search-engine")[0].classList.add("in-use")
@@ -171,11 +192,12 @@ function goToURL(URL, newTab) {
 }
 
 //Function: Goes to the URL of the clicked bookmark.
-function goToBookmarkURL(element, newTab) {
+function goToBookmarkURL(element, newTab, isChild) {
 	arrayPosition = parseInt(element.attributes.nm.value, 10);
 	
 	if (!removeMode) {
-		URL = bookmarks[arrayPosition][1]; console.log(!event);
+		curBookmarkSource = (isChild) ? currentFolder[4] : bookmarks;
+		URL = curBookmarkSource[arrayPosition][1];
 		goToURL(URL, newTab);
 	}
 	else {
@@ -271,28 +293,55 @@ function validCommand(str) {
 //Function: Makes a new Search engine Element
 function genSearchElement(arrayPosition) {
 	var engine = searchEngines[arrayPosition];
-	var URL = engine[1].replace("https://", "").replace("http://", "");
-	URL = URL.split("/")[0];
-	var id = "search-engine-" + arrayPosition.toString();
+	var currentData = {
+		"<URL>" : fetchFaviconFromAPI(engine[1].replace(/http(s|):\/\//g, "").split("/")[0]),
+		"<id>" : 	`search-engine-${arrayPosition.toString()}`,
+		"<arrayPosition>" : arrayPosition
+	}
 	
-	var engineSelector = engineSelectorScheme.replace("<arrayPosition>", arrayPosition);
-	engineSelector = engineSelector.replace("<URL>", fetchFaviconFromAPI(URL)).replace("<id>", id)
+	var engineSelector = engineSelectorScheme;
+	for(let k in currentData) {
+        engineSelector = engineSelector.replace(new RegExp(k, 'g'), currentData[k]);
+    }
 	
 	return engineSelector;
 }
 
 //Function: Makes a new Bookmark Element
-function genBookmarkElement(arrayPosition) {
-	var bookmark = bookmarks[arrayPosition];
-	var URL = bookmark[1].replace("https://", "").replace("http://", "");
-	URL = URL.split("/")[0];
-	var title = bookmark[0];
-	var id = "bookmark-" + arrayPosition.toString();
+function genBookmarkElement(arrayPosition, isChild) {
+	var bookmark = (isChild) ? currentFolder[4][arrayPosition] : bookmarks[arrayPosition];
+	var currentData = {
+		"<URL>" : fetchFaviconFromAPI(bookmark[1].replace(/http(s|):\/\//g, "").split("/")[0]),
+		"<title>" : bookmark[0],
+		"<id>" : 	(isChild) ? `child-bookmark-${arrayPosition.toString()}` : `bookmark-${arrayPosition.toString()}`,
+		"<arrayPosition>" : arrayPosition
+	}
 	
-	var bookmarkSelector = bookmarkLinkScheme.replace("<arrayPosition>", arrayPosition).replace("<id>", id);
-	bookmarkSelector = bookmarkSelector.replace("<URL>", fetchFaviconFromAPI(URL)).replace("<title>", title);
+	var bookmarkSelector = bookmarkLinkScheme;
+	for(let k in currentData) {
+        bookmarkSelector = bookmarkSelector.replace(new RegExp(k, 'g'), currentData[k]);
+    }
 	
 	return bookmarkSelector;
+}
+
+//Function: Makes a new Folder Element
+function genFolderElement(arrayPosition) {
+	var current = bookmarks[arrayPosition];
+	var currentData = {
+		"<id>" : `folder-${arrayPosition.toString()}`,
+		"<arrayPosition>" : arrayPosition,
+		"<title>" : current[1],
+		"<color>" : current[2],
+		"<icon>" : current[3]
+	}
+	
+	var folderSelector = folderScheme;
+	for(let k in currentData) {
+        folderSelector = folderSelector.replace(new RegExp(k, 'g'), currentData[k]);
+    }
+	
+	return folderSelector;
 }
 
 //Function: Makes a new language Element
@@ -306,7 +355,7 @@ function genLanguageElement(keyNum) {
 	return languageSelector;
 }
 
-//Functions: Adds the correct eventListeners for the specified Search Engine/Bookmark
+//Functions: Adds the correct eventListeners for the specified Search Engine/Bookmark/Folder
 function makeBookmarkListen(id) {
 	elem = document.getElementById(id);
 	
@@ -324,11 +373,57 @@ function makeBookmarkListen(id) {
 	elem.addEventListener("contextmenu", function(e){ 
 		e.preventDefault();
 		var origElem = e.srcElement || e.originalTarget;
-		elemContextMenu(e, origElem, true);
+		elemContextMenu(e, origElem, 1);
 	});
 	elem.addEventListener("auxclick", function(e){
 		var origElem = e.srcElement || e.originalTarget;
 		if(e.which == 2) goToBookmarkURL(origElem, true);
+	});
+}
+
+function makeChildBookmarkListen(id) {
+	elem = document.getElementById(id);
+	
+	elem.addEventListener("mouseenter", function(e){ 
+		var origElem = e.srcElement || e.originalTarget; 
+		describeURL(origElem, true);
+	});
+	elem.addEventListener("mouseleave", function(e){ 
+		hideTip();
+	});
+	elem.addEventListener("click", function(e){
+		var origElem = e.srcElement || e.originalTarget;
+		goToBookmarkURL(origElem, false, true);
+	});
+	elem.addEventListener("contextmenu", function(e){ 
+		e.preventDefault();
+		var origElem = e.srcElement || e.originalTarget;
+		elemContextMenu(e, origElem, 2);
+	});
+	elem.addEventListener("auxclick", function(e){
+		var origElem = e.srcElement || e.originalTarget;
+		if(e.which == 2) goToBookmarkURL(origElem, true, true);
+	});
+}
+
+function makeFolderListen(id) { 
+	elem = document.getElementById(id);
+	
+	elem.addEventListener("mouseenter", function(e){ 
+		var origElem = e.srcElement || e.originalTarget; 
+		describeFolder(origElem);
+	});
+	elem.addEventListener("mouseleave", function(e){ 
+		hideTip();
+	});
+	elem.addEventListener("click", function(e){
+		var origElem = e.srcElement || e.originalTarget;
+		showFolder(origElem);
+	});
+	elem.addEventListener("contextmenu", function(e){ 
+		e.preventDefault();
+		var origElem = e.srcElement || e.originalTarget;
+		elemContextMenu(e, origElem, 3);
 	});
 }
 
@@ -417,11 +512,12 @@ function savePreferences() {
 	localStorage.setItem("localSettings", JSON.stringify(localSettings));
 }
 
-//Function: Shows the Bookmark info when it is hovered
-function describeURL(element) {
-	var arrayPosition = parseInt(element.attributes.nm.value, 10);
-	var URL = bookmarks[arrayPosition][1];
-	var name = bookmarks[arrayPosition][0];
+//Function: Shows the Bookmark/Search Engine/Folder infos when it is hovered
+function describeURL(elem, isChild) {
+	var arrayPosition = parseInt(elem.attributes.nm.value, 10);
+	var curBookmarkSource = (isChild) ? currentFolder[4] : bookmarks;
+	var URL = curBookmarkSource[arrayPosition][1];
+	var name = curBookmarkSource[arrayPosition][0];
 	
 	searchBox.classList.add("fHidden");
 	searchAction.innerText = curLang.goTo.replace("<name>", name);
@@ -429,13 +525,19 @@ function describeURL(element) {
 	regulateSearchFontSize(searchTip.innerText);
 }
 
-//Function: Shows the Search Engine info when it is hovered
-function describeEngine(element) {
-	var arrayPosition = parseInt(element.attributes.nm.value, 10);
+function describeEngine(elem) {
+	var arrayPosition = parseInt(elem.attributes.nm.value, 10);
 	var name = searchEngines[arrayPosition][0];
 	
-	searchAction.innerText = curLang.searchOn.replace("<engine>", name);;
+	searchAction.innerText = curLang.searchOn.replace("<engine>", name);
 	regulateSearchFontSize(searchTip.innerText);
+}
+
+function describeFolder(elem) {
+	var arrayPosition = parseInt(elem.attributes.nm.value, 10);
+	var name = bookmarks[arrayPosition][1];
+	
+	searchAction.innerText = curLang.openFolder.replace("<title>", name);
 }
 
 //Function: Regulates the font size accordingly to its length, if it exceeds a precise number of characterSet
@@ -740,3 +842,40 @@ function disableCustomColorScheme() {
 	savePreferences();
 	location.reload()
 }
+
+
+//Functions show and hide the Folder View
+function showFolder(elem) {
+	arrayPosition = parseInt(elem.attributes.nm.value, 10);
+	currentFolder = bookmarks[arrayPosition];
+	renderFolderElems();
+	
+	folderContainer.classList.remove("fHidden");
+	bookmarksContainer.classList.add("fHidden");
+}
+
+
+function hideFolder() {
+	folderContainer.classList.add("fHidden");
+	bookmarksContainer.classList.remove("fHidden");
+	folderContentContainer.innerHTML = "";
+}
+
+//Funtion: render all Bookmarks of the current folder
+function renderFolderElems() {
+	childBookmarks = currentFolder[4];
+	
+	var i;
+	for (i = 0; i < childBookmarks.length; i++) {
+		folderContentContainer.innerHTML += genBookmarkElement(i, true);
+	}
+	for (i = 0; i < childBookmarks.length; i++) {
+		id = "child-bookmark-" + i.toString();
+		makeChildBookmarkListen(id, true);
+	}
+}
+
+//Listener: when Folder Back Arrow is clicked, hide the Folder Container
+hideFolderButton.addEventListener("click", function(){ 
+		hideFolder();
+	});
