@@ -459,6 +459,9 @@ p, input, label, a, #notif-text {
 		height: auto;
 		max-height: 80%;
 	}
+	.context-menu {
+		width: auto;
+	}
 	.sHidden .settings-container {
 		transform: scale(1,1)
 	}
