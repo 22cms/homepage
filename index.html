@@ -2,13 +2,14 @@
 	<head>
 		<title>Francesco's Home Page</title>
 		<link id="css-id" rel="stylesheet" href="css/index.css">
+		<link id="css-id" rel="stylesheet" href="css/materialdesignicons.min.css">
 		<link rel="icon" href="imgs/404.svg"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 		<meta content="utf-8" http-equiv="encoding">
 	</head>
 	<body>
-		<p class="Micon" id="settings-icon" onclick="settings()">&#xF08BB;</p>
+		<p class="Micon mdi-cog-outline" id="settings-icon" onclick="settings()"></p>
 		<div id="body-centerbox">
 			<div id="searchengines-container" class="centerbox"></div>
 			
@@ -21,13 +22,13 @@
 				
 			</div>
 			<div id="folder-container" class="bookmark-like-container centerbox fHidden">
-				<div id="hide-folder-button" class="bookmark-link centerbox"><div class="bookmark-circle centerbox"><div class="centerbox" style="color: white; text-shadow: 0px 2px 6px white;"><a class="Micon folder-icon">&#xF004D;</a></div></div><p class="bookmark-title translatable" stringid="goBack">Go back</p></div>
+				<div id="hide-folder-button" class="bookmark-link centerbox"><div class="bookmark-circle centerbox"><div class="centerbox" style="color: white; text-shadow: 0px 2px 6px white;"><span class="Micon folder-icon mdi-arrow-left"></span></div></div><p class="bookmark-title translatable" stringid="goBack">Go back</p></div>
 				<div id="folder-content-container" class="bookmark-like-container"></div>
 			</div>
 		</div>
 		<div id="settings-overlay" class="settings-overlay centerbox sHidden">
 			<div class="settings-container" id="settings-container">
-				<p id="settings-title" class="translatable" stringid="settings">Settings</p>
+				<p class="settings-title translatable" stringid="settings">Settings</p>
 				<div class="scrollablebox">
 					<p class="settings-category-title translatable" stringid="enginesAndBookmarks">Search Engines/Bookmarks</p>
 					<form id="add-element-form" class="no-margin">
@@ -63,7 +64,7 @@
 						<label class="radio-label translatable" stringid="showSettingsIcon" for="settings-show-icon">Show the Settings Icon on the top-right corner</label><br>
 						<input onchange="savePreferences()" class="settings-checkbox" varid="resizeSearchFont" id="settings-font-resize" type="checkbox" value="true" checked>
 						<label class="radio-label translatable" stringid="resizeSearchFont" for="settings-font-resize">Resize the font size while typing (if supported from the theme)</label><br>
-						<input onchange="settingsSwitchFavicon()" class="settings-checkbox" varid="useFaviconIco" id="settings-use-favicon-ico" type="checkbox" value="true" checked>
+						<input onchange="savePreferences();renderElements()" class="settings-checkbox" varid="useFaviconIco" id="settings-use-favicon-ico" type="checkbox" value="true" checked>
 						<label class="radio-label translatable" stringid="useFaviconIco" for="settings-use-favicon-ico">Use favicon.ico instead of Favicon Kit</label><br>
 					</form>
 					<div class="row">
@@ -85,6 +86,30 @@
 			</div>
 		</div>
 		
+		<div id="newfolder-overlay" class="settings-overlay centerbox sHidden">
+			<div class="settings-container">
+				<p class="settings-title translatable" stringid="moveIntoFolder">Move in a Folder</p>
+				<p class="settings-category-title row translatable" stringid="addNewFolder">Create a new Folder</p>
+				<div id="newfolder-container" class="bookmark-like-container centerbox">
+				</div>
+				<form>		
+					<input autocomplete="off" name="name" type="text" class="settings-type" placeholder="Folder name" value="Example Folder" oninput="renderNewFolderPreview()" id="folder-nametype">
+					<input autocomplete="off" name="icon" type="text" class="settings-type" placeholder="Icon Code" value="folder-outline" oninput="renderNewFolderPreview()" id="folder-icontype">
+					<a class="radio-label row translatable" stringid="materialIconsRedirect" href="https://materialdesignicons.com/">You can find all supported icons on Material Design Icons' website</a>
+				</form>
+
+				<p class="settings-category-title row translatable" stringid="useExistingFolder">Move into an existing folder</p>
+				<div id="existingfolders-container" class="bookmark-like-container centerbox">
+					<p class="settings-category-title no-margin translatable" stringid="noOtherFolders">There aren't any folders.</p>
+				</div>
+				
+				<div class="reverse-row">
+					<button onclick="makeIntoFolderDiag()" class="settings-cancel green ripple translatable" stringid="addElem">ADD</button>
+					<button onclick="newFolderDiag()" class="settings-cancel ripple translatable" stringid="folderUndo">UNDO</button>
+				</div>
+			</div>
+		</div>
+		
 		<div ontouchstart="this.classList.add('nHidden')" onclick="this.classList.add('nHidden')" id="notif-popup" class="nHidden notification-popup">
 			<span id="notif-text">The actual notification content</span>
 		</div>
@@ -94,9 +119,10 @@
 			
 			<p id="context-default" class="context-entry ripple fHidden" onclick="contextMakeDefault()"><span class="Micon">&#xF13B1;</span>&nbsp;&nbsp;<span class="translatable" stringid="contextDefault">Make Default</span></p>
 			<p id="context-newtab" class="context-entry ripple" onclick="contextTab()"><span class="Micon">&#xF075C;</span>&nbsp;&nbsp;<span class="translatable" stringid="contextNewTab">Open in new Tab</span></p>
-			
-			<p class="context-entry ripple" onclick="contextMoveLeft()"><span class="Micon">&#xF004D;</span>&nbsp;&nbsp;<span class="translatable" stringid="contextLeft">Move to the left</span></p>
-			<p class="context-entry ripple" onclick="contextMoveRight()"><span class="Micon">&#xF0054;</span>&nbsp;&nbsp;<span class="translatable" stringid="contextRight">Move to the right</span></p>
+			<p id="context-newfolder" class="context-entry ripple" onclick="contextFolderDiag()"><span class="Micon">&#xF0257;</span>&nbsp;&nbsp;<span class="translatable" stringid="moveIntoFolder">Move in a Folder</span></p>
+		
+			<p class="context-entry ripple" onclick="contextMove(false)"><span class="Micon">&#xF004D;</span>&nbsp;&nbsp;<span class="translatable" stringid="contextLeft">Move to the left</span></p>
+			<p class="context-entry ripple" onclick="contextMove(true)"><span class="Micon">&#xF0054;</span>&nbsp;&nbsp;<span class="translatable" stringid="contextRight">Move to the right</span></p>
 			<p class="context-entry ripple" onclick="contextRemoveElem()"><span class="Micon">&#xF01B4;</span>&nbsp;&nbsp;<span class="translatable" stringid="contextDelete">Delete element</span></p>
 		</div>
 	

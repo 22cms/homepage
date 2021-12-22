@@ -9,11 +9,11 @@ var localSettings = {
 	"bookmarks" : [
 		["YouTube", "https://www.youtube.com"],
 		["Deezer", "https://www.deezer.com"],
-		/*["folder", "Example Folder", "#DE0085", "F0256", [
+		/*["Example Folder", "#DE0085", "folder-outline", [
 				["Google", "https://www.google.com"],
 				["Wikipedia", "https://en.wikipedia.org"],
 			] 
-		],Example Folder scheme*/
+		],Example Folder scheme, the code distinguish them via length (a bookmark's length is 2, while folders' is 5)*/
 	],
 	"showSettingsIcon" : true,
 	"resizeSearchFont" : true,
@@ -40,7 +40,7 @@ var removeMode = 0; //removeMode is deprecated
 bookmarks = localSettings.bookmarks;
 
 const bookmarkLinkScheme = '<div id="<id>" class="bookmark-link centerbox" nm="<arrayPosition>"><div class="bookmark-circle centerbox"><img src="<URL>" class="bookmark-icon" onerror="this.src=\'imgs/404.svg\'"></div><p class="bookmark-title"><title></p></div>';
-const folderScheme = '<div id="<id>" nm="<arrayPosition>" class="bookmark-link centerbox"><div class="bookmark-circle centerbox"><div class="centerbox" style="color: <color>; text-shadow: 0px 2px 6px <color>;"><a class="Micon folder-icon">&#x<icon>;</a></div></div><p class="bookmark-title"><title></p></div>'
+const folderScheme = '<div id="<id>" nm="<arrayPosition>" class="bookmark-link centerbox"><div class="bookmark-circle centerbox"><div class="centerbox" style="color: <color>; text-shadow: 0px 2px 6px <color>;"><span class="Micon folder-icon mdi-<icon>"></span></div></div><p class="bookmark-title"><title></p></div>'
 
 const languageSelectScheme = '<option value="<key>"><emoji> <lang></option>'
 
@@ -60,11 +60,13 @@ const bookmarksContainer = document.getElementById("bookmarks-container");
 
 const folderContainer = document.getElementById("folder-container");
 const folderContentContainer = document.getElementById("folder-content-container");
+var currentFolderPos;
 var currentFolder;
 
 const settingsOverlay = document.getElementById("settings-overlay");
 const settingsAddElementForm = document.getElementById("add-element-form");
 const settingsLanguageSelect = document.getElementById("language-select");
+const customColorPicker = document.getElementById("custom-color-picker");
 
 const notifPopUp = document.getElementById("notif-popup");
 const notifText = document.getElementById("notif-text");
@@ -75,11 +77,20 @@ const themeAdvisor = document.getElementById("theme-advisor");
 const settingsIcon = document.getElementById("settings-icon");
 const settingsShowIcon = document.getElementById("settings-show-icon");
 
-const hideFolderButton = document.getElementById("hide-folder-button")
+const hideFolderButton = document.getElementById("hide-folder-button");
+
+const newFolderOverlay = document.getElementById("newfolder-overlay");
+const newFolderContainer = document.getElementById("newfolder-container");
+const newFolderNameType = document.getElementById("folder-nametype");
+const newFolderIconType =  document.getElementById("folder-icontype");
+const existingFoldersContainer = document.getElementById("existingfolders-container");
+var curBookmarkToFolder;
+var curRandomColor;
 
 const contextMenu = document.getElementById("context-menu");
 const contextNewTab = document.getElementById("context-newtab");
 const contextDefault = document.getElementById("context-default");
+const contextNewFolder = document.getElementById("context-newfolder");
 var contextElemType;
 var contextArrayPos;
 var contextVisible;
@@ -93,13 +104,15 @@ function renderElements() {
 	searchEnginesContainer.innerHTML = "";
 	bookmarksContainer.innerHTML = "";
 	settingsLanguageSelect.innerHTML = "";
+	//If a custom color scheme is present in localSettings, load it in customColorPicker
+	if (localSettings.customColorTheme) customColorPicker.value = localSettings.customColorTheme;
 	//Generates every element, adds adds event listener for every one of them, sets the default search engine and starts hideTip()
 	var i;
 	for (i = 0; i < searchEngines.length; i++) {
 		searchEnginesContainer.innerHTML += genSearchElement(i);
 	}
 	for (i = 0; i < bookmarks.length; i++) {
-		if (bookmarks[i][0] == "folder")
+		if (bookmarks[i].length == 4)
 			bookmarksContainer.innerHTML += genFolderElement(i);
 		else bookmarksContainer.innerHTML += genBookmarkElement(i);
 	}
@@ -109,7 +122,7 @@ function renderElements() {
 		makeEngineListen(id);
 	}
 	for (i = 0; i < bookmarks.length; i++) {
-		if (bookmarks[i][0] == "folder") {
+		if (bookmarks[i].length == 4) {
 			id = "folder-" + i.toString();
 			makeFolderListen(id);
 		}
@@ -128,13 +141,11 @@ function renderElements() {
 	}
 	settingsLanguageSelect.value = curLangCode;
 	//Calculates the Screen size for font regulation
-	maxCharacters = Math.floor(screen.width / 64)
+	maxCharacters = Math.floor(body.clientWidth / 64)
 	maxCharacters += Math.floor(maxCharacters/8);
 	//Hides the settings button if it's set to
-	if (!localSettings.showSettingsIcon) {
-		settingsIcon.classList.add("fHidden");
-	}
-	else settingsIcon.classList.remove("fHidden");
+	
+	settingsIcon.classList.toggle("fHidden", !localSettings.showSettingsIcon);
 	//Applies the custom color scheme if it's set to
 	if (localSettings.customColorTheme) createCustomColorScheme(localSettings.customColorTheme);
 	//Runs loadCheckboxes
@@ -172,16 +183,14 @@ function loadCheckboxes() {
 function toggleURLMode(toggle) {
 	URLMode = toggle;
 	
-	if (toggle) searchBox.classList.add("searchbox-url");
-	else searchBox.classList.remove("searchbox-url");
+	searchBox.classList.toggle("searchbox-url", toggle);
 }
 
 //Function: Enables/Disabls the Eval Mode for the searchbox
 function toggleEvalMode(toggle) {
 	evalMode = toggle;
 	
-	if (toggle) searchBox.classList.add("searchbox-eval");
-	else searchBox.classList.remove("searchbox-eval");
+	searchBox.classList.toggle("searchbox-eval", toggle);
 }
 
 //Function: Goes to the URL specified, adding "https://" if needed
@@ -196,7 +205,7 @@ function goToBookmarkURL(element, newTab, isChild) {
 	arrayPosition = parseInt(element.attributes.nm.value, 10);
 	
 	if (!removeMode) {
-		curBookmarkSource = (isChild) ? currentFolder[4] : bookmarks;
+		curBookmarkSource = (isChild) ? currentFolder[3] : bookmarks;
 		URL = curBookmarkSource[arrayPosition][1];
 		goToURL(URL, newTab);
 	}
@@ -271,13 +280,6 @@ function switchEngineTo(number, isFromElem) {
 
 //Function: Checks if the string is an URL
 function validURL(str) {
-  /* Disabled 'cause of performance issues + was stolen, made a way worse version instead: var pattern = new RegExp( /*'^(https?:\\/\\/)?'+ // protocol 
-    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-     '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-    '(\\#[-a-z\\d_]*)?$','i'); // fragment locator 
-  return !!pattern.test(str); */
 	strArray = str.split(":")[0].split(".");
 	var result = false;
 	if ((strArray[0] != "" || str.includes("://")) && !str.includes(" ") && str.includes(".") && strArray[strArray.length-1] != "") result = true; 
@@ -309,7 +311,7 @@ function genSearchElement(arrayPosition) {
 
 //Function: Makes a new Bookmark Element
 function genBookmarkElement(arrayPosition, isChild) {
-	var bookmark = (isChild) ? currentFolder[4][arrayPosition] : bookmarks[arrayPosition];
+	var bookmark = (isChild) ? currentFolder[3][arrayPosition] : bookmarks[arrayPosition];
 	var currentData = {
 		"<URL>" : fetchFaviconFromAPI(bookmark[1].replace(/http(s|):\/\//g, "").split("/")[0]),
 		"<title>" : bookmark[0],
@@ -326,14 +328,14 @@ function genBookmarkElement(arrayPosition, isChild) {
 }
 
 //Function: Makes a new Folder Element
-function genFolderElement(arrayPosition) {
-	var current = bookmarks[arrayPosition];
+function genFolderElement(arrayPosition, directElem, directId) {
+	var current = (!directElem) ? bookmarks[arrayPosition] : directElem;
 	var currentData = {
-		"<id>" : `folder-${arrayPosition.toString()}`,
+		"<id>" : (directId) ? directId : `folder-${arrayPosition.toString()}`,
 		"<arrayPosition>" : arrayPosition,
-		"<title>" : current[1],
-		"<color>" : current[2],
-		"<icon>" : current[3]
+		"<title>" : current[0],
+		"<color>" : current[1],
+		"<icon>" : current[2]
 	}
 	
 	var folderSelector = folderScheme;
@@ -489,11 +491,13 @@ function removeSpecEngine(arrayPosition) {
 	else notify(curLang.searchEngineRemoveError)
 }
 
-function removeSpecBookmark(arrayPosition) {
-	bookmarks.splice(arrayPosition, 1)
+function removeSpecBookmark(arrayPosition, isChild) {
+	workingArray = (isChild) ? currentFolder[3] : bookmarks;
+	workingArray.splice(arrayPosition, 1)
 
 	savePreferences();
-	renderElements();
+	if (isChild) renderFolderElems();
+	else renderElements();
 	notify(curLang.bookmarkRemoved);
 }
 
@@ -515,13 +519,12 @@ function savePreferences() {
 //Function: Shows the Bookmark/Search Engine/Folder infos when it is hovered
 function describeURL(elem, isChild) {
 	var arrayPosition = parseInt(elem.attributes.nm.value, 10);
-	var curBookmarkSource = (isChild) ? currentFolder[4] : bookmarks;
-	var URL = curBookmarkSource[arrayPosition][1];
-	var name = curBookmarkSource[arrayPosition][0];
+	var curBookmarkSource = (isChild) ? currentFolder[3] : bookmarks;
+	var elem = curBookmarkSource[arrayPosition];
 	
 	searchBox.classList.add("fHidden");
-	searchAction.innerText = curLang.goTo.replace("<name>", name);
-	searchTip.innerText = URL.replace("https://", "").replace("http://", "");
+	searchAction.innerText = curLang.goTo.replace("<name>", elem[0]);
+	searchTip.innerText = elem[1].replace(/http(s|):\/\//g, "");
 	regulateSearchFontSize(searchTip.innerText);
 }
 
@@ -530,15 +533,33 @@ function describeEngine(elem) {
 	var name = searchEngines[arrayPosition][0];
 	
 	searchAction.innerText = curLang.searchOn.replace("<engine>", name);
-	regulateSearchFontSize(searchTip.innerText);
 }
 
 function describeFolder(elem) {
 	var arrayPosition = parseInt(elem.attributes.nm.value, 10);
-	var name = bookmarks[arrayPosition][1];
+	var elem = bookmarks[arrayPosition];
 	
-	searchAction.innerText = curLang.openFolder.replace("<title>", name);
+	searchBox.classList.add("fHidden");
+	searchAction.innerText = curLang.openFolder.replace("<title>", elem[0]);
+	searchTip.innerText = (elem[3].length) ? folderDescription(elem[3]) : curLang.emptyFolder;
+	regulateSearchFontSize(searchTip.innerText);
 }
+
+//Function: makes a folder description
+function folderDescription(array) {
+	var result = "";
+	for (var i = 0; i < array.length; i++) {
+		result += array[i][0];
+		if (i >= 3) {
+			result += "...";
+			break;
+		}
+		if (i != array.length-1) result += ", ";
+	}
+	
+	return result
+}
+
 
 //Function: Regulates the font size accordingly to its length, if it exceeds a precise number of characterSet
 var newCharSize;
@@ -581,7 +602,7 @@ function addFormElem() {
 //Function: changes the language to the specified one in the settings page
 function changeLangTo() {
 	var newLang = settingsLanguageSelect.value;
-	console.log(newLang)
+	debugLog(newLang)
 	curLang = translations[newLang];
 	curLangCode = newLang;
 	
@@ -640,19 +661,15 @@ notifyRightTheme();
 
 //Functions: opens a context menu for the selected Search Engine/Bookmark and calculates the right coordinates to not go otside the screen
 
-function elemContextMenu(event, elem, isBookmark) {
+function elemContextMenu(event, elem, elemType) {
 	contextVisible = true;
-	contextElemType = isBookmark;
+	contextElemType = elemType;
 	contextArrayPos = parseInt(elem.attributes.nm.value, 10);
 	
-	if (isBookmark) {
-		contextNewTab.classList.remove("fHidden"); 
-		contextDefault.classList.add("fHidden"); 
-	}
-	else {
-		contextNewTab.classList.add("fHidden");
-		contextDefault.classList.remove("fHidden");
-	}
+	
+	contextNewTab.classList.toggle("fHidden", (!elemType || elemType == 3)); 
+	contextDefault.classList.toggle("fHidden", elemType);
+	contextNewFolder.classList.toggle("fHidden", elemType != 1);
 	
 	x = event.clientX;
 	y = event.clientY;
@@ -690,43 +707,35 @@ function contextClose() {
 
 function contextRemoveElem() {
 	if (!contextElemType) removeSpecEngine(contextArrayPos);
-	else removeSpecBookmark(contextArrayPos);
+	else removeSpecBookmark(contextArrayPos, contextElemType == 2);
 	
 	contextClose();
 }
 
-//Functions: moves a generic element to the left or to the right
+//Function: moves a generic element to the left or to the right
 
-function contextMoveLeft() {
-	workingArray = searchEngines;
-	if (contextElemType) workingArray = bookmarks;
+function contextMove(direction) {
+	workingArray = (!contextElemType) ? searchEngines : (contextElemType != 2 || contextElemType == 3) ? bookmarks : currentFolder[3];
 	
 	element = workingArray[contextArrayPos];
+	calcDirection = (direction) ? 1 : -1; 
 	workingArray.splice(contextArrayPos, 1);
-	workingArray.splice(contextArrayPos-1, 0, element);
+	workingArray.splice(contextArrayPos+calcDirection, 0, element);
 	
 	if (!contextElemType) searchEngines = workingArray;
+	else if (contextElemType == 2) currentFolder[3] = workingArray;
 	else bookmarks = workingArray;
 	
-	renderElements();
+	if (contextElemType == 2) renderFolderElems();
+	else renderElements();
+	
 	savePreferences();
 	contextClose();
 }
 
-function contextMoveRight() {
-	workingArray = searchEngines;
-	if (contextElemType) workingArray = bookmarks;
-	
-	element = workingArray[contextArrayPos];
-	workingArray.splice(contextArrayPos, 1);
-	workingArray.splice(contextArrayPos+1, 0, element);
-	
-	if (!contextElemType) searchEngines = workingArray;
-	else bookmarks = workingArray;
-	
-	renderElements();
-	savePreferences();
-	contextClose();
+//Function: opens the make folder dialog refering to the current element
+function contextFolderDiag() {
+	newFolderDiag(contextArrayPos);
 }
 
 //Function: sets the choosen Search Engine as the default one (by making it the first one)
@@ -772,11 +781,6 @@ function toggleSettingsButton() {
 	savePreferences();
 }
 
-//Function: switches the Favicon API in use
-function settingsSwitchFavicon() {
-	savePreferences();
-	renderElements();
-}
 
 
 //Function: Applies a custom color scheme in a Telegram-like style, basing it on a given Hexadecimal color
@@ -831,7 +835,7 @@ function componentToHex(c) {
   return hex.length == 1 ? "0" + hex : hex;
 }
 
-function rgbToHex(r, g, b) {
+function rgbToHex(r, g, b) { debugLog(`rgbToHex; r, g and b are ${r}, ${g} and ${b}`)
   return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
 
@@ -847,6 +851,7 @@ function disableCustomColorScheme() {
 //Functions show and hide the Folder View
 function showFolder(elem) {
 	arrayPosition = parseInt(elem.attributes.nm.value, 10);
+	currentFolderPos = arrayPosition;
 	currentFolder = bookmarks[arrayPosition];
 	renderFolderElems();
 	
@@ -858,12 +863,12 @@ function showFolder(elem) {
 function hideFolder() {
 	folderContainer.classList.add("fHidden");
 	bookmarksContainer.classList.remove("fHidden");
-	folderContentContainer.innerHTML = "";
 }
 
 //Funtion: render all Bookmarks of the current folder
 function renderFolderElems() {
-	childBookmarks = currentFolder[4];
+	childBookmarks = currentFolder[3];
+	folderContentContainer.innerHTML = "";
 	
 	var i;
 	for (i = 0; i < childBookmarks.length; i++) {
@@ -871,11 +876,132 @@ function renderFolderElems() {
 	}
 	for (i = 0; i < childBookmarks.length; i++) {
 		id = "child-bookmark-" + i.toString();
-		makeChildBookmarkListen(id, true);
+		makeChildBookmarkListen(id);
 	}
 }
 
 //Listener: when Folder Back Arrow is clicked, hide the Folder Container
 hideFolderButton.addEventListener("click", function(){ 
 		hideFolder();
+});
+hideFolderButton.addEventListener("mouseenter", function(){ 
+		searchAction.innerText = curLang.goBack;
+});
+hideFolderButton.addEventListener("mouseleave", function(){ 
+		hideTip();
+});
+
+
+
+//Function: Shows/hides the new folder dialog, and sets the working folder to the given value
+function newFolderDiag(arrayPos) { debugLog(`newFolderDiag; arrayPos is ${arrayPos}`)
+	if (arrayPos != undefined) curBookmarkToFolder = arrayPos;
+	renderNewFolderPreview();
+	renderExistingFolders();
+	
+	newFolderOverlay.classList.toggle("sHidden");
+}
+
+//Function: Renders the Folder Preview
+function renderNewFolderPreview() {
+	curRandomColor = randomColor();
+	var currentElement = [newFolderNameType.value, curRandomColor, newFolderIconType.value, null];
+	
+	newFolderContainer.innerHTML = genFolderElement(-1, currentElement);
+	document.getElementById("folder--1").addEventListener("click", function(e){
+		renderNewFolderPreview();
 	});
+}
+
+//Function: Renders all the already existing folders and gives them an onclick listener
+function renderExistingFolders() {
+	var i;
+	var thereAreFolders;
+	//Checks if there are any folders
+	for (i = 0; i < bookmarks.length; i++) {
+		if (bookmarks[i].length == 4) thereAreFolders = true; 
+	}
+	//If there are folders, empty the existing folders container
+	if (thereAreFolders) {
+		existingFoldersContainer.innerHTML = "";
+		//Generate all elements, with a negative ID
+		for (i = 0; i < bookmarks.length; i++) {
+			if (bookmarks[i].length == 4) { debugLog(`renderExistingFolders, loop 2; i is ${i}`)
+				currentElement = [bookmarks[i][0], bookmarks[i][1], bookmarks[i][2], null];
+				existingFoldersContainer.innerHTML += genFolderElement(i, currentElement, `existing-folder-${i.toString()}`);
+			}
+		}
+		//Now add them a custom Listener, which moves the element in the folder
+		for (i = 0; i < bookmarks.length; i++) { 
+			if (bookmarks[i].length == 4) { 
+				id = "existing-folder-" + i.toString(); debugLog(`renderExistingFolders, loop 3; id is ${id}`)
+				makeExistingFolderListen(id);
+			}
+		}
+	}
+}
+
+function makeExistingFolderListen(id) { debugLog(`makeExistingFolderListen; id is ${id}`)
+	elem = document.getElementById(id);
+	elem.addEventListener("click", function(e){
+		var origElem = e.srcElement || e.originalTarget;
+		moveIntoFolderFun(origElem); 
+		notify(curLang.toFolder);
+		newFolderDiag();
+	});
+	
+}
+
+//Function: randomly returns a primary color. 50% change of getting a predefined one, and 50% of getting a fully randomized one
+const colorWheel = ["#ff1744", "#f50057", "#D500F9", "#651fff", "#3d5afe", "#2979ff",
+	"#00b0ff", "#00e5ff", "#1de9b6", "#00e676", "#76ff03", "#c6ff00",
+	"#ffea00", "#ffc400", "#ff9100", "#ff3d00"];
+	
+function randomColor() {
+	random = Math.floor(Math.random() * (colorWheel.length - 0 + 1) + 0);
+	
+	if (random < colorWheel.length) return colorWheel[random]; 
+	else {
+		rr = Math.floor(Math.random() * (255 - 120 + 1) + 120); 
+		gr = Math.floor(Math.random() * (255 - 120 + 1) + 120);
+		br = Math.floor(Math.random() * (255 - 120 + 1) + 120); 
+		return rgbToHex(rr, gr, br);
+	}
+}
+
+//Function: deletes the current element and moves it into a folder instead
+function moveIntoFolderFun(elem) { 
+	var arrayPos = parseInt(elem.attributes.nm.value, 10); debugLog(`moveIntoFolderFun; arrayPos is ${arrayPos}`)
+	var current = bookmarks[curBookmarkToFolder]; debugLog(`moveIntoFolderFun; bookmarks is ${JSON.stringify(bookmarks)}`)
+	bookmarks[arrayPos][3].push(current);
+	bookmarks.splice(curBookmarkToFolder, 1);
+	savePreferences();
+	renderElements();
+}
+
+//Function converts a bookmark into a folder, from the dialog too
+function makeIntoFolder(arrayPos, name, icon) {
+	folder = [name, curRandomColor, icon, [bookmarks[arrayPos]] ];
+	bookmarks[arrayPos] = folder;
+	savePreferences();
+	notify(curLang.toFolder);
+	newFolderDiag();
+	renderElements();
+}
+
+function makeIntoFolderDiag() {
+	makeIntoFolder(curBookmarkToFolder, newFolderNameType.value, newFolderIconType.value) 
+}
+
+
+//Debug functions: Logs something in the console if debug is enabled, toggles debug mode
+function debugLog(string) {
+	if (localSettings.debug) console.log(string)
+}
+
+function toggleDebug(bool) {
+	toggle = (bool) ? bool : !localSettings.debug;
+	localSettings.debug = toggle;
+	savePreferences();
+	location.reload();
+}

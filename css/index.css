@@ -13,15 +13,6 @@
 	--customize-hoverbookmark:#65656550; /*The Color used to highlight the bookmarks when they're hovered*/
 }
 
-@font-face {
-  font-family: 'Material Design Icons';
-  font-style: normal;
-  font-weight: 400;
-  src: local(''),
-       url('./materialdesignicons-webfont.woff2') format('woff2'),
-       url('./materialdesignicons-webfont.woff') format('woff');
-}
-
 html {
 	background-color: var(--customize-background);
 	height: 100%;
@@ -119,6 +110,12 @@ p, input, label, a, #notif-text {
 }
 #folder-content-container {
 	margin: 0 0 0 0;
+}
+#newfolder-container, #existingfolders-container {
+	margin-bottom: 10px;
+}
+#newfolder-container {
+	height: 110px;
 }
 
 .search-engine, .bookmark-icon {
@@ -273,7 +270,7 @@ p, input, label, a, #notif-text {
 	scrollbar-width: none; 
 }
 
-#settings-title {
+.settings-title {
 	font-size: 30px;
 	margin: 16px;
 	margin-left: 0px;
