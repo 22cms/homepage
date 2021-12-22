@@ -453,9 +453,9 @@ function makeEngineListen(id) {
 
 //Function: Selects the right Favicon API and generates the URL
 function fetchFaviconFromAPI(URL) {
-	API = (localSettings.useFaviconIco) ? "https://<URL>/favicon.ico" : "https://api.faviconkit.com/<URL>/64";
+	API = (localSettings.useFaviconIco) ? `https://${URL}/favicon.ico` : `https://icons.duckduckgo.com/ip2/${URL}.ico`;
 	
-	return API.replace("<URL>", URL)
+	return API;
 }
 
 
