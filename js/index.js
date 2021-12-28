@@ -18,7 +18,7 @@ var localSettings = {
 	"showSettingsIcon" : true,
 	"resizeSearchFont" : true,
 	"switchEngineWithArrows" : true,
-	"useFaviconIco" : true,
+	"useFaviconIco" : false,
 };
 
 if (localStorage.getItem("localSettings")) localSettings = JSON.parse(localStorage.getItem("localSettings"));
@@ -195,7 +195,7 @@ function toggleEvalMode(toggle) {
 
 //Function: Goes to the URL specified, adding "https://" if needed
 function goToURL(URL, newTab) { 
-		if (!(URL.includes("://") || URL.includes("about:"))) URL = "https://" + URL;
+		if (!URL.includes("://")) URL = "https://" + URL;
 		if (!newTab) window.location.href = URL;
 		else window.open(URL, '_blank');
 }
@@ -246,8 +246,9 @@ document.addEventListener("keyup", function(event) {
 function searchViaBox() {
 	searchBoxText = searchBox.value;
 	if (searchBoxText.charAt(0) == ".") searchBoxText = searchBoxText.substring(1)
+	searchURL = currentEngine[1].replace("<query>", encodeURIComponent(searchBoxText))
 	
-	window.location.href = currentEngine[1].replace("<query>", encodeURIComponent(searchBoxText));
+	goToURL(searchURL);
 }
 
 
@@ -467,8 +468,12 @@ function addNewEngine(name, url) {
 		savePreferences();
 		renderElements();
 		notify(curLang.newSearchEngineAdded);
+		return true
 	}
-	else notify("<span style='color: red;'>" + curLang.newSearchEngineError + "</span>")
+	else {
+		notify("<span style='color: red;'>" + curLang.newSearchEngineError + "</span>")
+		return false
+	}
 }
 
 function addNewBookmark(name, url) {
@@ -505,6 +510,7 @@ function removeSpecBookmark(arrayPosition, isChild) {
 //Function: Saves the preferences in the browser localStorage
 
 function savePreferences() {
+	debugLog("savePreferences() got triggered");
 	localSettings.searchEngines = searchEngines;
 	localSettings.bookmarks = bookmarks;
 	fixedElements = document.getElementsByClassName("settings-checkbox");
@@ -595,9 +601,13 @@ function addFormElem() {
 	URL = settingsAddElementForm.url.value;
 	type = settingsAddElementForm.elementType.value; 
 	
-	if (type == "searchEngine") addNewEngine(name, URL);
-	if (type == "bookmark") addNewBookmark(name, URL);
-	settings();
+	if (type == "searchEngine") {
+		if (addNewEngine(name, URL)) settings()
+	}
+	else if (type == "bookmark") {
+		addNewBookmark(name, URL);
+		settings();
+	}
 }
 //Function: changes the language to the specified one in the settings page
 function changeLangTo() {
@@ -631,7 +641,7 @@ function notify(text) {
 //Function: Stringifies the localSettings JSON, makes it a command, and places it all in the searchBox,
 //making a command that autorestores all personal settings.
 
-function exportToSearchBox() {
+function exportJSON() {
 	var setString = JSON.stringify(localSettings);
 	
 	searchBox.value = ".$" + "localStorage.setItem('localSettings','" + setString + "');" + "localStorage.setItem('curLang','" 
@@ -785,7 +795,7 @@ function toggleSettingsButton() {
 
 //Function: Applies a custom color scheme in a Telegram-like style, basing it on a given Hexadecimal color
 
-function createCustomColorScheme(hexColor) {
+function createCustomColorScheme(hexColor, save) {
 	colorInRGB = hexToRgb(hexColor);
 	
 	colorBackground = [Math.floor(colorInRGB.r*25/189), Math.floor(colorInRGB.g*32/230), Math.floor(colorInRGB.b*34/251)];
@@ -810,8 +820,10 @@ function createCustomColorScheme(hexColor) {
 	rootCSS.style.setProperty ("--customize-searchtip", colorTip);
 	rootCSS.style.setProperty ("--customize-searchaction", colorAction);
 	
-	localSettings.customColorTheme = hexColor;
-	savePreferences();
+	if (save) {
+		localSettings.customColorTheme = hexColor;
+		savePreferences();
+	}
 }
 
 function correctRGB(colorValue) {
@@ -953,14 +965,14 @@ function makeExistingFolderListen(id) { debugLog(`makeExistingFolderListen; id i
 }
 
 //Function: randomly returns a primary color. 50% change of getting a predefined one, and 50% of getting a fully randomized one
-const colorWheel = ["#ff1744", "#f50057", "#D500F9", "#651fff", "#3d5afe", "#2979ff",
-	"#00b0ff", "#00e5ff", "#1de9b6", "#00e676", "#76ff03", "#c6ff00",
-	"#ffea00", "#ffc400", "#ff9100", "#ff3d00"];
+const colorWheel = ["#FF1744", "#F50057", "#D500F9", "#651FFF", "#3D5AFE", "#2979FF",
+	"#00B0FF", "#00E5FF", "#1DE9B6", "#00E676", "#76FF03", "#C6FF00",
+	"#FFEA00", "#FFC400", "#FF9100", "#FF3D00"];
 	
 function randomColor() {
-	random = Math.floor(Math.random() * (colorWheel.length - 0 + 1) + 0);
+	random = Math.floor(Math.random() * colorWheel.length);
 	
-	if (random < colorWheel.length) return colorWheel[random]; 
+	if (Math.round(Math.random())) return colorWheel[random]; 
 	else {
 		rr = Math.floor(Math.random() * (255 - 120 + 1) + 120); 
 		gr = Math.floor(Math.random() * (255 - 120 + 1) + 120);

@@ -68,14 +68,15 @@
 						<label class="radio-label translatable" stringid="useFaviconIco" for="settings-use-favicon-ico">Use favicon.ico instead of Favicon Kit</label><br>
 					</form>
 					<div class="row">
-						<input oninput="createCustomColorScheme(this.value)" class="fHidden" type="color" id="custom-color-picker" name="custom-color-picker"value="#BDE6FB"></input>
+						<input oninput="createCustomColorScheme(this.value, true)" class="fHidden" type="color" id="custom-color-picker" name="custom-color-picker"value="#BDE6FB"></input>
 						<label class="settings-button ripple green" style="width:auto;flex-grow:4" onclick="settings()" for="custom-color-picker"><span style="font-size:7"><br></span><span class="translatable" stringid="applyColorTheme">APPLY A CUSTOM COLOR THEME (TELEGRAM-LIKE)</span></label>
-						<button onclick="disableCustomColorScheme()" class="settings-button ripple Micon">&#xF0467;</button>
+						<button onclick="createCustomColorScheme(randomColor(), true)" class="settings-button ripple Micon mdi-shuffle-variant"></button>
+						<button onclick="disableCustomColorScheme()" class="settings-button ripple Micon mdi-rotate-right"></button>
 					</div>
 					
 					<p class="settings category-title translatable" stringid="resetAndImport">Reset and Import</p>
 					<div class="centerbox row">
-						<button type="button" class="settings-button green ripple translatable" stringid="settingsExport" onclick="exportToSearchBox();settings()">EXPORT SETTINGS</button>
+						<button type="button" class="settings-button green ripple translatable" stringid="settingsExport" onclick="exportJSON();settings()">EXPORT SETTINGS</button>
 						<button type="button" class="settings-button red ripple translatable" stringid="settingsReset" onclick="localStorage.clear();location.reload()">RESET ALL SETTINGS</button>
 					</div>
 					<p id="mobile-warning"><b class="translatable" stringid="mobileDisclaimerNote">Note</b>: <span class="translatable" stringid="mobileDisclaimerText">This website is not meant to be used on mobile devices. Most of the features will work just fine, but it won't resemble the best user experience scenario.</span></p>
@@ -115,15 +116,15 @@
 		</div>
 		
 		<div id="context-menu" class="settings-container context-menu vHidden">
-			<p class="context-close ripple Micon" onclick="contextClose()">&#xF05AD;</p>
+			<p class="context-close ripple Micon mdi-window-close" onclick="contextClose()"></p>
 			
-			<p id="context-default" class="context-entry ripple fHidden" onclick="contextMakeDefault()"><span class="Micon">&#xF13B1;</span>&nbsp;&nbsp;<span class="translatable" stringid="contextDefault">Make Default</span></p>
-			<p id="context-newtab" class="context-entry ripple" onclick="contextTab()"><span class="Micon">&#xF075C;</span>&nbsp;&nbsp;<span class="translatable" stringid="contextNewTab">Open in new Tab</span></p>
-			<p id="context-newfolder" class="context-entry ripple" onclick="contextFolderDiag()"><span class="Micon">&#xF0257;</span>&nbsp;&nbsp;<span class="translatable" stringid="moveIntoFolder">Move in a Folder</span></p>
+			<p id="context-default" class="context-entry ripple fHidden" onclick="contextMakeDefault()"><span class="Micon mdi-home-search-outline"></span>&nbsp;&nbsp;<span class="translatable" stringid="contextDefault">Make Default</span></p>
+			<p id="context-newtab" class="context-entry ripple" onclick="contextTab()"><span class="Micon mdi-tab-plus"></span>&nbsp;&nbsp;<span class="translatable" stringid="contextNewTab">Open in new Tab</span></p>
+			<p id="context-newfolder" class="context-entry ripple" onclick="contextFolderDiag()"><span class="Micon mdi-folder-open-outline"></span>&nbsp;&nbsp;<span class="translatable" stringid="moveIntoFolder">Move in a Folder</span></p>
 		
-			<p class="context-entry ripple" onclick="contextMove(false)"><span class="Micon">&#xF004D;</span>&nbsp;&nbsp;<span class="translatable" stringid="contextLeft">Move to the left</span></p>
-			<p class="context-entry ripple" onclick="contextMove(true)"><span class="Micon">&#xF0054;</span>&nbsp;&nbsp;<span class="translatable" stringid="contextRight">Move to the right</span></p>
-			<p class="context-entry ripple" onclick="contextRemoveElem()"><span class="Micon">&#xF01B4;</span>&nbsp;&nbsp;<span class="translatable" stringid="contextDelete">Delete element</span></p>
+			<p class="context-entry ripple" onclick="contextMove(false)"><span class="Micon mdi-arrow-left"></span>&nbsp;&nbsp;<span class="translatable" stringid="contextLeft">Move to the left</span></p>
+			<p class="context-entry ripple" onclick="contextMove(true)"><span class="Micon mdi-arrow-right"></span>&nbsp;&nbsp;<span class="translatable" stringid="contextRight">Move to the right</span></p>
+			<p class="context-entry ripple" onclick="contextRemoveElem()"><span class="Micon mdi-delete"></span>&nbsp;&nbsp;<span class="translatable" stringid="contextDelete">Delete element</span></p>
 		</div>
 	
 		<script src="js/translations.js"></script> 
