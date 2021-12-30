@@ -867,6 +867,8 @@ function showFolder(elem) {
 	currentFolder = bookmarks[arrayPosition];
 	renderFolderElems();
 	
+	hideFolderButton.children[0].children[0].style.color = currentFolder[1]
+	hideFolderButton.children[0].children[0].style.textShadow = currentFolder[1] + " 0px 2px 6px";
 	folderContainer.classList.remove("fHidden");
 	bookmarksContainer.classList.add("fHidden");
 }
