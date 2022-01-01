@@ -267,7 +267,7 @@ function switchEngineTo(number, isFromElem) {
 			currentEngine = searchEngines[number];
 			currentEngineNum = number;
 			document.getElementsByClassName("in-use")[0].classList.remove("in-use");
-			document.getElementsByClassName("search-engine")[number].classList.add("in-use");
+			document.getElementsByClassName("search-link")[number].classList.add("in-use");
 			
 		}
 		hideTip();
