@@ -27,7 +27,7 @@ if (localStorage.getItem("localSettings")) localSettings = JSON.parse(localStora
 
 searchEngines = localSettings.searchEngines;
 
-const engineSelectorScheme = '<img src="<URL>" id="<id>" class="search-engine" onerror="this.src=\'imgs/404.svg\'" nm="<arrayPosition>">'
+const engineSelectorScheme = '<div class="search-link centerbox" id="<id>" nm="<arrayPosition>"><img src="<URL>" class="search-engine" onerror="this.src=\'imgs/404.svg\'"></div>'
 
 var currentEngine = searchEngines[0];
 var currentEngineNum = 0;
@@ -132,7 +132,7 @@ function renderElements() {
 		}
 	}
 	
-	document.getElementsByClassName("search-engine")[0].classList.add("in-use")
+	document.getElementsByClassName("search-link")[0].classList.add("in-use")
 	currentEngine = searchEngines[0];
 	hideTip();
 	//Generates the Language Selector Entries
