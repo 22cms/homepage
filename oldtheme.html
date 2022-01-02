@@ -52,6 +52,10 @@
 						<label class="radio-label translatable" stringid="switchEngineWithArrows" for="settings-switch-via-arrows">Switch Search Engines using ???? and ???? arrow keys</label><br>
 						<input onchange="savePreferences()" class="settings-checkbox" varid="enableCtrlShortcut" id="settings-enable-ctrl-shortcut" type="checkbox" value="true" checked>
 						<label class="radio-label translatable" stringid="enableCtrlShortcut" for="settings-enable-ctrl-shortcut">Open bookmarks and folder using CTRL plus any keyboard number</label><br>
+						<div class="settings-ctrl-numpad">
+							<input onchange="savePreferences()" class="settings-checkbox " varid="numPadInstead" id="settings-numpad-instead" type="checkbox" value="true" checked>
+							<label class="radio-label translatable" stringid="numPadInstead" for="settings-numpad-instead">Use Num Pad instead of number keys</label>
+						</div>
 					</form>
 					<br style="font-size: 7px;">
 					<!--<button type="button" class="settings-button red ripple" onclick="removeMode = 1;settings()">REMOVE AN ELEMENT</button> -->

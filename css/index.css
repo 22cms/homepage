@@ -343,6 +343,14 @@ p, input, label, a, #notif-text {
 	color: #C0C0C0;
 }
 
+.settings-ctrl-numpad {
+	display: none;
+	margin-left: 10px;
+}
+#settings-enable-ctrl-shortcut:checked ~ .settings-ctrl-numpad {
+	display: initial;
+}
+
 .settings-button {
 	display: inline-block;
 	cursor: pointer;

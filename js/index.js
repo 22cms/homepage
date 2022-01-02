@@ -252,13 +252,21 @@ document.addEventListener("keydown", function(event) {
 		break;
 		case 27:
 			if (folder.open) hideFolder();
+			
 		break;
 		
 		default:
-			if (ctrlIsDown && (event.keyCode >= 49 && event.keyCode <= 57)) {
-				event.preventDefault();
-				if (!folder.open) bookmarksContainer.children[event.keyCode - 49].click();
-				else folderContentContainer.children[event.keyCode - 49].click();
+			if (ctrlIsDown) {
+				if (!localSettings.numPadInstead && event.keyCode >= 49 && event.keyCode <= 57) {
+					event.preventDefault();
+					if (!folder.open) bookmarksContainer.children[event.keyCode - 49].click();
+					else folderContentContainer.children[event.keyCode - 49].click();
+				}
+				else if (localSettings.numPadInstead && event.keyCode >= 97 && event.keyCode <= 105) {
+					event.preventDefault();
+					if (!folder.open) bookmarksContainer.children[event.keyCode - 97].click();
+					else folderContentContainer.children[event.keyCode - 97].click();
+				}
 			}
 		break;
 	};
@@ -949,13 +957,17 @@ function newFolderDiag(arrayPos) { debugLog(`newFolderDiag; arrayPos is ${arrayP
 }
 
 //Function: Renders the Folder Preview
-function renderNewFolderPreview() {
-	curRandomColor = randomColor();
+function renderNewFolderPreview(nonRandom) {
+	curRandomColor = randomColor(nonRandom);
 	var currentElement = [newFolderNameType.value, curRandomColor, newFolderIconType.value, null];
 	
 	newFolderContainer.innerHTML = genFolderElement(-1, currentElement);
 	document.querySelector("#folder--1").addEventListener("click", function(e){
 		renderNewFolderPreview();
+	});
+	document.querySelector("#folder--1").addEventListener("contextmenu", function(e){
+		e.preventDefault();
+		renderNewFolderPreview(true);
 	});
 }
 
@@ -1003,10 +1015,11 @@ const colorWheel = ["#FF1744", "#F50057", "#D500F9", "#651FFF", "#3D5AFE", "#297
 	"#00B0FF", "#00E5FF", "#1DE9B6", "#00E676", "#76FF03", "#C6FF00",
 	"#FFEA00", "#FFC400", "#FF9100", "#FF3D00"];
 	
-function randomColor() {
+function randomColor(nonRandom) {
 	random = Math.floor(Math.random() * colorWheel.length);
 	
-	if (Math.round(Math.random())) return colorWheel[random]; 
+	nonRandom = (nonRandom) ? true : Math.round(Math.random())
+	if (nonRandom) return colorWheel[random]; 
 	else {
 		rr = Math.floor(Math.random() * (255 - 120 + 1) + 120); 
 		gr = Math.floor(Math.random() * (255 - 120 + 1) + 120);
