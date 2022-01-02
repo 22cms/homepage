@@ -50,6 +50,8 @@
 					<form class="no-margin mHidden">
 						<input onchange="savePreferences()" class="settings-checkbox" varid="switchEngineWithArrows" id="settings-switch-via-arrows" type="checkbox" value="true" checked>
 						<label class="radio-label translatable" stringid="switchEngineWithArrows" for="settings-switch-via-arrows">Switch Search Engines using 🠕 and 🠗 arrow keys</label><br>
+						<input onchange="savePreferences()" class="settings-checkbox" varid="enableCtrlShortcut" id="settings-enable-ctrl-shortcut" type="checkbox" value="true" checked>
+						<label class="radio-label translatable" stringid="enableCtrlShortcut" for="settings-enable-ctrl-shortcut">Open bookmarks and folder using CTRL plus any keyboard number</label><br>
 					</form>
 					<br style="font-size: 7px;">
 					<!--<button type="button" class="settings-button red ripple" onclick="removeMode = 1;settings()">REMOVE AN ELEMENT</button> -->
@@ -60,6 +62,8 @@
 					</select>
 					<p id="theme-advisor" class="radio-label">You're Using the Default Theme, <a href="oldtheme.html" class="searchbox-url">Click here</a> to use the "Old" Theme</p>
 					<form>
+						<input onchange="savePreferences();renderElements()" class="settings-checkbox" varid="enableAnimations" type="checkbox" id="settings-enable-animations" value="true" checked>
+						<label class="radio-label translatable" stringid="enableAnimations" for="settings-enable-animations">Enable animations</label><br>
 						<input onchange="toggleSettingsButton()" class="settings-checkbox" varid="showSettingsIcon" type="checkbox" id="settings-show-icon" value="true" checked>
 						<label class="radio-label translatable" stringid="showSettingsIcon" for="settings-show-icon">Show the Settings Icon on the top-right corner</label><br>
 						<input onchange="savePreferences()" class="settings-checkbox" varid="resizeSearchFont" id="settings-font-resize" type="checkbox" value="true" checked>
@@ -125,6 +129,10 @@
 			<p class="context-entry ripple" onclick="contextMove(false)"><span class="Micon mdi-arrow-left"></span>&nbsp;&nbsp;<span class="translatable" stringid="contextLeft">Move to the left</span></p>
 			<p class="context-entry ripple" onclick="contextMove(true)"><span class="Micon mdi-arrow-right"></span>&nbsp;&nbsp;<span class="translatable" stringid="contextRight">Move to the right</span></p>
 			<p class="context-entry ripple" onclick="contextRemoveElem()"><span class="Micon mdi-delete"></span>&nbsp;&nbsp;<span class="translatable" stringid="contextDelete">Delete element</span></p>
+		</div>
+		
+		<div id="html-elems-schemes" class="fHidden">
+			<div id="ctrl-badge-scheme" class="centerbox ctrl-badge" style="left:0px;top:0px;"><a class="black"></a></div>
 		</div>
 	
 		<script src="js/translations.js"></script> 

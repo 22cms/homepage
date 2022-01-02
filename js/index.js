@@ -16,9 +16,11 @@ var localSettings = {
 		],Example Folder scheme, the code distinguish them via length (a bookmark's length is 2, while folders' is 5)*/
 	],
 	"showSettingsIcon" : true,
+	"enableAnimations" : true,
 	"resizeSearchFont" : true,
 	"switchEngineWithArrows" : true,
 	"useFaviconIco" : false,
+	"enableCtrlShortcut" : true,
 };
 
 if (localStorage.getItem("localSettings")) localSettings = JSON.parse(localStorage.getItem("localSettings"));
@@ -42,7 +44,9 @@ bookmarks = localSettings.bookmarks;
 const bookmarkLinkScheme = '<div id="<id>" class="bookmark-link centerbox" nm="<arrayPosition>"><div class="bookmark-circle centerbox"><img src="<URL>" class="bookmark-icon" onerror="this.src=\'imgs/404.svg\'"></div><p class="bookmark-title"><title></p></div>';
 const folderScheme = '<div id="<id>" nm="<arrayPosition>" class="bookmark-link centerbox"><div class="bookmark-circle centerbox"><div class="centerbox" style="color: <color>; text-shadow: 0px 2px 6px <color>;"><span class="Micon folder-icon mdi-<icon>"></span></div></div><p class="bookmark-title"><title></p></div>'
 
+//Other various HTML elements schemes
 const languageSelectScheme = '<option value="<key>"><emoji> <lang></option>'
+const ctrlBadgeScheme = document.querySelector("#ctrl-badge-scheme")
 
 //Declares the Searchbox and the tip behind it, also declares the Action Tip and the :root for CSS variables, and also the settings overlay objects
 //Declares Search Engines, Bookmarks and Folder View containers 
@@ -50,51 +54,51 @@ const languageSelectScheme = '<option value="<key>"><emoji> <lang></option>'
 //Declares the contextMenu element and variables related to it
 
 const body = document.body;
-const searchBox = document.getElementById("search-box");
-const searchTip = document.getElementById("search-tip");
-const searchAction = document.getElementById("searchbox-action");
+const searchBox = document.querySelector("#search-box");
+const searchTip = document.querySelector("#search-tip");
+const searchAction = document.querySelector("#searchbox-action");
 var maxCharacters;
 
-const searchEnginesContainer = document.getElementById("searchengines-container");
-const bookmarksContainer = document.getElementById("bookmarks-container");
+const searchEnginesContainer = document.querySelector("#searchengines-container");
+const bookmarksContainer = document.querySelector("#bookmarks-container");
 
-const folderContainer = document.getElementById("folder-container");
-const folderContentContainer = document.getElementById("folder-content-container");
-var currentFolderPos;
-var currentFolder;
+const folderContainer = document.querySelector("#folder-container");
+const folderContentContainer = document.querySelector("#folder-content-container");
+var folder = {};
 
-const settingsOverlay = document.getElementById("settings-overlay");
-const settingsAddElementForm = document.getElementById("add-element-form");
-const settingsLanguageSelect = document.getElementById("language-select");
-const customColorPicker = document.getElementById("custom-color-picker");
+const settingsOverlay = document.querySelector("#settings-overlay");
+const settingsAddElementForm = document.querySelector("#add-element-form");
+const settingsLanguageSelect = document.querySelector("#language-select");
+const customColorPicker = document.querySelector("#custom-color-picker");
 
-const notifPopUp = document.getElementById("notif-popup");
-const notifText = document.getElementById("notif-text");
+const notifPopUp = document.querySelector("#notif-popup");
+const notifText = document.querySelector("#notif-text");
 
 const rootCSS = document.querySelector(":root");
-const themeAdvisor = document.getElementById("theme-advisor");
+const themeAdvisor = document.querySelector("#theme-advisor");
 
-const settingsIcon = document.getElementById("settings-icon");
-const settingsShowIcon = document.getElementById("settings-show-icon");
+const settingsIcon = document.querySelector("#settings-icon");
+const settingsShowIcon = document.querySelector("#settings-show-icon");
 
-const hideFolderButton = document.getElementById("hide-folder-button");
+const hideFolderButton = document.querySelector("#hide-folder-button");
 
-const newFolderOverlay = document.getElementById("newfolder-overlay");
-const newFolderContainer = document.getElementById("newfolder-container");
-const newFolderNameType = document.getElementById("folder-nametype");
-const newFolderIconType =  document.getElementById("folder-icontype");
-const existingFoldersContainer = document.getElementById("existingfolders-container");
+const newFolderOverlay = document.querySelector("#newfolder-overlay");
+const newFolderContainer = document.querySelector("#newfolder-container");
+const newFolderNameType = document.querySelector("#folder-nametype");
+const newFolderIconType =  document.querySelector("#folder-icontype");
+const existingFoldersContainer = document.querySelector("#existingfolders-container");
 var curBookmarkToFolder;
 var curRandomColor;
 
-const contextMenu = document.getElementById("context-menu");
-const contextNewTab = document.getElementById("context-newtab");
-const contextDefault = document.getElementById("context-default");
-const contextNewFolder = document.getElementById("context-newfolder");
+const contextMenu = document.querySelector("#context-menu");
+const contextNewTab = document.querySelector("#context-newtab");
+const contextDefault = document.querySelector("#context-default");
+const contextNewFolder = document.querySelector("#context-newfolder");
 var contextElemType;
 var contextArrayPos;
 var contextVisible;
 
+var ctrlIsDown;
 
 
 //On Load Function: Renders all the elements of the page (should probably be splitten)
@@ -148,6 +152,7 @@ function renderElements() {
 	settingsIcon.classList.toggle("fHidden", !localSettings.showSettingsIcon);
 	//Applies the custom color scheme if it's set to
 	if (localSettings.customColorTheme) createCustomColorScheme(localSettings.customColorTheme);
+	body.classList.toggle("no-animations", !localSettings.enableAnimations);
 	//Runs loadCheckboxes
 	loadCheckboxes();
 }
@@ -205,7 +210,7 @@ function goToBookmarkURL(element, newTab, isChild) {
 	arrayPosition = parseInt(element.attributes.nm.value, 10);
 	
 	if (!removeMode) {
-		curBookmarkSource = (isChild) ? currentFolder[3] : bookmarks;
+		curBookmarkSource = (isChild) ? folder.current[3] : bookmarks;
 		URL = curBookmarkSource[arrayPosition][1];
 		goToURL(URL, newTab);
 	}
@@ -216,12 +221,13 @@ function goToBookmarkURL(element, newTab, isChild) {
 }
 
 //Listener: When the enter Key has ben pressed, search the sentence using the search engine which has been choosen, unless it's an URL or a command;
-//If the up or down arrow keys have been pressed, switch the search engine to the next/previous one
+//If the up or down arrow keys have been pressed, switch the search engine to the next/previous one;
+//If the CTRL button is un/pressed, toggle ctrlBookMode
 
-document.addEventListener("keyup", function(event) {
+document.addEventListener("keydown", function(event) {
     switch (event.keyCode) {
 		case 13:
-			if (searchBox === document.activeElement & searchBox.value != "") {
+			if (searchBox.value != "") {
 				if (evalMode) searchAction.innerText = eval(searchBox.value.slice(2));
 				else if (!URLMode) searchViaBox();
 				else goToURL(searchBox.value);
@@ -229,15 +235,38 @@ document.addEventListener("keyup", function(event) {
 		break;
 		case 38:
 			if (localSettings.switchEngineWithArrows) {
+				event.preventDefault();
 				if (currentEngineNum == 0) switchEngineTo(searchEngines.length-1, false);
 				else switchEngineTo(currentEngineNum-1, false);
 			}
 		break;
 		case 40: 
 			if (localSettings.switchEngineWithArrows) {
+				event.preventDefault();
 				if (currentEngineNum == searchEngines.length-1) switchEngineTo(0, false);
 				else switchEngineTo(currentEngineNum+1, false);
 			}
+		break;
+		case 17:
+			if (!event.repeat) ctrlBookMode(localSettings.enableCtrlShortcut);
+		break;
+		case 27:
+			if (folder.open) hideFolder();
+		break;
+		
+		default:
+			if (ctrlIsDown && (event.keyCode >= 49 && event.keyCode <= 57)) {
+				event.preventDefault();
+				if (!folder.open) bookmarksContainer.children[event.keyCode - 49].click();
+				else folderContentContainer.children[event.keyCode - 49].click();
+			}
+		break;
+	};
+});
+document.addEventListener("keyup", function(event) {
+	switch (event.keyCode) {
+		case 17:
+			ctrlBookMode(false);
 		break;
 	};
 });
@@ -267,7 +296,7 @@ function switchEngineTo(number, isFromElem) {
 			currentEngine = searchEngines[number];
 			currentEngineNum = number;
 			document.getElementsByClassName("in-use")[0].classList.remove("in-use");
-			document.getElementsByClassName("search-engine")[number].classList.add("in-use");
+			document.getElementsByClassName("search-link")[number].classList.add("in-use");
 			
 		}
 		hideTip();
@@ -312,7 +341,7 @@ function genSearchElement(arrayPosition) {
 
 //Function: Makes a new Bookmark Element
 function genBookmarkElement(arrayPosition, isChild) {
-	var bookmark = (isChild) ? currentFolder[3][arrayPosition] : bookmarks[arrayPosition];
+	var bookmark = (isChild) ? folder.current[3][arrayPosition] : bookmarks[arrayPosition];
 	var currentData = {
 		"<URL>" : fetchFaviconFromAPI(bookmark[1].replace(/http(s|):\/\//g, "").split("/")[0]),
 		"<title>" : bookmark[0],
@@ -497,7 +526,7 @@ function removeSpecEngine(arrayPosition) {
 }
 
 function removeSpecBookmark(arrayPosition, isChild) {
-	workingArray = (isChild) ? currentFolder[3] : bookmarks;
+	workingArray = (isChild) ? folder.current[3] : bookmarks;
 	workingArray.splice(arrayPosition, 1)
 
 	savePreferences();
@@ -525,7 +554,7 @@ function savePreferences() {
 //Function: Shows the Bookmark/Search Engine/Folder infos when it is hovered
 function describeURL(elem, isChild) {
 	var arrayPosition = parseInt(elem.attributes.nm.value, 10);
-	var curBookmarkSource = (isChild) ? currentFolder[3] : bookmarks;
+	var curBookmarkSource = (isChild) ? folder.current[3] : bookmarks;
 	var elem = curBookmarkSource[arrayPosition];
 	
 	searchBox.classList.add("fHidden");
@@ -725,7 +754,7 @@ function contextRemoveElem() {
 //Function: moves a generic element to the left or to the right
 
 function contextMove(direction) {
-	workingArray = (!contextElemType) ? searchEngines : (contextElemType != 2 || contextElemType == 3) ? bookmarks : currentFolder[3];
+	workingArray = (!contextElemType) ? searchEngines : (contextElemType != 2 || contextElemType == 3) ? bookmarks : folder.current[3];
 	
 	element = workingArray[contextArrayPos];
 	calcDirection = (direction) ? 1 : -1; 
@@ -733,7 +762,7 @@ function contextMove(direction) {
 	workingArray.splice(contextArrayPos+calcDirection, 0, element);
 	
 	if (!contextElemType) searchEngines = workingArray;
-	else if (contextElemType == 2) currentFolder[3] = workingArray;
+	else if (contextElemType == 2) folder.current[3] = workingArray;
 	else bookmarks = workingArray;
 	
 	if (contextElemType == 2) renderFolderElems();
@@ -863,25 +892,28 @@ function disableCustomColorScheme() {
 //Functions show and hide the Folder View
 function showFolder(elem) {
 	arrayPosition = parseInt(elem.attributes.nm.value, 10);
-	currentFolderPos = arrayPosition;
-	currentFolder = bookmarks[arrayPosition];
+	folder.currentPos = arrayPosition;
+	folder.current = bookmarks[arrayPosition];
+	folder.open = true;
 	renderFolderElems();
 	
-	hideFolderButton.children[0].children[0].style.color = currentFolder[1]
-	hideFolderButton.children[0].children[0].style.textShadow = currentFolder[1] + " 0px 2px 6px";
+	hideFolderButton.children[0].children[0].style.color = folder.current[1]
+	hideFolderButton.children[0].children[0].style.textShadow = folder.current[1] + " 0px 2px 6px";
 	folderContainer.classList.remove("fHidden");
 	bookmarksContainer.classList.add("fHidden");
+	if(ctrlIsDown) ctrlBookMode(true);
 }
 
 
 function hideFolder() {
+	folder = {};
 	folderContainer.classList.add("fHidden");
 	bookmarksContainer.classList.remove("fHidden");
 }
 
 //Funtion: render all Bookmarks of the current folder
 function renderFolderElems() {
-	childBookmarks = currentFolder[3];
+	childBookmarks = folder.current[3];
 	folderContentContainer.innerHTML = "";
 	
 	var i;
@@ -922,7 +954,7 @@ function renderNewFolderPreview() {
 	var currentElement = [newFolderNameType.value, curRandomColor, newFolderIconType.value, null];
 	
 	newFolderContainer.innerHTML = genFolderElement(-1, currentElement);
-	document.getElementById("folder--1").addEventListener("click", function(e){
+	document.querySelector("#folder--1").addEventListener("click", function(e){
 		renderNewFolderPreview();
 	});
 }
@@ -1018,4 +1050,50 @@ function toggleDebug(bool) {
 	localSettings.debug = toggle;
 	savePreferences();
 	location.reload();
+}
+
+
+//Function: Toggles ctrlBookMode, which consents to open a bookmark/folder via CTRL + 0-9
+function ctrlBookMode(bool) {
+	if (bool) {
+		ctrlIsDown = true;
+		curContainer = (folder.open) ? folderContentContainer : bookmarksContainer;
+		curArray = (folder.open) ? folder.current[3] : bookmarks;
+		
+		curContainer.classList.toggle("in-use", true);
+		searchAction.innerText = curLang.openShortcut;
+		
+		var bookCircles = curContainer.getElementsByClassName("bookmark-circle");
+		for (var i = 0; i < curArray.length; i++) {
+			currentBook = bookCircles[i].getBoundingClientRect();
+			if (9 > i) genCtrlBadge(curContainer, i+1, currentBook.x + 27, currentBook.y - 7);
+			else genCtrlBadge(curContainer, "emoticon-sad-outline", currentBook.x + 27, currentBook.y - 7, true);
+		}
+		if (folder.open) {
+			hideFolderButton.classList.toggle("in-use", true);
+			goBackPos = hideFolderButton.getElementsByClassName("bookmark-circle")[0].getBoundingClientRect();
+			genCtrlBadge(curContainer, "keyboard-esc", goBackPos.x + 27, goBackPos.y - 7, true)
+		}
+	}
+	else {
+		ctrlIsDown = false;
+		bookmarksContainer.classList.toggle("in-use", false);
+		folderContentContainer.classList.toggle("in-use", false);
+		hideFolderButton.classList.toggle("in-use", false);
+		hideTip();
+		
+		var aliveBadges = document.getElementsByClassName('ctrl-badge');
+		while(aliveBadges[0]) {
+			aliveBadges[0].parentNode.removeChild(aliveBadges[0]);
+		}
+	}
+}
+function genCtrlBadge(parent, value, x, y, mIcon) {
+	cln = ctrlBadgeScheme.cloneNode(true)
+	currentBadge = parent.appendChild(cln);
+
+	currentBadge.style.top = y;
+	currentBadge.style.left = x;
+	if (mIcon) currentBadge.lastChild.classList.add("Micon", "mdi-" + value);
+	else currentBadge.lastChild.innerText = value;
 }
