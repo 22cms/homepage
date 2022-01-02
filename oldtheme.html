@@ -62,6 +62,8 @@
 					</select>
 					<p id="theme-advisor" class="radio-label">You're Using the Default Theme, <a href="oldtheme.html" class="searchbox-url">Click here</a> to use the "Old" Theme</p>
 					<form>
+						<input onchange="savePreferences();renderElements()" class="settings-checkbox" varid="enableAnimations" type="checkbox" id="settings-enable-animations" value="true" checked>
+						<label class="radio-label translatable" stringid="enableAnimations" for="settings-enable-animations">Enable animations</label><br>
 						<input onchange="toggleSettingsButton()" class="settings-checkbox" varid="showSettingsIcon" type="checkbox" id="settings-show-icon" value="true" checked>
 						<label class="radio-label translatable" stringid="showSettingsIcon" for="settings-show-icon">Show the Settings Icon on the top-right corner</label><br>
 						<input onchange="savePreferences()" class="settings-checkbox" varid="resizeSearchFont" id="settings-font-resize" type="checkbox" value="true" checked>
