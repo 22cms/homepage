@@ -326,11 +326,11 @@ p, input, label, a, #notif-text {
 	color: #C0C0C0;
 }
 
-.settings-ctrl-numpad {
+.settings-alt-numpad {
 	display: none;
 	margin-left: 10px;
 }
-#settings-enable-ctrl-shortcut:checked ~ .settings-ctrl-numpad {
+#settings-enable-alt-shortcut:checked ~ .settings-alt-numpad {
 	display: initial;
 }
 
@@ -450,7 +450,7 @@ p, input, label, a, #notif-text {
 }
 
 
-.ctrl-badge {
+.alt-badge {
 	position: fixed;
 	background-color: var(--customize-primary);
 	width: 25px;

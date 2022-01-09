@@ -20,7 +20,7 @@ var localSettings = {
 	"resizeSearchFont" : true,
 	"switchEngineWithArrows" : true,
 	"useFaviconIco" : false,
-	"enableCtrlShortcut" : true,
+	"enableAltShortcut" : true,
 };
 
 if (localStorage.getItem("localSettings")) localSettings = JSON.parse(localStorage.getItem("localSettings"));
@@ -29,7 +29,7 @@ if (localStorage.getItem("localSettings")) localSettings = JSON.parse(localStora
 
 searchEngines = localSettings.searchEngines;
 
-const engineSelectorScheme = '<div class="search-link centerbox" id="<id>" nm="<arrayPosition>"><img src="<URL>" class="search-engine" onerror="this.src=\'imgs/404.svg\'"></div>'
+const engineSelectorScheme = document.querySelector("#engine-selector-scheme");
 
 var currentEngine = searchEngines[0];
 var currentEngineNum = 0;
@@ -46,7 +46,7 @@ const folderScheme = '<div id="<id>" nm="<arrayPosition>" class="bookmark-link c
 
 //Other various HTML elements schemes
 const languageSelectScheme = '<option value="<key>"><emoji> <lang></option>'
-const ctrlBadgeScheme = document.querySelector("#ctrl-badge-scheme")
+const altBadgeScheme = document.querySelector("#alt-badge-scheme")
 
 //Declares the Searchbox and the tip behind it, also declares the Action Tip and the :root for CSS variables, and also the settings overlay objects
 //Declares Search Engines, Bookmarks and Folder View containers 
@@ -98,7 +98,7 @@ var contextElemType;
 var contextArrayPos;
 var contextVisible;
 
-var ctrlIsDown;
+var altIsDown;
 
 
 //On Load Function: Renders all the elements of the page (should probably be splitten)
@@ -113,7 +113,7 @@ function renderElements() {
 	//Generates every element, adds adds event listener for every one of them, sets the default search engine and starts hideTip()
 	var i;
 	for (i = 0; i < searchEngines.length; i++) {
-		searchEnginesContainer.innerHTML += genSearchElement(i);
+		genSearchElement(searchEnginesContainer, i);
 	}
 	for (i = 0; i < bookmarks.length; i++) {
 		if (bookmarks[i].length == 4)
@@ -121,10 +121,6 @@ function renderElements() {
 		else bookmarksContainer.innerHTML += genBookmarkElement(i);
 	}
 	//Adds Event Listeners
-	for (i = 0; i < searchEngines.length; i++) {
-		id = "search-engine-" + i.toString();
-		makeEngineListen(id);
-	}
 	for (i = 0; i < bookmarks.length; i++) {
 		if (bookmarks[i].length == 4) {
 			id = "folder-" + i.toString();
@@ -222,7 +218,7 @@ function goToBookmarkURL(element, newTab, isChild) {
 
 //Listener: When the enter Key has ben pressed, search the sentence using the search engine which has been choosen, unless it's an URL or a command;
 //If the up or down arrow keys have been pressed, switch the search engine to the next/previous one;
-//If the CTRL button is un/pressed, toggle ctrlBookMode
+//If the CTRL button is un/pressed, toggle altBookMode
 
 document.addEventListener("keydown", function(event) {
     switch (event.keyCode) {
@@ -241,22 +237,24 @@ document.addEventListener("keydown", function(event) {
 			}
 		break;
 		case 40: 
-			if (localSettings.switchEngineWithArrows) {
+			if (localSettings.switchEngineWithArrows) { 
 				event.preventDefault();
 				if (currentEngineNum == searchEngines.length-1) switchEngineTo(0, false);
 				else switchEngineTo(currentEngineNum+1, false);
 			}
 		break;
-		case 17:
-			if (!event.repeat) ctrlBookMode(localSettings.enableCtrlShortcut);
+		case 18:
+			if (localSettings.enableAltShortcut) {
+				event.preventDefault();
+				if (!event.repeat) altBookMode(true);
+			}
 		break;
 		case 27:
 			if (folder.open) hideFolder();
-			
 		break;
 		
 		default:
-			if (ctrlIsDown) {
+			if (altIsDown) {
 				if (!localSettings.numPadInstead && event.keyCode >= 49 && event.keyCode <= 57) {
 					event.preventDefault();
 					if (!folder.open) bookmarksContainer.children[event.keyCode - 49].click();
@@ -273,8 +271,11 @@ document.addEventListener("keydown", function(event) {
 });
 document.addEventListener("keyup", function(event) {
 	switch (event.keyCode) {
-		case 17:
-			ctrlBookMode(false);
+		case 18:
+			if (localSettings.enableAltShortcut) {
+				event.preventDefault();
+				altBookMode(false);
+			}
 		break;
 	};
 });
@@ -331,20 +332,16 @@ function validCommand(str) {
 } 
 
 //Function: Makes a new Search engine Element
-function genSearchElement(arrayPosition) {
-	var engine = searchEngines[arrayPosition];
-	var currentData = {
-		"<URL>" : fetchFaviconFromAPI(engine[1].replace(/http(s|):\/\//g, "").split("/")[0]),
-		"<id>" : 	`search-engine-${arrayPosition.toString()}`,
-		"<arrayPosition>" : arrayPosition
-	}
+function genSearchElement(parent, arrayPosition) {
+	cln = engineSelectorScheme.cloneNode(true);
+	engine = searchEngines[arrayPosition];
+	currentElement = parent.appendChild(cln);
+
+	currentElement.id = `search-engine-${arrayPosition.toString()}`;
+	currentElement.lastChild.src = fetchFaviconFromAPI(engine[1].replace(/http(s|):\/\//g, "").split("/")[0]);
+	currentElement.attributes.nm.value = arrayPosition.toString();
 	
-	var engineSelector = engineSelectorScheme;
-	for(let k in currentData) {
-        engineSelector = engineSelector.replace(new RegExp(k, 'g'), currentData[k]);
-    }
-	
-	return engineSelector;
+	makeEngineListen(cln);
 }
 
 //Function: Makes a new Bookmark Element
@@ -467,9 +464,7 @@ function makeFolderListen(id) {
 	});
 }
 
-function makeEngineListen(id) {
-	elem = document.getElementById(id);
-	
+function makeEngineListen(elem) {
 	elem.addEventListener("mouseenter", function(e){ 
 		var origElem = e.srcElement || e.originalTarget; 
 		describeEngine(origElem);
@@ -486,6 +481,10 @@ function makeEngineListen(id) {
 		var origElem = e.srcElement || e.originalTarget;
 		elemContextMenu(e, origElem, false);
 	});
+	elem.lastChild.onerror = function(e) {
+		var origElem = e.srcElement || e.originalTarget;
+		origElem.src='imgs/404.svg';
+	};
 }
 
 
@@ -909,7 +908,7 @@ function showFolder(elem) {
 	hideFolderButton.children[0].children[0].style.textShadow = folder.current[1] + " 0px 2px 6px";
 	folderContainer.classList.remove("fHidden");
 	bookmarksContainer.classList.add("fHidden");
-	if(ctrlIsDown) ctrlBookMode(true);
+	if(altIsDown) altBookMode(true);
 }
 
 
@@ -1066,10 +1065,10 @@ function toggleDebug(bool) {
 }
 
 
-//Function: Toggles ctrlBookMode, which consents to open a bookmark/folder via CTRL + 0-9
-function ctrlBookMode(bool) {
+//Function: Toggles altBookMode, which consents to open a bookmark/folder via CTRL + 0-9
+function altBookMode(bool) {
 	if (bool) {
-		ctrlIsDown = true;
+		altIsDown = true;
 		curContainer = (folder.open) ? folderContentContainer : bookmarksContainer;
 		curArray = (folder.open) ? folder.current[3] : bookmarks;
 		
@@ -1079,30 +1078,30 @@ function ctrlBookMode(bool) {
 		var bookCircles = curContainer.getElementsByClassName("bookmark-circle");
 		for (var i = 0; i < curArray.length; i++) {
 			currentBook = bookCircles[i].getBoundingClientRect();
-			if (9 > i) genCtrlBadge(curContainer, i+1, currentBook.x + 27, currentBook.y - 7);
-			else genCtrlBadge(curContainer, "emoticon-sad-outline", currentBook.x + 27, currentBook.y - 7, true);
+			if (9 > i) genAltBadge(curContainer, i+1, currentBook.x + 27, currentBook.y - 7);
+			else genAltBadge(curContainer, "emoticon-sad-outline", currentBook.x + 27, currentBook.y - 7, true);
 		}
 		if (folder.open) {
 			hideFolderButton.classList.toggle("in-use", true);
 			goBackPos = hideFolderButton.getElementsByClassName("bookmark-circle")[0].getBoundingClientRect();
-			genCtrlBadge(curContainer, "keyboard-esc", goBackPos.x + 27, goBackPos.y - 7, true)
+			genAltBadge(curContainer, "keyboard-esc", goBackPos.x + 27, goBackPos.y - 7, true)
 		}
 	}
 	else {
-		ctrlIsDown = false;
+		altIsDown = false;
 		bookmarksContainer.classList.toggle("in-use", false);
 		folderContentContainer.classList.toggle("in-use", false);
 		hideFolderButton.classList.toggle("in-use", false);
 		hideTip();
 		
-		var aliveBadges = document.getElementsByClassName('ctrl-badge');
+		var aliveBadges = document.getElementsByClassName('alt-badge');
 		while(aliveBadges[0]) {
 			aliveBadges[0].parentNode.removeChild(aliveBadges[0]);
 		}
 	}
 }
-function genCtrlBadge(parent, value, x, y, mIcon) {
-	cln = ctrlBadgeScheme.cloneNode(true)
+function genAltBadge(parent, value, x, y, mIcon) {
+	cln = altBadgeScheme.cloneNode(true)
 	currentBadge = parent.appendChild(cln);
 
 	currentBadge.style.top = y;
