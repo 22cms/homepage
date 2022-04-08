@@ -803,7 +803,8 @@ function contextMakeDefault() {
 //Function: opens a new Tab from a bookmark
 
 function contextTab() {
-	goToURL(bookmarks[contextArrayPos][1], true);
+    workingArray = (contextElemType == 1) ? bookmarks : folder.current[3];
+	goToURL(workingArray[contextArrayPos][1], true);
 	contextClose();
 }
 
