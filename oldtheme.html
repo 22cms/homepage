@@ -15,7 +15,7 @@
 			
 			<div class="searchbox-container centerbox">
 				<p id="search-tip">Type here</p>
-				<input autocomplete="off" onclick="if(URLMode) goToURL(this.value)" oninput="hideTip()" id="search-box" type="text">
+				<input autocomplete="off" onclick="dealWithSearchBoxClick()" oninput="hideTip()" id="search-box" type="text">
 			</div>
 			<p id="searchbox-action">Search on Google</p>
 			<div id="bookmarks-container" class="bookmark-like-container centerbox">
@@ -49,7 +49,7 @@
 					<br style="font-size: 7px;">
 					<form class="no-margin mHidden">
 						<input onchange="savePreferences()" class="settings-checkbox" varid="switchEngineWithArrows" id="settings-switch-via-arrows" type="checkbox" value="true" checked>
-						<label class="radio-label translatable" stringid="switchEngineWithArrows" for="settings-switch-via-arrows">Switch Search Engines using ???? and ???? arrow keys</label><br>
+						<label class="radio-label translatable" stringid="switchEngineWithArrows" for="settings-switch-via-arrows">Switch Search Engines using 🠕 and 🠗 arrow keys</label><br>
 						<input onchange="savePreferences()" class="settings-checkbox" varid="enableAltShortcut" id="settings-enable-alt-shortcut" type="checkbox" value="true" checked>
 						<label class="radio-label translatable" stringid="enableAltShortcut" for="settings-enable-alt-shortcut">Open bookmarks and folder using ALT plus any keyboard number</label><br>
 						<div class="settings-alt-numpad">
@@ -72,8 +72,12 @@
 						<label class="radio-label translatable" stringid="showSettingsIcon" for="settings-show-icon">Show the Settings Icon on the top-right corner</label><br>
 						<input onchange="savePreferences()" class="settings-checkbox" varid="resizeSearchFont" id="settings-font-resize" type="checkbox" value="true" checked>
 						<label class="radio-label translatable" stringid="resizeSearchFont" for="settings-font-resize">Resize the font size while typing (if supported from the theme)</label><br>
+						<input onchange="savePreferences()" class="settings-checkbox" varid="launchURLwhenClicked" type="checkbox" id="settings-launch-url" value="true" checked>
+						<label class="radio-label translatable" stringid="launchURLwhenClicked" for="settings-launch-url">Go to the typed URL/Subreddit when left clicked</label><br>
 						<input onchange="savePreferences();renderElements()" class="settings-checkbox" varid="useFaviconIco" id="settings-use-favicon-ico" type="checkbox" value="true" checked>
 						<label class="radio-label translatable" stringid="useFaviconIco" for="settings-use-favicon-ico">Use favicon.ico instead of Favicon Kit</label><br>
+						<input onchange="savePreferences()" class="settings-checkbox" varid="useOldReddit" id="settings-use-old-reddit" type="checkbox" value="true" checked>
+						<label class="radio-label translatable" stringid="useOldReddit" for="settings-use-old-reddit">Go to old.reddit.com when typing a Subreddit</label><br>
 					</form>
 					<div class="row">
 						<input oninput="createCustomColorScheme(this.value, true)" class="fHidden" type="color" id="custom-color-picker" name="custom-color-picker"value="#BDE6FB"></input>
@@ -142,17 +146,9 @@
 			<div class="search-link centerbox" id="engine-selector-scheme" nm="((arrayPosition))"><img src="" class="search-engine"></div>
 			
 			<div id="bookmark-link-scheme" class="bookmark-link centerbox" nm="((arrayPosition))">
-				<div class="bookmark-circle centerbox"><img class="bookmark-icon"></div>
-				<p class="bookmark-title"></p>
+				<div class="bookmark-circle centerbox"><img src="" class="bookmark-icon"></div>
+				<p class="bookmark-title">((title))</p>
 			</div>
-			
-			<div id="folder-scheme" nm="((arrayPosition))" class="bookmark-link centerbox">
-				<div class="bookmark-circle centerbox">
-					<div class="centerbox" style="color: ((color)); text-shadow: 0px 2px 6px ((color));">
-						<span class="Micon folder-icon"></span> <!-- mdi-<icon> -->
-					</div>
-				</div>
-				<p class="bookmark-title"></p></div>
 		</div>
 	
 		<script src="js/translations.js"></script> 

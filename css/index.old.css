@@ -84,6 +84,8 @@ p, input, label, a, #notif-text {
 
 .searchbox-url {
 	text-decoration: underline;
+}
+.searchbox-clickable {
 	cursor: pointer;
 }
 .searchbox-eval {

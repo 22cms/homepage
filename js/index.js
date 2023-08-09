@@ -21,6 +21,8 @@ var localSettings = {
 	"switchEngineWithArrows" : true,
 	"useFaviconIco" : false,
 	"enableAltShortcut" : true,
+	"useOldReddit" : false,
+	"launchURLwhenClicked" : true,
 };
 
 if (localStorage.getItem("localSettings")) localSettings = JSON.parse(localStorage.getItem("localSettings"));
@@ -35,6 +37,7 @@ var currentEngine = searchEngines[0];
 var currentEngineNum = 0;
 var URLMode = false;
 var evalMode = false;
+var redditMode = false;
 var removeMode = 0; //removeMode is deprecated
 
 //Bookmarks. Alias links to some external website
@@ -167,7 +170,8 @@ function hideTip() {
 	
 	if (validURL(searchBox.value)) { toggleURLMode(true); searchAction.innerText = curLang.goToTheURL }
 	else if (validCommand(searchBox.value)) { toggleEvalMode(true); searchAction.innerText = curLang.evalJSCode }
-	else { toggleURLMode(false), toggleEvalMode(false); };
+	else if (validSubReddit(searchBox.value)) { toggleRedditMode(true); searchAction.innerText = curLang.goToSubReddit }
+	else { toggleURLMode(false); toggleEvalMode(false); toggleRedditMode(false);};
 }
 
 //Function: Sets every checkbox element to the right value, accordingly to the how localSettings has been set to
@@ -185,6 +189,15 @@ function toggleURLMode(toggle) {
 	URLMode = toggle;
 	
 	searchBox.classList.toggle("searchbox-url", toggle);
+	if (localSettings.launchURLwhenClicked) searchBox.classList.toggle("searchbox-clickable", toggle);
+}
+
+//Function: Enables/Disabls the Reddit Mode for the searchbox
+function toggleRedditMode(toggle) {
+	redditMode = toggle;
+
+	searchBox.classList.toggle("searchbox-url", toggle);
+	if (localSettings.launchURLwhenClicked) searchBox.classList.toggle("searchbox-clickable", toggle);
 }
 
 //Function: Enables/Disabls the Eval Mode for the searchbox
@@ -199,6 +212,13 @@ function goToURL(URL, newTab) {
 		if (!URL.includes("://")) URL = "https://" + URL;
 		if (!newTab) window.location.href = URL;
 		else window.open(URL, '_blank');
+}
+
+//Function: Goes to the specified subreddit, following the settings' Old Mode toggle
+function goToSubReddit(subreddit) {
+	subredditFormat = (subreddit.slice(0, 2) == "r/") ? subreddit.slice(2) : subreddit;
+	subDomain = localSettings.useOldReddit ? "old" : "www";
+	goToURL(`https://${subDomain}.reddit.com/r/${subredditFormat}`);
 }
 
 //Function: Goes to the URL of the clicked bookmark.
@@ -225,6 +245,7 @@ document.addEventListener("keydown", function(event) {
 		case 13:
 			if (searchBox.value != "") {
 				if (evalMode) searchAction.innerText = eval(searchBox.value.slice(2));
+				else if (redditMode) goToSubReddit(searchbox.value);
 				else if (!URLMode) searchViaBox();
 				else goToURL(searchBox.value);
 			}
@@ -280,6 +301,14 @@ document.addEventListener("keyup", function(event) {
 	};
 });
 
+//Function: Exports dealing with the SearchBox element here for simplicity now that it has become kinda complicated
+function dealWithSearchBoxClick() {
+	  if (localSettings.launchURLwhenClicked) {
+		  if(URLMode) goToURL(searchBox.value); 
+		  else if(redditMode) goToSubReddit(searchBox.value)
+	  }
+}
+
 //Function: Search using the current Search Engine 
 function searchViaBox() {
 	searchBoxText = searchBox.value;
@@ -329,7 +358,14 @@ function validURL(str) {
 function validCommand(str) {
 	strIn2 = str.slice(0, 2);
 	return (strIn2 == ".$")
-} 
+}
+
+//Function: Checks if the sentence starts with an "r/", in that case, it's a subreddit.
+function validSubReddit(str) {
+	strIn2 = str.slice(0, 2);
+	return (strIn2 == "r/")
+}
+
 
 //Function: Makes a new Search engine Element
 function genSearchElement(parent, arrayPosition) {

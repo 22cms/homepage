@@ -15,7 +15,7 @@
 			
 			<div class="searchbox-container centerbox">
 				<p id="search-tip">Type here</p>
-				<input autocomplete="off" onclick="if(URLMode) goToURL(this.value)" oninput="hideTip()" id="search-box" type="text">
+				<input autocomplete="off" onclick="dealWithSearchBoxClick()" oninput="hideTip()" id="search-box" type="text">
 			</div>
 			<p id="searchbox-action">Search on Google</p>
 			<div id="bookmarks-container" class="bookmark-like-container centerbox">
@@ -72,8 +72,12 @@
 						<label class="radio-label translatable" stringid="showSettingsIcon" for="settings-show-icon">Show the Settings Icon on the top-right corner</label><br>
 						<input onchange="savePreferences()" class="settings-checkbox" varid="resizeSearchFont" id="settings-font-resize" type="checkbox" value="true" checked>
 						<label class="radio-label translatable" stringid="resizeSearchFont" for="settings-font-resize">Resize the font size while typing (if supported from the theme)</label><br>
+						<input onchange="savePreferences()" class="settings-checkbox" varid="launchURLwhenClicked" type="checkbox" id="settings-launch-url" value="true" checked>
+						<label class="radio-label translatable" stringid="launchURLwhenClicked" for="settings-launch-url">Go to the typed URL/Subreddit when left clicked</label><br>
 						<input onchange="savePreferences();renderElements()" class="settings-checkbox" varid="useFaviconIco" id="settings-use-favicon-ico" type="checkbox" value="true" checked>
 						<label class="radio-label translatable" stringid="useFaviconIco" for="settings-use-favicon-ico">Use favicon.ico instead of Favicon Kit</label><br>
+						<input onchange="savePreferences()" class="settings-checkbox" varid="useOldReddit" id="settings-use-old-reddit" type="checkbox" value="true" checked>
+						<label class="radio-label translatable" stringid="useOldReddit" for="settings-use-old-reddit">Go to old.reddit.com when typing a Subreddit</label><br>
 					</form>
 					<div class="row">
 						<input oninput="createCustomColorScheme(this.value, true)" class="fHidden" type="color" id="custom-color-picker" name="custom-color-picker"value="#BDE6FB"></input>
