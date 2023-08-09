@@ -245,7 +245,7 @@ document.addEventListener("keydown", function(event) {
 		case 13:
 			if (searchBox.value != "") {
 				if (evalMode) searchAction.innerText = eval(searchBox.value.slice(2));
-				else if (redditMode) goToSubReddit(searchbox.value);
+				else if (redditMode) goToSubReddit(searchBox.value);
 				else if (!URLMode) searchViaBox();
 				else goToURL(searchBox.value);
 			}
