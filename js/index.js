@@ -839,7 +839,7 @@ function contextRemoveElem() {
 //Function: moves a generic element to the left or to the right
 
 function contextMove(direction) {
-	workingArray = (!contextElemType) ? searchEngines : (contextElemType != 2 || contextElemType == 3) ? bookmarks : folder.current[3];
+	workingArray = (!contextElemType) ? searchEngines : (contextElemType != 2 || contextElemType == 3) ? bookmarks : folder.current.content;
 	
 	element = workingArray[contextArrayPos];
 	calcDirection = (direction) ? 1 : -1; 
