@@ -1,0 +1,73 @@
+<html>
+    <head>
+        <title>Francesco's Home Page - Conversion</title>
+		<link id="css-id" rel="stylesheet" href="css/index.css">
+        <link rel="icon" href="imgs/404.svg"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+		<meta content="utf-8" http-equiv="encoding">
+    </head>
+    <body>
+        <div id="body-centerbox">
+            <p id="searchbox-action">Upgrading Search Engines and Bookmark Storage to the New format...</p>
+        </div>
+
+        <script>
+            unparsedSettings = localStorage.getItem("localSettings");
+            localSettings = JSON.parse(unparsedSettings);
+            
+            if (!unparsedSettings) document.querySelector('#searchbox-action').innerText = 'You were automatically redirected to this upgrade page, but your Local Storage seems to be empty.\n\
+            This might be happening because you were running this instance locally.\n\
+            I\'m too lazy to implement a solution to this scenario right now, and I probably never will implement one,\n\
+            so your only option is to delete your browser storage for the local files index.html and oldtheme.html.\n\
+            I\'m sorry\n\
+            lmao'
+            else 
+
+            
+            function upgradeStorage() {
+                for (i = 0; i < localSettings.searchEngines.length; i++) {
+		            oldEngine = localSettings.searchEngines[i];
+                    localSettings.searchEngines[i] = {
+                        'name': oldEngine[0],
+                        'url': oldEngine[1]
+                    }
+            	}
+                for (i = 0; i < localSettings.bookmarks.length; i++) {
+		            oldBookmark = localSettings.bookmarks[i];
+                    if (localSettings.bookmarks[i].length == 4) {
+                        oldContent = oldBookmark[3];
+                        console.log(oldContent);
+                        newContent = [];
+                        for (j = 0; j < oldContent.length; j++) {
+                            newContent[j] =  {
+                                'name': oldContent[j][0],
+                                'type': 'url',
+                                'url': oldContent[j][1]
+                            }
+                        }
+                        localSettings.bookmarks[i] = {
+                            'name': oldBookmark[0],
+                            'type': 'folder',
+                            'color': oldBookmark[1],
+                            'icon': oldBookmark[2],
+                            'content': newContent
+                        }
+                    }
+                    else {
+                        localSettings.bookmarks[i] = {
+                            'name': localSettings.bookmarks[i][0],
+                            'type': 'url',
+                            'url': localSettings.bookmarks[i][1]
+                        }
+                    }
+        	    }
+
+                localStorage.setItem("localSettings", JSON.stringify(localSettings));
+                window.location.href = './index.html';
+            }   
+
+        upgradeStorage()
+        </script>
+    </body>
+</html>
