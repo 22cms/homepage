@@ -98,6 +98,7 @@ p, input, label, a, #notif-text {
 #searchbox-action {
 	color: var(--customize-searchaction);
 	margin-top: 20px;
+	text-align: center;
 }
 
 

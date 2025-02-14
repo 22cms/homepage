@@ -2,18 +2,52 @@
 
 var localSettings = {
 	"searchEngines" : [
-		["Google", "https://www.google.com/search?q=<query>"],
-		["Wikipedia", "https://en.wikipedia.org/w/index.php?search=<query>"],
-		["Deezer", "https://www.deezer.com/search/<query>"],
+		{
+			'name': 'Google',
+			'url': 'https://www.google.com/search?q=<query>',
+			'customIcon': false
+		},
+		{
+			'name': 'Wikipedia',
+			'url': 'https://en.wikipedia.org/w/index.php?search=<query>',
+			'customIcon': false
+		},
+		{
+			'name': 'Deezer',
+			'url': 'https://www.deezer.com/search/<query>',
+			'customIcon': false
+		}
 	],
 	"bookmarks" : [
-		["YouTube", "https://www.youtube.com"],
-		["Deezer", "https://www.deezer.com"],
-		/*["Example Folder", "#DE0085", "folder-outline", [
-				["Google", "https://www.google.com"],
-				["Wikipedia", "https://en.wikipedia.org"],
-			] 
-		],Example Folder scheme, the code distinguish them via length (a bookmark's length is 2, while folders' is 5)*/
+		{
+			'name': 'YouTube',
+			'type': 'url',
+			'url': 'www.youtube.com',
+		},
+		{
+			'name': 'Deezer',
+			'type': 'url',
+			'url': 'www.deezer.com',
+		},
+		
+		{
+			'name': 'Example Folder',
+			'type': 'folder',
+			'color': '#DE0085',
+			'icon': 'folder-outline',
+			'content': [
+				{
+					'name': 'Google',
+					'type': 'url',
+					'url': 'www.google.com',
+				},
+				{
+					'name': 'Wikipedia',
+					'type': 'url',
+					'url': 'www.wikipedia.org',
+				}
+			],
+		}
 	],
 	"showSettingsIcon" : true,
 	"enableAnimations" : true,
@@ -26,6 +60,10 @@ var localSettings = {
 };
 
 if (localStorage.getItem("localSettings")) localSettings = JSON.parse(localStorage.getItem("localSettings"));
+
+//Checks if localSettings still uses the old format, and redirects user to an upgrade page if it does
+
+if (Array.isArray(localSettings.searchEngines[0])) window.location.href = './upgrade.html';
 
 //Search Engines. The First in the List is the default one
 
@@ -119,23 +157,23 @@ function renderElements() {
 		genSearchElement(searchEnginesContainer, i);
 	}
 	for (i = 0; i < bookmarks.length; i++) {
-		if (bookmarks[i].length == 4)
+		if (bookmarks[i].type == 'folder')
 			bookmarksContainer.innerHTML += genFolderElement(i);
-		else bookmarksContainer.innerHTML += genBookmarkElement(i);
+		else if (bookmarks[i].type == 'url') bookmarksContainer.innerHTML += genBookmarkElement(i);
 	}
 	//Adds Event Listeners
 	for (i = 0; i < bookmarks.length; i++) {
-		if (bookmarks[i].length == 4) {
+		if (bookmarks[i].type == 'folder') {
 			id = "folder-" + i.toString();
 			makeFolderListen(id);
 		}
-		else {
+		else if (bookmarks[i].type == 'url') {
 			id = "bookmark-" + i.toString();
 			makeBookmarkListen(id);
 		}
 	}
 	
-	document.getElementsByClassName("search-link")[0].classList.add("in-use")
+	document.getElementsByClassName("search-link")[0].classList.add("in-use");
 	currentEngine = searchEngines[0];
 	hideTip();
 	//Generates the Language Selector Entries
@@ -156,7 +194,11 @@ function renderElements() {
 	loadCheckboxes();
 }
 
-renderElements();
+try {renderElements()}
+catch (error) {
+	notify("<span style='color: red;'>" 
+		+ "There was a fatal error trying to render the main UI. Check your browser's console for more info" + "</span>");
+} 
 
 //Function: When the searchbox changes, if something is written in it, change the text behind it to "",else put it back to the original value.
 // + asks to enable the URL Mode if the input is an URL
@@ -166,7 +208,7 @@ function hideTip() {
 	regulateSearchFontSize(searchBox.value);
 	
 	searchTip.innerText = (!searchBox.value) ? curLang.typeHere : "";
-	searchAction.innerText = curLang.searchOn.replace("<engine>", currentEngine[0]);
+	searchAction.innerText = curLang.searchOn.replace("<engine>", currentEngine.name);
 	
 	if (validURL(searchBox.value)) { toggleURLMode(true); searchAction.innerText = curLang.goToTheURL }
 	else if (validCommand(searchBox.value)) { toggleEvalMode(true); searchAction.innerText = curLang.evalJSCode }
@@ -226,8 +268,8 @@ function goToBookmarkURL(element, newTab, isChild) {
 	arrayPosition = parseInt(element.attributes.nm.value, 10);
 	
 	if (!removeMode) {
-		curBookmarkSource = (isChild) ? folder.current[3] : bookmarks;
-		URL = curBookmarkSource[arrayPosition][1];
+		curBookmarkSource = (isChild) ? folder.current.content : bookmarks;
+		URL = curBookmarkSource[arrayPosition].url;
 		goToURL(URL, newTab);
 	}
 	else {
@@ -313,7 +355,7 @@ function dealWithSearchBoxClick() {
 function searchViaBox() {
 	searchBoxText = searchBox.value;
 	if (searchBoxText.charAt(0) == ".") searchBoxText = searchBoxText.substring(1)
-	searchURL = currentEngine[1].replace("<query>", encodeURIComponent(searchBoxText))
+	searchURL = currentEngine.url.replace("<query>", encodeURIComponent(searchBoxText))
 	
 	goToURL(searchURL);
 }
@@ -374,7 +416,7 @@ function genSearchElement(parent, arrayPosition) {
 	currentElement = parent.appendChild(cln);
 
 	currentElement.id = `search-engine-${arrayPosition.toString()}`;
-	currentElement.lastChild.src = fetchFaviconFromAPI(engine[1].replace(/http(s|):\/\//g, "").split("/")[0]);
+	currentElement.lastChild.src = fetchFaviconFromAPI(engine.url.replace(/http(s|):\/\//g, "").split("/")[0]);
 	currentElement.attributes.nm.value = arrayPosition.toString();
 	
 	makeEngineListen(cln);
@@ -382,10 +424,10 @@ function genSearchElement(parent, arrayPosition) {
 
 //Function: Makes a new Bookmark Element
 function genBookmarkElement(arrayPosition, isChild) {
-	var bookmark = (isChild) ? folder.current[3][arrayPosition] : bookmarks[arrayPosition];
+	var bookmark = (isChild) ? folder.current.content[arrayPosition] : bookmarks[arrayPosition];
 	var currentData = {
-		"<URL>" : fetchFaviconFromAPI(bookmark[1].replace(/http(s|):\/\//g, "").split("/")[0]),
-		"<title>" : bookmark[0],
+		"<URL>" : fetchFaviconFromAPI(bookmark.url.replace(/http(s|):\/\//g, "").split("/")[0]),
+		"<title>" : bookmark.name,
 		"<id>" : 	(isChild) ? `child-bookmark-${arrayPosition.toString()}` : `bookmark-${arrayPosition.toString()}`,
 		"<arrayPosition>" : arrayPosition
 	}
@@ -404,9 +446,9 @@ function genFolderElement(arrayPosition, directElem, directId) {
 	var currentData = {
 		"<id>" : (directId) ? directId : `folder-${arrayPosition.toString()}`,
 		"<arrayPosition>" : arrayPosition,
-		"<title>" : current[0],
-		"<color>" : current[1],
-		"<icon>" : current[2]
+		"<title>" : current.name,
+		"<color>" : current.color,
+		"<icon>" : current.icon
 	}
 	
 	var folderSelector = folderScheme;
@@ -597,18 +639,18 @@ function savePreferences() {
 //Function: Shows the Bookmark/Search Engine/Folder infos when it is hovered
 function describeURL(elem, isChild) {
 	var arrayPosition = parseInt(elem.attributes.nm.value, 10);
-	var curBookmarkSource = (isChild) ? folder.current[3] : bookmarks;
+	var curBookmarkSource = (isChild) ? folder.current.content : bookmarks;
 	var elem = curBookmarkSource[arrayPosition];
 	
 	searchBox.classList.add("fHidden");
-	searchAction.innerText = curLang.goTo.replace("<name>", elem[0]);
-	searchTip.innerText = elem[1].replace(/http(s|):\/\//g, "");
+	searchAction.innerText = curLang.goTo.replace("<name>", elem.name);
+	searchTip.innerText = elem.url.replace(/http(s|):\/\//g, "");
 	regulateSearchFontSize(searchTip.innerText);
 }
 
 function describeEngine(elem) {
 	var arrayPosition = parseInt(elem.attributes.nm.value, 10);
-	var name = searchEngines[arrayPosition][0];
+	var name = searchEngines[arrayPosition].name;
 	
 	searchAction.innerText = curLang.searchOn.replace("<engine>", name);
 }
@@ -618,8 +660,8 @@ function describeFolder(elem) {
 	var elem = bookmarks[arrayPosition];
 	
 	searchBox.classList.add("fHidden");
-	searchAction.innerText = curLang.openFolder.replace("<title>", elem[0]);
-	searchTip.innerText = (elem[3].length) ? folderDescription(elem[3]) : curLang.emptyFolder;
+	searchAction.innerText = curLang.openFolder.replace("<title>", elem.name);
+	searchTip.innerText = (elem.content.length) ? folderDescription(elem.content) : curLang.emptyFolder;
 	regulateSearchFontSize(searchTip.innerText);
 }
 
@@ -627,7 +669,7 @@ function describeFolder(elem) {
 function folderDescription(array) {
 	var result = "";
 	for (var i = 0; i < array.length; i++) {
-		result += array[i][0];
+		result += array[i].name;
 		if (i >= 2) {
 			result += "...";
 			break;
@@ -802,10 +844,14 @@ function contextMove(direction) {
 	element = workingArray[contextArrayPos];
 	calcDirection = (direction) ? 1 : -1; 
 	workingArray.splice(contextArrayPos, 1);
-	workingArray.splice(contextArrayPos+calcDirection, 0, element);
-	
+
+	if (contextArrayPos+calcDirection != -1 && contextArrayPos+calcDirection != workingArray.length+1) 
+		workingArray.splice(contextArrayPos+calcDirection, 0, element)
+	else if (contextArrayPos+calcDirection == -1) workingArray.splice(workingArray.length, 0, element)
+	else workingArray.unshift(element);
+
 	if (!contextElemType) searchEngines = workingArray;
-	else if (contextElemType == 2) folder.current[3] = workingArray;
+	else if (contextElemType == 2) folder.current.content = workingArray;
 	else bookmarks = workingArray;
 	
 	if (contextElemType == 2) renderFolderElems();
@@ -840,7 +886,7 @@ function contextMakeDefault() {
 
 function contextTab() {
     workingArray = (contextElemType == 1) ? bookmarks : folder.current[3];
-	goToURL(workingArray[contextArrayPos][1], true);
+	goToURL(workingArray[contextArrayPos].url, true);
 	contextClose();
 }
 
@@ -957,7 +1003,7 @@ function hideFolder() {
 
 //Funtion: render all Bookmarks of the current folder
 function renderFolderElems() {
-	childBookmarks = folder.current[3];
+	childBookmarks = folder.current.content;
 	folderContentContainer.innerHTML = "";
 	
 	var i;
@@ -995,7 +1041,7 @@ function newFolderDiag(arrayPos) { debugLog(`newFolderDiag; arrayPos is ${arrayP
 //Function: Renders the Folder Preview
 function renderNewFolderPreview(nonRandom) {
 	curRandomColor = randomColor(nonRandom);
-	var currentElement = [newFolderNameType.value, curRandomColor, newFolderIconType.value, null];
+	var currentElement = {'name': newFolderNameType.value, 'color': curRandomColor, 'icon': newFolderIconType.value, 'content': null};
 	
 	newFolderContainer.innerHTML = genFolderElement(-1, currentElement);
 	document.querySelector("#folder--1").addEventListener("click", function(e){
@@ -1013,21 +1059,21 @@ function renderExistingFolders() {
 	var thereAreFolders;
 	//Checks if there are any folders
 	for (i = 0; i < bookmarks.length; i++) {
-		if (bookmarks[i].length == 4) thereAreFolders = true; 
+		if (bookmarks[i].type == 'folder') thereAreFolders = true; 
 	}
 	//If there are folders, empty the existing folders container
 	if (thereAreFolders) {
 		existingFoldersContainer.innerHTML = "";
 		//Generate all elements, with a negative ID
 		for (i = 0; i < bookmarks.length; i++) {
-			if (bookmarks[i].length == 4) { debugLog(`renderExistingFolders, loop 2; i is ${i}`)
-				currentElement = [bookmarks[i][0], bookmarks[i][1], bookmarks[i][2], null];
+			if (bookmarks[i].type == 'folder') { debugLog(`renderExistingFolders, loop 2; i is ${i}`)
+				currentElement = bookmarks[i];
 				existingFoldersContainer.innerHTML += genFolderElement(i, currentElement, `existing-folder-${i.toString()}`);
 			}
 		}
 		//Now add them a custom Listener, which moves the element in the folder
 		for (i = 0; i < bookmarks.length; i++) { 
-			if (bookmarks[i].length == 4) { 
+			if (bookmarks[i].type == 'folder') { 
 				id = "existing-folder-" + i.toString(); debugLog(`renderExistingFolders, loop 3; id is ${id}`)
 				makeExistingFolderListen(id);
 			}
@@ -1068,7 +1114,7 @@ function randomColor(nonRandom) {
 function moveIntoFolderFun(elem) { 
 	var arrayPos = parseInt(elem.attributes.nm.value, 10); debugLog(`moveIntoFolderFun; arrayPos is ${arrayPos}`)
 	var current = bookmarks[curBookmarkToFolder]; debugLog(`moveIntoFolderFun; bookmarks is ${JSON.stringify(bookmarks)}`)
-	bookmarks[arrayPos][3].push(current);
+	bookmarks[arrayPos].content.push(current);
 	bookmarks.splice(curBookmarkToFolder, 1);
 	savePreferences();
 	renderElements();
@@ -1076,7 +1122,7 @@ function moveIntoFolderFun(elem) {
 
 //Function converts a bookmark into a folder, from the dialog too
 function makeIntoFolder(arrayPos, name, icon) {
-	folder = [name, curRandomColor, icon, [bookmarks[arrayPos]] ];
+	folder = {'name': name, 'type': 'folder', 'color': curRandomColor, 'icon': icon, 'content': [bookmarks[arrayPos]]};
 	bookmarks[arrayPos] = folder;
 	savePreferences();
 	notify(curLang.toFolder);
@@ -1107,7 +1153,7 @@ function altBookMode(bool) {
 	if (bool) {
 		altIsDown = true;
 		curContainer = (folder.open) ? folderContentContainer : bookmarksContainer;
-		curArray = (folder.open) ? folder.current[3] : bookmarks;
+		curArray = (folder.open) ? folder.current.content : bookmarks;
 		
 		curContainer.classList.toggle("in-use", true);
 		searchAction.innerText = curLang.openShortcut;
