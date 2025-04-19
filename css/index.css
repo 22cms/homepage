@@ -454,13 +454,12 @@ p, input, label, a, #notif-text {
 
 .context-close {
 	display: none;
-	width: 60px;
-	height: 30px;
+	width: 46px;
+	margin: 4px 4px 4px calc(100% - 50px);
+	font-size: 20px;
 	text-align: center;
-	padding: 6px 0px 0px 0px;
-	margin: 0px 0px 0px calc(100% - 60px);
-	font-size: 22px;
-	transition: background 0.1s;
+	border-radius: 4px;
+	transition: initial
 }
 .context-entry {
 	display: flex;
@@ -469,14 +468,14 @@ p, input, label, a, #notif-text {
 	margin: 4px 5px;
 	padding: 0px 8px;
 	font-size: 14px;
-	transition: background 0.1s;
 	border-radius: 4px;
+	transition: initial
 }
 .context-entry .mIcon {
 	font-size: 20px;
 	margin-right: 4px
 }
-.context-entry:hover {
+.context-entry:hover, .context-close:hover {
 	background-color: var(--customize-context);
 }
 
