@@ -11,6 +11,7 @@
 	--customize-searchaction:#BDE6FB50; /*Even more dimmed Primary color*/
 	--customize-circles:#3D4C52; /*Dimmed primary color, but instead of opacity, the actual RGB Values are changed*/
 	--customize-hoverbookmark:#65656550; /*The Color used to highlight the bookmarks when they're hovered*/
+	--customize-context:#7A95A3; /*The Color used to highlight context menu entries*/
 }
 
 html {
@@ -448,9 +449,11 @@ p, input, label, a, #notif-text {
 	padding: 0;
 	overflow: hidden;
 	box-sizing: border-box;
+	border-radius: 10px
 }
 
 .context-close {
+	display: none;
 	width: 60px;
 	height: 30px;
 	text-align: center;
@@ -463,13 +466,18 @@ p, input, label, a, #notif-text {
 	display: flex;
 	height: 28px;
 	align-items: center;
-	margin: 0;
-	padding: 12px 8px 12px 8px;
-	font-size: 15px;
+	margin: 4px 5px;
+	padding: 0px 8px;
+	font-size: 14px;
 	transition: background 0.1s;
+	border-radius: 4px;
 }
 .context-entry .mIcon {
-	font-size: 22px;
+	font-size: 20px;
+	margin-right: 4px
+}
+.context-entry:hover {
+	background-color: var(--customize-context);
 }
 
 
@@ -537,6 +545,7 @@ p, input, label, a, #notif-text {
 	}
 	.context-menu {
 		width: auto;
+		border-radius: 10px;
 	}
 	
 	#mobile-warning {
@@ -560,11 +569,14 @@ p, input, label, a, #notif-text {
 	}
 	
 	.context-entry {
-		padding: 16px 10px 16px 10px;
-		font-size: 16px;
+		height: 35px;
+		margin: 4px 5px;
+		padding: 0px 10px;
+		font-size: 14px;
+		border-radius: 6px
 	}
 	.context-entry .mIcon {
-		font-size: 26px;
+		font-size: 22px;
 	}
 	
 	.mHidden {

@@ -63,7 +63,7 @@ if (localStorage.getItem("localSettings")) localSettings = JSON.parse(localStora
 
 //Checks if localSettings still uses the old format, and redirects user to an upgrade page if it does
 
-if (Array.isArray(localSettings.searchEngines[0])) window.location.href = './upgrade.html';
+//if (Array.isArray(localSettings.searchEngines[0])) window.location.href = './upgrade.html';
 
 //Search Engines. The First in the List is the default one
 
@@ -198,6 +198,7 @@ try {renderElements()}
 catch (error) {
 	notify("<span style='color: red;'>" 
 		+ "There was a fatal error trying to render the main UI. Check your browser's console for more info" + "</span>");
+	console.log(error);
 } 
 
 //Function: When the searchbox changes, if something is written in it, change the text behind it to "",else put it back to the original value.
@@ -577,7 +578,7 @@ function fetchFaviconFromAPI(URL) {
 //Functions: Adds a new Search engine or a new Bookmark to the Array and saves the list in the localStorage element
 function addNewEngine(name, url) {
 	if (url.includes("<query>")) {
-		searchEngines.push([name, url])
+		searchEngines.push( {'name': name, 'url': url, 'customIcon': false} )
 	
 		savePreferences();
 		renderElements();
@@ -591,7 +592,7 @@ function addNewEngine(name, url) {
 }
 
 function addNewBookmark(name, url) {
-	bookmarks.push([name, url])
+	bookmarks.push({ 'name': name, 'type': "url", 'url': url })
 	
 	savePreferences();
 	renderElements();
@@ -932,12 +933,17 @@ function createCustomColorScheme(hexColor, save) {
 		colorAction = rgbToHex(colorInRGB.r + 30, colorInRGB.g + 30, colorInRGB.b + 30);
 		colorPrimary = rgbToHex(correctRGB(colorInRGB.r), correctRGB(colorInRGB.g), correctRGB(colorInRGB.b));
 	}
+	if ((colorInRGB.r + colorInRGB.g + colorInRGB.b) > 380) {
+		colorContext = rgbToHex(Math.floor(colorInRGB.r*0.65), Math.floor(colorInRGB.g*0.65), Math.floor(colorInRGB.b*0.65))
+	}
+	else colorContext = colorPrimary;
 	
 	rootCSS.style.setProperty ("--customize-primary", colorPrimary);
 	rootCSS.style.setProperty ("--customize-background", colorBackground);
 	rootCSS.style.setProperty ("--customize-circles", colorCircles);
 	rootCSS.style.setProperty ("--customize-searchtip", colorTip);
 	rootCSS.style.setProperty ("--customize-searchaction", colorAction);
+	rootCSS.style.setProperty ("--customize-context", colorContext);
 	
 	if (save) {
 		localSettings.customColorTheme = hexColor;
@@ -946,7 +952,8 @@ function createCustomColorScheme(hexColor, save) {
 }
 
 function correctRGB(colorValue) {
-	if (colorValue < 128) colorValue = colorValue + 80;
+	console.log(colorValue)
+	if (colorValue < 128) colorValue = 80
 	return colorValue
 }
 
