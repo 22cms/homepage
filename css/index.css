@@ -475,8 +475,11 @@ button {
 .ripple:active {
 	transition: initial;
 	background-color: #FFFFFF18;
-	border: 1px solid #FFFFFF18;
 	opacity: 70%
+}
+
+.ripple.settings-button:active {
+	border: 1px solid #FFFFFF18;
 }
 
 .ripple.highlight:hover,  .settings-cancel.confirm-button:hover {
