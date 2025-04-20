@@ -82,14 +82,15 @@
 					<div class="row">
 						<input oninput="createCustomColorScheme(this.value, true)" class="fHidden" type="color" id="custom-color-picker" name="custom-color-picker"value="#BDE6FB"></input>
 						<label class="settings-button ripple confirm-button" style="width:auto;flex-grow:4" onclick="settings()" for="custom-color-picker"></span><span class="translatable" stringid="applyColorTheme">APPLY A CUSTOM COLOR THEME (TELEGRAM-LIKE)</span></label>
-						<button onclick="createCustomColorScheme(randomColor(), true)" class="settings-button ripple Micon mdi-shuffle-variant"></button>
+						<button onclick="createCustomColorScheme(randomColor(false, 120), true)" class="settings-button ripple Micon mdi-shuffle-variant"></button>
 						<button onclick="disableCustomColorScheme()" class="settings-button ripple Micon mdi-rotate-right"></button>
 					</div>
 					
 					<p class="settings category-title translatable" stringid="resetAndImport">Reset and Import</p>
 					<div class="centerbox row">
-						<button type="button" class="settings-button confirm-button ripple translatable" stringid="settingsExport" onclick="exportJSON();settings()">EXPORT SETTINGS</button>
+						
 						<button type="button" class="settings-button red ripple translatable" stringid="settingsReset" onclick="localStorage.clear();location.reload()">RESET ALL SETTINGS</button>
+						<button type="button" class="settings-button confirm-button ripple translatable" stringid="settingsExport" onclick="exportJSON();settings()">EXPORT SETTINGS</button>
 					</div>
 					<p id="mobile-warning"><b class="translatable" stringid="mobileDisclaimerNote">Note</b>: <span class="translatable" stringid="mobileDisclaimerText">This website is not meant to be used on mobile devices. Most of the features will work just fine, but it won't resemble the best user experience scenario.</span></p>
 				</div>
