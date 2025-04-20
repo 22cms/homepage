@@ -1,7 +1,7 @@
 //Loads the settings object from localStorage
 
 var localSettings = {
-	"searchEngines" : [
+	"searchEngines": [
 		{
 			'name': 'Google',
 			'url': 'https://www.google.com/search?q=<query>',
@@ -18,7 +18,7 @@ var localSettings = {
 			'customIcon': false
 		}
 	],
-	"bookmarks" : [
+	"bookmarks": [
 		{
 			'name': 'YouTube',
 			'type': 'url',
@@ -29,7 +29,7 @@ var localSettings = {
 			'type': 'url',
 			'url': 'www.deezer.com',
 		},
-		
+
 		{
 			'name': 'Example Folder',
 			'type': 'folder',
@@ -49,14 +49,14 @@ var localSettings = {
 			],
 		}
 	],
-	"showSettingsIcon" : true,
-	"enableAnimations" : true,
-	"resizeSearchFont" : true,
-	"switchEngineWithArrows" : true,
-	"useFaviconIco" : false,
-	"enableAltShortcut" : true,
-	"useOldReddit" : false,
-	"launchURLwhenClicked" : true,
+	"showSettingsIcon": true,
+	"enableAnimations": true,
+	"resizeSearchFont": true,
+	"switchEngineWithArrows": true,
+	"useFaviconIco": false,
+	"enableAltShortcut": true,
+	"useOldReddit": false,
+	"launchURLwhenClicked": true,
 };
 
 if (localStorage.getItem("localSettings")) localSettings = JSON.parse(localStorage.getItem("localSettings"));
@@ -126,7 +126,7 @@ const hideFolderButton = document.querySelector("#hide-folder-button");
 const newFolderOverlay = document.querySelector("#newfolder-overlay");
 const newFolderContainer = document.querySelector("#newfolder-container");
 const newFolderNameType = document.querySelector("#folder-nametype");
-const newFolderIconType =  document.querySelector("#folder-icontype");
+const newFolderIconType = document.querySelector("#folder-icontype");
 const existingFoldersContainer = document.querySelector("#existingfolders-container");
 var curBookmarkToFolder;
 var curRandomColor;
@@ -172,7 +172,7 @@ function renderElements() {
 			makeBookmarkListen(id);
 		}
 	}
-	
+
 	document.getElementsByClassName("search-link")[0].classList.add("in-use");
 	currentEngine = searchEngines[0];
 	hideTip();
@@ -183,9 +183,9 @@ function renderElements() {
 	settingsLanguageSelect.value = curLangCode;
 	//Calculates the Screen size for font regulation
 	maxCharacters = Math.floor(body.clientWidth / 64)
-	maxCharacters += Math.floor(maxCharacters/8);
+	maxCharacters += Math.floor(maxCharacters / 8);
 	//Hides the settings button if it's set to
-	
+
 	settingsIcon.classList.toggle("fHidden", !localSettings.showSettingsIcon);
 	//Applies the custom color scheme if it's set to
 	if (localSettings.customColorTheme) createCustomColorScheme(localSettings.customColorTheme);
@@ -194,12 +194,12 @@ function renderElements() {
 	loadCheckboxes();
 }
 
-try {renderElements()}
+try { renderElements() }
 catch (error) {
-	notify("<span style='color: red;'>" 
+	notify("<span style='color: red;'>"
 		+ "There was a fatal error trying to render the main UI. Check your browser's console for more info" + "</span>");
 	console.log(error);
-} 
+}
 
 //Function: When the searchbox changes, if something is written in it, change the text behind it to "",else put it back to the original value.
 // + asks to enable the URL Mode if the input is an URL
@@ -207,14 +207,14 @@ function hideTip() {
 	searchBox.classList.remove("fHidden");
 	searchBox.focus();
 	regulateSearchFontSize(searchBox.value);
-	
+
 	searchTip.innerText = (!searchBox.value) ? curLang.typeHere : "";
 	searchAction.innerText = curLang.searchOn.replace("<engine>", currentEngine.name);
-	
+
 	if (validURL(searchBox.value)) { toggleURLMode(true); searchAction.innerText = curLang.goToTheURL }
 	else if (validCommand(searchBox.value)) { toggleEvalMode(true); searchAction.innerText = curLang.evalJSCode }
 	else if (validSubReddit(searchBox.value)) { toggleRedditMode(true); searchAction.innerText = curLang.goToSubReddit }
-	else { toggleURLMode(false); toggleEvalMode(false); toggleRedditMode(false);};
+	else { toggleURLMode(false); toggleEvalMode(false); toggleRedditMode(false); };
 }
 
 //Function: Sets every checkbox element to the right value, accordingly to the how localSettings has been set to
@@ -230,7 +230,7 @@ function loadCheckboxes() {
 //Function: Enables/Disabls the URL Mode for the searchbox
 function toggleURLMode(toggle) {
 	URLMode = toggle;
-	
+
 	searchBox.classList.toggle("searchbox-url", toggle);
 	if (localSettings.launchURLwhenClicked) searchBox.classList.toggle("searchbox-clickable", toggle);
 }
@@ -246,15 +246,15 @@ function toggleRedditMode(toggle) {
 //Function: Enables/Disabls the Eval Mode for the searchbox
 function toggleEvalMode(toggle) {
 	evalMode = toggle;
-	
+
 	searchBox.classList.toggle("searchbox-eval", toggle);
 }
 
 //Function: Goes to the URL specified, adding "https://" if needed
-function goToURL(URL, newTab) { 
-		if (!URL.includes("://")) URL = "https://" + URL;
-		if (!newTab) window.location.href = URL;
-		else window.open(URL, '_blank');
+function goToURL(URL, newTab) {
+	if (!URL.includes("://")) URL = "https://" + URL;
+	if (!newTab) window.location.href = URL;
+	else window.open(URL, '_blank');
 }
 
 //Function: Goes to the specified subreddit, following the settings' Old Mode toggle
@@ -267,7 +267,7 @@ function goToSubReddit(subreddit) {
 //Function: Goes to the URL of the clicked bookmark.
 function goToBookmarkURL(element, newTab, isChild) {
 	arrayPosition = parseInt(element.attributes.nm.value, 10);
-	
+
 	if (!removeMode) {
 		curBookmarkSource = (isChild) ? folder.current.content : bookmarks;
 		URL = curBookmarkSource[arrayPosition].url;
@@ -283,8 +283,8 @@ function goToBookmarkURL(element, newTab, isChild) {
 //If the up or down arrow keys have been pressed, switch the search engine to the next/previous one;
 //If the CTRL button is un/pressed, toggle altBookMode
 
-document.addEventListener("keydown", function(event) {
-    switch (event.keyCode) {
+document.addEventListener("keydown", function (event) {
+	switch (event.keyCode) {
 		case 13:
 			if (searchBox.value != "") {
 				if (evalMode) searchAction.innerText = eval(searchBox.value.slice(2));
@@ -292,31 +292,31 @@ document.addEventListener("keydown", function(event) {
 				else if (!URLMode) searchViaBox();
 				else goToURL(searchBox.value);
 			}
-		break;
+			break;
 		case 38:
 			if (localSettings.switchEngineWithArrows) {
 				event.preventDefault();
-				if (currentEngineNum == 0) switchEngineTo(searchEngines.length-1, false);
-				else switchEngineTo(currentEngineNum-1, false);
+				if (currentEngineNum == 0) switchEngineTo(searchEngines.length - 1, false);
+				else switchEngineTo(currentEngineNum - 1, false);
 			}
-		break;
-		case 40: 
-			if (localSettings.switchEngineWithArrows) { 
+			break;
+		case 40:
+			if (localSettings.switchEngineWithArrows) {
 				event.preventDefault();
-				if (currentEngineNum == searchEngines.length-1) switchEngineTo(0, false);
-				else switchEngineTo(currentEngineNum+1, false);
+				if (currentEngineNum == searchEngines.length - 1) switchEngineTo(0, false);
+				else switchEngineTo(currentEngineNum + 1, false);
 			}
-		break;
+			break;
 		case 18:
 			if (localSettings.enableAltShortcut) {
 				event.preventDefault();
 				if (!event.repeat) altBookMode(true);
 			}
-		break;
+			break;
 		case 27:
 			if (folder.open) hideFolder();
-		break;
-		
+			break;
+
 		default:
 			if (altIsDown) {
 				if (!localSettings.numPadInstead && event.keyCode >= 49 && event.keyCode <= 57) {
@@ -330,26 +330,26 @@ document.addEventListener("keydown", function(event) {
 					else folderContentContainer.children[event.keyCode - 97].click();
 				}
 			}
-		break;
+			break;
 	};
 });
-document.addEventListener("keyup", function(event) {
+document.addEventListener("keyup", function (event) {
 	switch (event.keyCode) {
 		case 18:
 			if (localSettings.enableAltShortcut) {
 				event.preventDefault();
 				altBookMode(false);
 			}
-		break;
+			break;
 	};
 });
 
 //Function: Exports dealing with the SearchBox element here for simplicity now that it has become kinda complicated
 function dealWithSearchBoxClick() {
-	  if (localSettings.launchURLwhenClicked) {
-		  if(URLMode) goToURL(searchBox.value); 
-		  else if(redditMode) goToSubReddit(searchBox.value)
-	  }
+	if (localSettings.launchURLwhenClicked) {
+		if (URLMode) goToURL(searchBox.value);
+		else if (redditMode) goToSubReddit(searchBox.value)
+	}
 }
 
 //Function: Search using the current Search Engine 
@@ -357,14 +357,14 @@ function searchViaBox() {
 	searchBoxText = searchBox.value;
 	if (searchBoxText.charAt(0) == ".") searchBoxText = searchBoxText.substring(1)
 	searchURL = currentEngine.url.replace("<query>", encodeURIComponent(searchBoxText))
-	
+
 	goToURL(searchURL);
 }
 
 
 //Functions: Change the Search Engine to the Engine Specified, from the engine number or the element
 function switchEngineTo(number, isFromElem) {
-	
+
 	if (!removeMode) {
 		if (isFromElem) {
 			var engine = parseInt(number.attributes.nm.value, 10);
@@ -378,7 +378,7 @@ function switchEngineTo(number, isFromElem) {
 			currentEngineNum = number;
 			document.getElementsByClassName("in-use")[0].classList.remove("in-use");
 			document.getElementsByClassName("search-link")[number].classList.add("in-use");
-			
+
 		}
 		hideTip();
 	}
@@ -393,7 +393,7 @@ function switchEngineTo(number, isFromElem) {
 function validURL(str) {
 	strArray = str.split(":")[0].split(".");
 	var result = false;
-	if ((strArray[0] != "" || str.includes("://")) && !str.includes(" ") && str.includes(".") && strArray[strArray.length-1] != "") result = true; 
+	if ((strArray[0] != "" || str.includes("://")) && !str.includes(" ") && str.includes(".") && strArray[strArray.length - 1] != "") result = true;
 	return result;
 }
 
@@ -419,7 +419,7 @@ function genSearchElement(parent, arrayPosition) {
 	currentElement.id = `search-engine-${arrayPosition.toString()}`;
 	currentElement.lastChild.src = fetchFaviconFromAPI(engine.url.replace(/http(s|):\/\//g, "").split("/")[0]);
 	currentElement.attributes.nm.value = arrayPosition.toString();
-	
+
 	makeEngineListen(cln);
 }
 
@@ -427,17 +427,17 @@ function genSearchElement(parent, arrayPosition) {
 function genBookmarkElement(arrayPosition, isChild) {
 	var bookmark = (isChild) ? folder.current.content[arrayPosition] : bookmarks[arrayPosition];
 	var currentData = {
-		"<URL>" : fetchFaviconFromAPI(bookmark.url.replace(/http(s|):\/\//g, "").split("/")[0]),
-		"<title>" : bookmark.name,
-		"<id>" : 	(isChild) ? `child-bookmark-${arrayPosition.toString()}` : `bookmark-${arrayPosition.toString()}`,
-		"<arrayPosition>" : arrayPosition
+		"<URL>": fetchFaviconFromAPI(bookmark.url.replace(/http(s|):\/\//g, "").split("/")[0]),
+		"<title>": bookmark.name,
+		"<id>": (isChild) ? `child-bookmark-${arrayPosition.toString()}` : `bookmark-${arrayPosition.toString()}`,
+		"<arrayPosition>": arrayPosition
 	}
-	
+
 	var bookmarkSelector = bookmarkLinkScheme;
-	for(let k in currentData) {
-        bookmarkSelector = bookmarkSelector.replace(new RegExp(k, 'g'), currentData[k]);
-    }
-	
+	for (let k in currentData) {
+		bookmarkSelector = bookmarkSelector.replace(new RegExp(k, 'g'), currentData[k]);
+	}
+
 	return bookmarkSelector;
 }
 
@@ -445,18 +445,18 @@ function genBookmarkElement(arrayPosition, isChild) {
 function genFolderElement(arrayPosition, directElem, directId) {
 	var current = (!directElem) ? bookmarks[arrayPosition] : directElem;
 	var currentData = {
-		"<id>" : (directId) ? directId : `folder-${arrayPosition.toString()}`,
-		"<arrayPosition>" : arrayPosition,
-		"<title>" : current.name,
-		"<color>" : current.color,
-		"<icon>" : current.icon
+		"<id>": (directId) ? directId : `folder-${arrayPosition.toString()}`,
+		"<arrayPosition>": arrayPosition,
+		"<title>": current.name,
+		"<color>": current.color,
+		"<icon>": current.icon
 	}
-	
+
 	var folderSelector = folderScheme;
-	for(let k in currentData) {
-        folderSelector = folderSelector.replace(new RegExp(k, 'g'), currentData[k]);
-    }
-	
+	for (let k in currentData) {
+		folderSelector = folderSelector.replace(new RegExp(k, 'g'), currentData[k]);
+	}
+
 	return folderSelector;
 }
 
@@ -464,79 +464,79 @@ function genFolderElement(arrayPosition, directElem, directId) {
 function genLanguageElement(keyNum) {
 	var language = translations[Object.keys(translations)[keyNum]];
 	var key = Object.keys(translations)[keyNum];
-	
+
 	var languageSelector = languageSelectScheme.replace("<key>", key);
 	languageSelector = languageSelector.replace("<emoji>", language.languageEmoji).replace("<lang>", language.languageName);
-	
+
 	return languageSelector;
 }
 
 //Functions: Adds the correct eventListeners for the specified Search Engine/Bookmark/Folder
 function makeBookmarkListen(id) {
 	elem = document.getElementById(id);
-	
-	elem.addEventListener("mouseenter", function(e){ 
-		var origElem = e.srcElement || e.originalTarget; 
+
+	elem.addEventListener("mouseenter", function (e) {
+		var origElem = e.srcElement || e.originalTarget;
 		describeURL(origElem);
 	});
-	elem.addEventListener("mouseleave", function(e){ 
+	elem.addEventListener("mouseleave", function (e) {
 		hideTip();
 	});
-	elem.addEventListener("click", function(e){
+	elem.addEventListener("click", function (e) {
 		var origElem = e.srcElement || e.originalTarget;
 		goToBookmarkURL(origElem);
 	});
-	elem.addEventListener("contextmenu", function(e){ 
+	elem.addEventListener("contextmenu", function (e) {
 		e.preventDefault();
 		var origElem = e.srcElement || e.originalTarget;
 		elemContextMenu(e, origElem, 1);
 	});
-	elem.addEventListener("auxclick", function(e){
+	elem.addEventListener("auxclick", function (e) {
 		var origElem = e.srcElement || e.originalTarget;
-		if(e.which == 2) goToBookmarkURL(origElem, true);
+		if (e.which == 2) goToBookmarkURL(origElem, true);
 	});
 }
 
 function makeChildBookmarkListen(id) {
 	elem = document.getElementById(id);
-	
-	elem.addEventListener("mouseenter", function(e){ 
-		var origElem = e.srcElement || e.originalTarget; 
+
+	elem.addEventListener("mouseenter", function (e) {
+		var origElem = e.srcElement || e.originalTarget;
 		describeURL(origElem, true);
 	});
-	elem.addEventListener("mouseleave", function(e){ 
+	elem.addEventListener("mouseleave", function (e) {
 		hideTip();
 	});
-	elem.addEventListener("click", function(e){
+	elem.addEventListener("click", function (e) {
 		var origElem = e.srcElement || e.originalTarget;
 		goToBookmarkURL(origElem, false, true);
 	});
-	elem.addEventListener("contextmenu", function(e){ 
+	elem.addEventListener("contextmenu", function (e) {
 		e.preventDefault();
 		var origElem = e.srcElement || e.originalTarget;
 		elemContextMenu(e, origElem, 2);
 	});
-	elem.addEventListener("auxclick", function(e){
+	elem.addEventListener("auxclick", function (e) {
 		var origElem = e.srcElement || e.originalTarget;
-		if(e.which == 2) goToBookmarkURL(origElem, true, true);
+		if (e.which == 2) goToBookmarkURL(origElem, true, true);
 	});
 }
 
-function makeFolderListen(id) { 
+function makeFolderListen(id) {
 	elem = document.getElementById(id);
-	
-	elem.addEventListener("mouseenter", function(e){ 
-		var origElem = e.srcElement || e.originalTarget; 
+
+	elem.addEventListener("mouseenter", function (e) {
+		var origElem = e.srcElement || e.originalTarget;
 		describeFolder(origElem);
 	});
-	elem.addEventListener("mouseleave", function(e){ 
+	elem.addEventListener("mouseleave", function (e) {
 		hideTip();
 	});
-	elem.addEventListener("click", function(e){
+	elem.addEventListener("click", function (e) {
 		var origElem = e.srcElement || e.originalTarget;
 		showFolder(origElem);
 	});
-	elem.addEventListener("contextmenu", function(e){ 
+	elem.addEventListener("contextmenu", function (e) {
 		e.preventDefault();
 		var origElem = e.srcElement || e.originalTarget;
 		elemContextMenu(e, origElem, 3);
@@ -544,25 +544,25 @@ function makeFolderListen(id) {
 }
 
 function makeEngineListen(elem) {
-	elem.addEventListener("mouseenter", function(e){ 
-		var origElem = e.srcElement || e.originalTarget; 
+	elem.addEventListener("mouseenter", function (e) {
+		var origElem = e.srcElement || e.originalTarget;
 		describeEngine(origElem);
 	});
-	elem.addEventListener("mouseleave", function(e){ 
+	elem.addEventListener("mouseleave", function (e) {
 		hideTip();
 	});
-	elem.addEventListener("click", function(e){
+	elem.addEventListener("click", function (e) {
 		var origElem = e.srcElement || e.originalTarget;
 		switchEngineTo(origElem, true);
 	});
-	elem.addEventListener("contextmenu", function(e){ 
+	elem.addEventListener("contextmenu", function (e) {
 		e.preventDefault();
 		var origElem = e.srcElement || e.originalTarget;
 		elemContextMenu(e, origElem, false);
 	});
-	elem.lastChild.onerror = function(e) {
+	elem.lastChild.onerror = function (e) {
 		var origElem = e.srcElement || e.originalTarget;
-		origElem.src='imgs/404.svg';
+		origElem.src = 'imgs/404.svg';
 	};
 }
 
@@ -570,7 +570,7 @@ function makeEngineListen(elem) {
 //Function: Selects the right Favicon API and generates the URL
 function fetchFaviconFromAPI(URL) {
 	API = (localSettings.useFaviconIco) ? `https://${URL}/favicon.ico` : `https://icons.duckduckgo.com/ip2/${URL}.ico`;
-	
+
 	return API;
 }
 
@@ -578,8 +578,8 @@ function fetchFaviconFromAPI(URL) {
 //Functions: Adds a new Search engine or a new Bookmark to the Array and saves the list in the localStorage element
 function addNewEngine(name, url) {
 	if (url.includes("<query>")) {
-		searchEngines.push( {'name': name, 'url': url, 'customIcon': false} )
-	
+		searchEngines.push({ 'name': name, 'url': url, 'customIcon': false })
+
 		savePreferences();
 		renderElements();
 		notify(curLang.newSearchEngineAdded);
@@ -593,17 +593,17 @@ function addNewEngine(name, url) {
 
 function addNewBookmark(name, url) {
 	bookmarks.push({ 'name': name, 'type': "url", 'url': url })
-	
+
 	savePreferences();
 	renderElements();
 	notify(curLang.newBookmarkAdded);
-	}
+}
 
 //Functions: Removes the Search engine or the Bookmark from the Array and saves the list in the localStorage element
 function removeSpecEngine(arrayPosition) {
 	if (searchEngines.length > 1) {
 		searchEngines.splice(arrayPosition, 1)
-	
+
 		savePreferences();
 		renderElements();
 		notify(curLang.searchEngineRemoved);
@@ -633,7 +633,7 @@ function savePreferences() {
 		varid = fixedElements[i].attributes.varid.value;
 		localSettings[varid] = fixedElements[i].checked;
 	}
-	
+
 	localStorage.setItem("localSettings", JSON.stringify(localSettings));
 }
 
@@ -642,7 +642,7 @@ function describeURL(elem, isChild) {
 	var arrayPosition = parseInt(elem.attributes.nm.value, 10);
 	var curBookmarkSource = (isChild) ? folder.current.content : bookmarks;
 	var elem = curBookmarkSource[arrayPosition];
-	
+
 	searchBox.classList.add("fHidden");
 	searchAction.innerText = curLang.goTo.replace("<name>", elem.name);
 	searchTip.innerText = elem.url.replace(/http(s|):\/\//g, "");
@@ -652,14 +652,14 @@ function describeURL(elem, isChild) {
 function describeEngine(elem) {
 	var arrayPosition = parseInt(elem.attributes.nm.value, 10);
 	var name = searchEngines[arrayPosition].name;
-	
+
 	searchAction.innerText = curLang.searchOn.replace("<engine>", name);
 }
 
 function describeFolder(elem) {
 	var arrayPosition = parseInt(elem.attributes.nm.value, 10);
 	var elem = bookmarks[arrayPosition];
-	
+
 	searchBox.classList.add("fHidden");
 	searchAction.innerText = curLang.openFolder.replace("<title>", elem.name);
 	searchTip.innerText = (elem.content.length) ? folderDescription(elem.content) : curLang.emptyFolder;
@@ -675,9 +675,9 @@ function folderDescription(array) {
 			result += "...";
 			break;
 		}
-		if (i != array.length-1) result += ", ";
+		if (i != array.length - 1) result += ", ";
 	}
-	
+
 	return result
 }
 
@@ -688,7 +688,7 @@ var newCharSize;
 function getThemeInfo() {
 	newCharSize = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--searchtype-onecharsize').replace("px", ""), 10)
 	maxCharacters = Math.floor(screen.width / newCharSize); //maxCharacters is calculated from the screen width itself
-	maxCharacters += Math.floor(maxCharacters/8); //Gives some extra tolerance coz it's kinda cool
+	maxCharacters += Math.floor(maxCharacters / 8); //Gives some extra tolerance coz it's kinda cool
 }
 getThemeInfo();
 
@@ -697,10 +697,10 @@ function regulateSearchFontSize(baseElem) {
 		newFontSize = getComputedStyle(document.documentElement).getPropertyValue('--searchtype-sizeorig');
 		fontSizeInt = parseInt(newFontSize.replace("px", ""), 10);
 		if (baseElem.length > maxCharacters) {
-			newFontSize = (fontSizeInt / 2 * (maxCharacters / baseElem.length) *2).toString() + "px"
+			newFontSize = (fontSizeInt / 2 * (maxCharacters / baseElem.length) * 2).toString() + "px"
 		}
-		
-		rootCSS.style.setProperty ("--searchtype-size", newFontSize)
+
+		rootCSS.style.setProperty("--searchtype-size", newFontSize)
 	}
 }
 
@@ -714,8 +714,8 @@ function settings() {
 function addFormElem() {
 	name = settingsAddElementForm.name.value;
 	URL = settingsAddElementForm.url.value;
-	type = settingsAddElementForm.elementType.value; 
-	
+	type = settingsAddElementForm.elementType.value;
+
 	if (type == "searchEngine") {
 		if (addNewEngine(name, URL)) settings()
 	}
@@ -730,7 +730,7 @@ function changeLangTo() {
 	debugLog(newLang)
 	curLang = translations[newLang];
 	curLangCode = newLang;
-	
+
 	renderElements();
 	applyFixedTranslations();
 	localStorage.setItem("curLang", curLangCode)
@@ -742,9 +742,9 @@ function changeLangTo() {
 function notify(text) {
 	notifText.innerHTML = text;
 	notifPopUp.classList.remove("nHidden");
-	
+
 	var counter = 0;
-	var interval = setInterval(function() {
+	var interval = setInterval(function () {
 		counter++;
 		if (counter == 5) {
 			notifPopUp.classList.add("nHidden")
@@ -758,15 +758,15 @@ function notify(text) {
 
 function exportJSON() {
 	var setString = JSON.stringify(localSettings);
-	
-	searchBox.value = ".$" + "localStorage.setItem('localSettings','" + setString + "');" + "localStorage.setItem('curLang','" 
-	+ curLangCode + "');" + "location.reload()";
+
+	searchBox.value = ".$" + "localStorage.setItem('localSettings','" + setString + "');" + "localStorage.setItem('curLang','"
+		+ curLangCode + "');" + "location.reload()";
 	hideTip();
-	
+
 	searchBox.select();
 	searchBox.setSelectionRange(0, 99999);
 	document.execCommand("copy");
-	
+
 	notify(curLang.exportNotif);
 }
 
@@ -776,7 +776,7 @@ function exportJSON() {
 function notifyRightTheme() {
 	var themeName = getComputedStyle(document.documentElement).getPropertyValue('--theme-name');
 	var advisorMessage = "You're Using the \"" + themeName + "\" Theme, <a href='index.html' class='searchbox-url'>Click here</a> to change it to the default one";
-	
+
 	if (themeName != "Default") themeAdvisor.innerHTML = advisorMessage;
 }
 
@@ -790,35 +790,35 @@ function elemContextMenu(event, elem, elemType) {
 	contextVisible = true;
 	contextElemType = elemType;
 	contextArrayPos = parseInt(elem.attributes.nm.value, 10);
-	
-	
-	contextNewTab.classList.toggle("fHidden", (!elemType || elemType == 3)); 
+
+
+	contextNewTab.classList.toggle("fHidden", (!elemType || elemType == 3));
 	contextDefault.classList.toggle("fHidden", elemType);
 	contextNewFolder.classList.toggle("fHidden", elemType != 1);
-	
+
 	x = event.clientX;
 	y = event.clientY;
-	const {normalizedX, normalizedY} = normalizePosition(x, y); 
+	const { normalizedX, normalizedY } = normalizePosition(x, y);
 	contextMenu.classList.remove("vHidden");
 	contextMenu.style.left = `${normalizedX}px`;
 	contextMenu.style.top = `${normalizedY}px`;
 }
 
 function normalizePosition(mouseX, mouseY) {
-	outOfBoundsOnX = mouseX + contextMenu.clientWidth > body.clientWidth;	
+	outOfBoundsOnX = mouseX + contextMenu.clientWidth > body.clientWidth;
 	outOfBoundsOnY = mouseY + contextMenu.clientHeight > body.clientHeight;
-	
+
 	normalizedX = mouseX;
 	normalizedY = mouseY;
-	
+
 	if (outOfBoundsOnX) {
 		normalizedX = body.clientWidth - contextMenu.clientWidth;
-  }
+	}
 	if (outOfBoundsOnY) {
 		normalizedY = body.clientHeight - contextMenu.clientHeight;
-  }
+	}
 
-  return {normalizedX, normalizedY};
+	return { normalizedX, normalizedY };
 }
 
 //Function: Closes the context menu
@@ -833,7 +833,7 @@ function contextClose() {
 function contextRemoveElem() {
 	if (!contextElemType) removeSpecEngine(contextArrayPos);
 	else removeSpecBookmark(contextArrayPos, contextElemType == 2);
-	
+
 	contextClose();
 }
 
@@ -841,23 +841,23 @@ function contextRemoveElem() {
 
 function contextMove(direction) {
 	workingArray = (!contextElemType) ? searchEngines : (contextElemType != 2 || contextElemType == 3) ? bookmarks : folder.current.content;
-	
+
 	element = workingArray[contextArrayPos];
-	calcDirection = (direction) ? 1 : -1; 
+	calcDirection = (direction) ? 1 : -1;
 	workingArray.splice(contextArrayPos, 1);
 
-	if (contextArrayPos+calcDirection != -1 && contextArrayPos+calcDirection != workingArray.length+1) 
-		workingArray.splice(contextArrayPos+calcDirection, 0, element)
-	else if (contextArrayPos+calcDirection == -1) workingArray.splice(workingArray.length, 0, element)
+	if (contextArrayPos + calcDirection != -1 && contextArrayPos + calcDirection != workingArray.length + 1)
+		workingArray.splice(contextArrayPos + calcDirection, 0, element)
+	else if (contextArrayPos + calcDirection == -1) workingArray.splice(workingArray.length, 0, element)
 	else workingArray.unshift(element);
 
 	if (!contextElemType) searchEngines = workingArray;
 	else if (contextElemType == 2) folder.current.content = workingArray;
 	else bookmarks = workingArray;
-	
+
 	if (contextElemType == 2) renderFolderElems();
 	else renderElements();
-	
+
 	savePreferences();
 	contextClose();
 }
@@ -871,13 +871,13 @@ function contextFolderDiag() {
 
 function contextMakeDefault() {
 	workingArray = searchEngines;
-	
+
 	element = workingArray[contextArrayPos];
 	workingArray.splice(contextArrayPos, 1);
 	workingArray.splice(0, 0, element);
-	
+
 	searchEngines = workingArray;
-	
+
 	renderElements();
 	savePreferences();
 	contextClose();
@@ -886,7 +886,7 @@ function contextMakeDefault() {
 //Function: opens a new Tab from a bookmark
 
 function contextTab() {
-    workingArray = (contextElemType == 1) ? bookmarks : folder.current[3];
+	workingArray = (contextElemType == 1) ? bookmarks : folder.current[3];
 	goToURL(workingArray[contextArrayPos].url, true);
 	contextClose();
 }
@@ -916,65 +916,78 @@ function toggleSettingsButton() {
 //Function: Applies a custom color scheme in a Telegram-like style, basing it on a given Hexadecimal color
 
 function createCustomColorScheme(hexColor, save) {
-	colorInRGB = hexToRgb(hexColor);
-	
-	colorBackground = [Math.floor(colorInRGB.r*25/189), Math.floor(colorInRGB.g*32/230), Math.floor(colorInRGB.b*34/251)];
-	colorBackground = rgbToHex(colorBackground[0], colorBackground[1], colorBackground[2]);
-	
-	colorCircles = [Math.floor(colorInRGB.r*61/189), Math.floor(colorInRGB.g*76/230), Math.floor(colorInRGB.b*82/251)];
-	colorCircles = rgbToHex(colorCircles[0], colorCircles[1], colorCircles[2]);
-	
-	if ((colorInRGB.r + colorInRGB.g + colorInRGB.b) > 160) {
-		colorTip = hexColor + "60";
-		colorAction = hexColor + "50";
-		colorPrimary = hexColor;
+	const rgb = hexToRgb(hexColor);
+	const totalBrightness = rgb.r + rgb.g + rgb.b;
+
+	const correctRGB = (value) => Math.max(0, Math.min(255, Math.floor(value)));
+	const scaledHex = (r, g, b) => rgbToHex(correctRGB(r), correctRGB(g), correctRGB(b));
+
+	let colorPrimary, colorBackground, colorTip, colorAction, colorCircles, colorContext;
+
+	if (totalBrightness > 90) {
+		colorBackground = scaledHex(rgb.r * 0.13, rgb.g * 0.13, rgb.b * 0.13);
+
+		if (totalBrightness > 200) {
+
+			colorPrimary = hexColor;
+			colorTip = hexColor + "60";
+			colorAction = hexColor + "50";
+			colorCircles = scaledHex(rgb.r * 0.33, rgb.g * 0.33, rgb.b * 0.33);
+		} else {
+
+			colorPrimary = scaledHex(rgb.r * 1.8, rgb.g * 1.8, rgb.b * 1.8);
+			colorTip = scaledHex(rgb.r + 90, rgb.g + 90, rgb.b + 90) + "A0";
+			colorAction = scaledHex(rgb.r + 30, rgb.g + 30, rgb.b + 30);
+			colorCircles = scaledHex(rgb.r * 0.7, rgb.g * 0.7, rgb.b * 0.7);
+		}
+
+		colorContext =  (totalBrightness > 360 || (rgb.g / 2 > rgb.r + rgb.b))
+			? scaledHex(rgb.r * 0.7 - 10, rgb.g * 0.7 - 10, rgb.b * 0.7 - 10)
+			: colorPrimary;
+
 	} else {
-		colorTip = rgbToHex(colorInRGB.r + 40, colorInRGB.g + 40, colorInRGB.b + 40);
-		colorAction = rgbToHex(colorInRGB.r + 30, colorInRGB.g + 30, colorInRGB.b + 30);
-		colorPrimary = rgbToHex(correctRGB(colorInRGB.r), correctRGB(colorInRGB.g), correctRGB(colorInRGB.b));
+
+		colorBackground = "#000000";
+		colorPrimary = scaledHex(Math.max(rgb.r * 4, 70), Math.max(rgb.g * 4, 70), Math.max(rgb.b * 4, 70))
+		colorTip = scaledHex(Math.max(rgb.r * 3.4, 40), Math.max(rgb.g * 3.4, 40), Math.max(rgb.b * 3.4, 40)) + "9F";
+		colorAction = colorTip;
+		colorCircles = hexColor;
+		colorContext = colorPrimary;
 	}
-	if ((colorInRGB.r + colorInRGB.g + colorInRGB.b) > 380) {
-		colorContext = rgbToHex(Math.floor(colorInRGB.r*0.65), Math.floor(colorInRGB.g*0.65), Math.floor(colorInRGB.b*0.65))
-	}
-	else colorContext = colorPrimary;
-	
-	rootCSS.style.setProperty ("--customize-primary", colorPrimary);
-	rootCSS.style.setProperty ("--customize-background", colorBackground);
-	rootCSS.style.setProperty ("--customize-circles", colorCircles);
-	rootCSS.style.setProperty ("--customize-searchtip", colorTip);
-	rootCSS.style.setProperty ("--customize-searchaction", colorAction);
-	rootCSS.style.setProperty ("--customize-context", colorContext);
-	
+
+	rootCSS.style.setProperty("--customize-primary", colorPrimary);
+	rootCSS.style.setProperty("--customize-background", colorBackground);
+	rootCSS.style.setProperty("--customize-circles", colorCircles);
+	rootCSS.style.setProperty("--customize-searchtip", colorTip);
+	rootCSS.style.setProperty("--customize-searchaction", colorAction);
+	rootCSS.style.setProperty("--customize-context", colorContext);
+
 	if (save) {
 		localSettings.customColorTheme = hexColor;
 		savePreferences();
 	}
 }
 
-function correctRGB(colorValue) {
-	console.log(colorValue)
-	if (colorValue < 128) colorValue = 80
-	return colorValue
-}
 
 //Took from here: https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
 
 function hexToRgb(hex) {
-  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result ? {
-    r: parseInt(result[1], 16),
-    g: parseInt(result[2], 16),
-    b: parseInt(result[3], 16)
-  } : null;
+	var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+	return result ? {
+		r: parseInt(result[1], 16),
+		g: parseInt(result[2], 16),
+		b: parseInt(result[3], 16)
+	} : null;
 }
 
 function componentToHex(c) {
-  var hex = c.toString(16);
-  return hex.length == 1 ? "0" + hex : hex;
+	var hex = c.toString(16);
+	return hex.length == 1 ? "0" + hex : hex;
 }
 
-function rgbToHex(r, g, b) { debugLog(`rgbToHex; r, g and b are ${r}, ${g} and ${b}`)
-  return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+function rgbToHex(r, g, b) {
+	debugLog(`rgbToHex; r, g and b are ${r}, ${g} and ${b}`)
+	return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
 
 //Function: disables the custom color theme
@@ -993,12 +1006,12 @@ function showFolder(elem) {
 	folder.current = bookmarks[arrayPosition];
 	folder.open = true;
 	renderFolderElems();
-	
+
 	hideFolderButton.children[0].children[0].style.color = folder.current[1]
 	hideFolderButton.children[0].children[0].style.textShadow = folder.current[1] + " 0px 2px 6px";
 	folderContainer.classList.remove("fHidden");
 	bookmarksContainer.classList.add("fHidden");
-	if(altIsDown) altBookMode(true);
+	if (altIsDown) altBookMode(true);
 }
 
 
@@ -1012,7 +1025,7 @@ function hideFolder() {
 function renderFolderElems() {
 	childBookmarks = folder.current.content;
 	folderContentContainer.innerHTML = "";
-	
+
 	var i;
 	for (i = 0; i < childBookmarks.length; i++) {
 		folderContentContainer.innerHTML += genBookmarkElement(i, true);
@@ -1024,37 +1037,38 @@ function renderFolderElems() {
 }
 
 //Listener: when Folder Back Arrow is clicked, hide the Folder Container
-hideFolderButton.addEventListener("click", function(){ 
-		hideFolder();
+hideFolderButton.addEventListener("click", function () {
+	hideFolder();
 });
-hideFolderButton.addEventListener("mouseenter", function(){ 
-		searchAction.innerText = curLang.goBack;
+hideFolderButton.addEventListener("mouseenter", function () {
+	searchAction.innerText = curLang.goBack;
 });
-hideFolderButton.addEventListener("mouseleave", function(){ 
-		hideTip();
+hideFolderButton.addEventListener("mouseleave", function () {
+	hideTip();
 });
 
 
 
 //Function: Shows/hides the new folder dialog, and sets the working folder to the given value
-function newFolderDiag(arrayPos) { debugLog(`newFolderDiag; arrayPos is ${arrayPos}`)
+function newFolderDiag(arrayPos) {
+	debugLog(`newFolderDiag; arrayPos is ${arrayPos}`)
 	if (arrayPos != undefined) curBookmarkToFolder = arrayPos;
 	renderNewFolderPreview();
 	renderExistingFolders();
-	
+
 	newFolderOverlay.classList.toggle("sHidden");
 }
 
 //Function: Renders the Folder Preview
 function renderNewFolderPreview(nonRandom) {
 	curRandomColor = randomColor(nonRandom);
-	var currentElement = {'name': newFolderNameType.value, 'color': curRandomColor, 'icon': newFolderIconType.value, 'content': null};
-	
+	var currentElement = { 'name': newFolderNameType.value, 'color': curRandomColor, 'icon': newFolderIconType.value, 'content': null };
+
 	newFolderContainer.innerHTML = genFolderElement(-1, currentElement);
-	document.querySelector("#folder--1").addEventListener("click", function(e){
+	document.querySelector("#folder--1").addEventListener("click", function (e) {
 		renderNewFolderPreview();
 	});
-	document.querySelector("#folder--1").addEventListener("contextmenu", function(e){
+	document.querySelector("#folder--1").addEventListener("contextmenu", function (e) {
 		e.preventDefault();
 		renderNewFolderPreview(true);
 	});
@@ -1066,21 +1080,22 @@ function renderExistingFolders() {
 	var thereAreFolders;
 	//Checks if there are any folders
 	for (i = 0; i < bookmarks.length; i++) {
-		if (bookmarks[i].type == 'folder') thereAreFolders = true; 
+		if (bookmarks[i].type == 'folder') thereAreFolders = true;
 	}
 	//If there are folders, empty the existing folders container
 	if (thereAreFolders) {
 		existingFoldersContainer.innerHTML = "";
 		//Generate all elements, with a negative ID
 		for (i = 0; i < bookmarks.length; i++) {
-			if (bookmarks[i].type == 'folder') { debugLog(`renderExistingFolders, loop 2; i is ${i}`)
+			if (bookmarks[i].type == 'folder') {
+				debugLog(`renderExistingFolders, loop 2; i is ${i}`)
 				currentElement = bookmarks[i];
 				existingFoldersContainer.innerHTML += genFolderElement(i, currentElement, `existing-folder-${i.toString()}`);
 			}
 		}
 		//Now add them a custom Listener, which moves the element in the folder
-		for (i = 0; i < bookmarks.length; i++) { 
-			if (bookmarks[i].type == 'folder') { 
+		for (i = 0; i < bookmarks.length; i++) {
+			if (bookmarks[i].type == 'folder') {
 				id = "existing-folder-" + i.toString(); debugLog(`renderExistingFolders, loop 3; id is ${id}`)
 				makeExistingFolderListen(id);
 			}
@@ -1088,37 +1103,38 @@ function renderExistingFolders() {
 	}
 }
 
-function makeExistingFolderListen(id) { debugLog(`makeExistingFolderListen; id is ${id}`)
+function makeExistingFolderListen(id) {
+	debugLog(`makeExistingFolderListen; id is ${id}`)
 	elem = document.getElementById(id);
-	elem.addEventListener("click", function(e){
+	elem.addEventListener("click", function (e) {
 		var origElem = e.srcElement || e.originalTarget;
-		moveIntoFolderFun(origElem); 
+		moveIntoFolderFun(origElem);
 		notify(curLang.toFolder);
 		newFolderDiag();
 	});
-	
+
 }
 
 //Function: randomly returns a primary color. 50% change of getting a predefined one, and 50% of getting a fully randomized one
 const colorWheel = ["#FF1744", "#F50057", "#D500F9", "#651FFF", "#3D5AFE", "#2979FF",
 	"#00B0FF", "#00E5FF", "#1DE9B6", "#00E676", "#76FF03", "#C6FF00",
 	"#FFEA00", "#FFC400", "#FF9100", "#FF3D00"];
-	
+
 function randomColor(nonRandom) {
 	random = Math.floor(Math.random() * colorWheel.length);
-	
+
 	nonRandom = (nonRandom) ? true : Math.round(Math.random())
-	if (nonRandom) return colorWheel[random]; 
+	if (nonRandom) return colorWheel[random];
 	else {
-		rr = Math.floor(Math.random() * (255 - 120 + 1) + 120); 
+		rr = Math.floor(Math.random() * (255 - 120 + 1) + 120);
 		gr = Math.floor(Math.random() * (255 - 120 + 1) + 120);
-		br = Math.floor(Math.random() * (255 - 120 + 1) + 120); 
+		br = Math.floor(Math.random() * (255 - 120 + 1) + 120);
 		return rgbToHex(rr, gr, br);
 	}
 }
 
 //Function: deletes the current element and moves it into a folder instead
-function moveIntoFolderFun(elem) { 
+function moveIntoFolderFun(elem) {
 	var arrayPos = parseInt(elem.attributes.nm.value, 10); debugLog(`moveIntoFolderFun; arrayPos is ${arrayPos}`)
 	var current = bookmarks[curBookmarkToFolder]; debugLog(`moveIntoFolderFun; bookmarks is ${JSON.stringify(bookmarks)}`)
 	bookmarks[arrayPos].content.push(current);
@@ -1129,7 +1145,7 @@ function moveIntoFolderFun(elem) {
 
 //Function converts a bookmark into a folder, from the dialog too
 function makeIntoFolder(arrayPos, name, icon) {
-	folder = {'name': name, 'type': 'folder', 'color': curRandomColor, 'icon': icon, 'content': [bookmarks[arrayPos]]};
+	folder = { 'name': name, 'type': 'folder', 'color': curRandomColor, 'icon': icon, 'content': [bookmarks[arrayPos]] };
 	bookmarks[arrayPos] = folder;
 	savePreferences();
 	notify(curLang.toFolder);
@@ -1138,7 +1154,7 @@ function makeIntoFolder(arrayPos, name, icon) {
 }
 
 function makeIntoFolderDiag() {
-	makeIntoFolder(curBookmarkToFolder, newFolderNameType.value, newFolderIconType.value) 
+	makeIntoFolder(curBookmarkToFolder, newFolderNameType.value, newFolderIconType.value)
 }
 
 
@@ -1161,14 +1177,14 @@ function altBookMode(bool) {
 		altIsDown = true;
 		curContainer = (folder.open) ? folderContentContainer : bookmarksContainer;
 		curArray = (folder.open) ? folder.current.content : bookmarks;
-		
+
 		curContainer.classList.toggle("in-use", true);
 		searchAction.innerText = curLang.openShortcut;
-		
+
 		var bookCircles = curContainer.getElementsByClassName("bookmark-circle");
 		for (var i = 0; i < curArray.length; i++) {
 			currentBook = bookCircles[i].getBoundingClientRect();
-			if (9 > i) genAltBadge(curContainer, i+1, currentBook.x + 27, currentBook.y - 7);
+			if (9 > i) genAltBadge(curContainer, i + 1, currentBook.x + 27, currentBook.y - 7);
 			else genAltBadge(curContainer, "emoticon-sad-outline", currentBook.x + 27, currentBook.y - 7, true);
 		}
 		if (folder.open) {
@@ -1183,9 +1199,9 @@ function altBookMode(bool) {
 		folderContentContainer.classList.toggle("in-use", false);
 		hideFolderButton.classList.toggle("in-use", false);
 		hideTip();
-		
+
 		var aliveBadges = document.getElementsByClassName('alt-badge');
-		while(aliveBadges[0]) {
+		while (aliveBadges[0]) {
 			aliveBadges[0].parentNode.removeChild(aliveBadges[0]);
 		}
 	}

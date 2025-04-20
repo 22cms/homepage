@@ -283,6 +283,7 @@ p, input, label, a, #notif-text {
 	color: #f44336;
 	font-size: 15px;
 	font-weight: 500;
+	text-transform: uppercase;
 	background-color: #404040;
 	padding: 8px;
 	padding-left: 10px;
@@ -344,17 +345,22 @@ p, input, label, a, #notif-text {
 	padding: 0px 20px 0px 20px;
 	margin: 2px;
 	font-size: 15px;
+	text-transform: uppercase;
 	background-color: #404040;
 	border-radius: 3px;
 	text-align: center;
 	color: white;
 	border: none;
 }
-.green {
+.settings-button span {
+	padding-top: 10px;
+	display: inline-block;
+  }
+.confirm-button {
 	color: #43a047;
 	border: none;
 }
-.green.border {
+.confirm-button.highlight {
 	border: 2px solid #43a047;
 }
 .red {
