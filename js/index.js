@@ -130,6 +130,7 @@ const newFolderIconType = document.querySelector("#folder-icontype");
 const existingFoldersContainer = document.querySelector("#existingfolders-container");
 var curBookmarkToFolder;
 var curRandomColor;
+var lastRandomColor
 
 const contextMenu = document.querySelector("#context-menu");
 const contextNewTab = document.querySelector("#context-newtab");
@@ -140,6 +141,7 @@ var contextArrayPos;
 var contextVisible;
 
 var altIsDown;
+
 
 
 //On Load Function: Renders all the elements of the page (should probably be splitten)
@@ -938,10 +940,10 @@ function createCustomColorScheme(hexColor, save) {
 			colorPrimary = scaledHex(rgb.r * 1.8, rgb.g * 1.8, rgb.b * 1.8);
 			colorTip = scaledHex(rgb.r + 90, rgb.g + 90, rgb.b + 90) + "A0";
 			colorAction = scaledHex(rgb.r + 30, rgb.g + 30, rgb.b + 30);
-			colorCircles = scaledHex(rgb.r * 0.7, rgb.g * 0.7, rgb.b * 0.7);
+			colorCircles = scaledHex(rgb.r + 30, rgb.g + 30, rgb.b + 30);
 		}
 
-		colorContext =  (totalBrightness > 360 || (rgb.g / 2 > rgb.r + rgb.b))
+		colorContext = (totalBrightness > 360 || (rgb.g / 2 > rgb.r + rgb.b))
 			? scaledHex(rgb.r * 0.7 - 10, rgb.g * 0.7 - 10, rgb.b * 0.7 - 10)
 			: colorPrimary;
 
@@ -951,7 +953,7 @@ function createCustomColorScheme(hexColor, save) {
 		colorPrimary = scaledHex(Math.max(rgb.r * 4, 70), Math.max(rgb.g * 4, 70), Math.max(rgb.b * 4, 70))
 		colorTip = scaledHex(Math.max(rgb.r * 3.4, 40), Math.max(rgb.g * 3.4, 40), Math.max(rgb.b * 3.4, 40)) + "9F";
 		colorAction = colorTip;
-		colorCircles = hexColor;
+		colorCircles = scaledHex(Math.max(rgb.r * 2.8, 40), Math.max(rgb.g * 2.8, 40), Math.max(rgb.b * 2.8, 40));
 		colorContext = colorPrimary;
 	}
 
@@ -1061,7 +1063,7 @@ function newFolderDiag(arrayPos) {
 
 //Function: Renders the Folder Preview
 function renderNewFolderPreview(nonRandom) {
-	curRandomColor = randomColor(nonRandom);
+	curRandomColor = randomColor(nonRandom, 360);
 	var currentElement = { 'name': newFolderNameType.value, 'color': curRandomColor, 'icon': newFolderIconType.value, 'content': null };
 
 	newFolderContainer.innerHTML = genFolderElement(-1, currentElement);
@@ -1116,21 +1118,65 @@ function makeExistingFolderListen(id) {
 }
 
 //Function: randomly returns a primary color. 50% change of getting a predefined one, and 50% of getting a fully randomized one
-const colorWheel = ["#FF1744", "#F50057", "#D500F9", "#651FFF", "#3D5AFE", "#2979FF",
-	"#00B0FF", "#00E5FF", "#1DE9B6", "#00E676", "#76FF03", "#C6FF00",
-	"#FFEA00", "#FFC400", "#FF9100", "#FF3D00"];
 
-function randomColor(nonRandom) {
-	random = Math.floor(Math.random() * colorWheel.length);
+function randomColor(nonRandom, minimum = 360) {
+	const colorWheel = [[255, 23, 68], [245, 0, 87], [213, 0, 249], [101, 31, 255], [61, 90, 254], [41, 121, 255],
+	[0, 176, 255], [0, 229, 255], [29, 233, 182], [0, 230, 118], [118, 255, 3],
+	[198, 255, 0], [255, 234, 0], [255, 196, 0], [255, 145, 0], [255, 61, 0]]
 
+	const randomComponent = () => Math.floor(Math.random() * 256);
+	let newColor, rr, gr, br;
+
+	minimum = (Math.max(0, Math.min(765, minimum)))
 	nonRandom = (nonRandom) ? true : Math.round(Math.random())
-	if (nonRandom) return colorWheel[random];
-	else {
-		rr = Math.floor(Math.random() * (255 - 120 + 1) + 120);
-		gr = Math.floor(Math.random() * (255 - 120 + 1) + 120);
-		br = Math.floor(Math.random() * (255 - 120 + 1) + 120);
-		return rgbToHex(rr, gr, br);
+	if (nonRandom) {
+		let random = Math.floor(Math.random() * colorWheel.length);
+		[rr, gr, br] = colorWheel[random];
+		debugLog("Color Wheel Color picked")
 	}
+	else {
+		rr = randomComponent();
+		gr = randomComponent();
+		br = randomComponent();
+		debugLog("RNG Color picked")
+	}
+
+	let currentBrightness = rr + gr + br;
+	if (currentBrightness < minimum) {
+		let gammaCorrection = minimum - currentBrightness;
+		const evenGammaDistribution = (channel) => (channel == 0) ? 0 : Math.floor((gammaCorrection * (channel / currentBrightness)));
+		const roofCap = (value) => Math.min(value, 255)
+		let components = [rr, gr, br]
+		debugLog(`The minimum brightness of ${minimum} was not reached by RGB(${components.toString()}),`
+			+ ` a gamma correction of ${gammaCorrection} will be applied`)
+
+		componentCorrection = [
+			evenGammaDistribution(rr), evenGammaDistribution(gr), evenGammaDistribution(br)
+		]
+		components = components.map((val, i) => roofCap(val + componentCorrection[i]));
+
+		const correctionSum = componentCorrection.reduce((a, b) => a + b, 0);
+		if (correctionSum < gammaCorrection) {
+			let position = components.indexOf(Math.max(...components));
+			components[position] = roofCap(components[position] + (gammaCorrection - correctionSum));
+		}
+
+		let newBrightness = () => components.reduce((a, b) => a + b, 0);
+		debugLog(`Gamma-corrected result: RGB(${components.toString()}). New brightness: ${newBrightness()}`)
+		while (newBrightness() < minimum) {
+			components = components.map(v => roofCap(v + 1))
+		}
+		if (newBrightness() != minimum) components[components.indexOf(Math.min(...components))] += -1;
+		debugLog(`Redistributed result: RGB(${components.toString()}). New brightness: ${newBrightness()}`)
+		newColor = rgbToHex(roofCap(components[0]), roofCap(components[1]), roofCap(components[2]))
+	}
+	else newColor = rgbToHex(rr, gr, br);
+
+	if (lastRandomColor != newColor) {
+		lastRandomColor = newColor;
+		return newColor;
+	}
+	else return randomColor(nonRandom, minimum);
 }
 
 //Function: deletes the current element and moves it into a folder instead

@@ -323,7 +323,7 @@ button {
 
 @supports (backdrop-filter: blur(2em)) {
 	.settings-container {
-		backdrop-filter: blur(6px);
+		backdrop-filter: blur(16px);
 		background-color: #50505060;
 	}
 
@@ -449,6 +449,7 @@ button {
 
 .red {
 	color: #f44336;
+	border: 1px solid #f4433670;
 }
 
 .row,
@@ -478,7 +479,7 @@ button {
 	opacity: 70%
 }
 
-.ripple.settings-button:active {
+.ripple.settings-button:active, .ripple.settings-cancel:active {
 	border: 1px solid #FFFFFF18;
 }
 
@@ -639,12 +640,18 @@ button {
 		width: 100%;
 		height: auto;
 		max-height: 80%;
+		background-color: #4A4A4A60;
 	}
 
 	.sHidden .settings-container {
 		transform: scale(1, 1)
 	}
 
+	@supports (backdrop-filter: blur(2em)) {
+		.settings-container {
+			backdrop-filter: blur(28px);
+		}
+	}	
 	.context-menu {
 		width: auto;
 		border-radius: 10px;
