@@ -63,7 +63,7 @@ if (localStorage.getItem("localSettings")) localSettings = JSON.parse(localStora
 
 //Checks if localSettings still uses the old format, and redirects user to an upgrade page if it does
 
-//if (Array.isArray(localSettings.searchEngines[0])) window.location.href = './upgrade.html';
+if (Array.isArray(localSettings.searchEngines[0])) window.location.href = './upgrade.html';
 
 //Search Engines. The First in the List is the default one
 
