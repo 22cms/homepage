@@ -69,12 +69,9 @@ if (localSettings.debug) document.querySelector("style").innerHTML = "* {outline
 
 //Search Engines. The First in the List is the default one
 
-
-searchEngines = localSettings.searchEngines;
-
 const engineSelectorScheme = document.querySelector("#engine-selector-scheme");
 
-var currentEngine = searchEngines[0];
+var currentEngine = localSettings.searchEngines[0];
 var currentEngineNum = 0;
 var URLMode = false;
 var evalMode = false;
@@ -82,8 +79,6 @@ var redditMode = false;
 var removeMode = 0; //removeMode is deprecated
 
 //Bookmarks. Alias links to some external website
-
-bookmarks = localSettings.bookmarks;
 
 const bookmarkLinkScheme = '<div id="<id>" class="bookmark-link centerbox" nm="<arrayPosition>"><div class="bookmark-circle centerbox"><img src="<URL>" class="bookmark-icon" onerror="this.src=\'imgs/404.svg\'"></div><p class="bookmark-title"><title></p></div>';
 const folderScheme = '<div id="<id>" nm="<arrayPosition>" class="bookmark-link centerbox"><div class="bookmark-circle centerbox"><div class="centerbox" style="color: <color>; text-shadow: 0px 2px 6px <color>;"><span class="Micon folder-icon mdi-<icon>"></span></div></div><p class="bookmark-title"><title></p></div>'
@@ -158,28 +153,28 @@ function renderElements() {
 	if (localSettings.customColorTheme) customColorPicker.value = localSettings.customColorTheme;
 	//Generates every element, adds adds event listener for every one of them, sets the default search engine and starts hideTip()
 	var i;
-	for (i = 0; i < searchEngines.length; i++) {
+	for (i = 0; i < localSettings.searchEngines.length; i++) {
 		genSearchElement(searchEnginesContainer, i);
 	}
-	for (i = 0; i < bookmarks.length; i++) {
-		if (bookmarks[i].type == 'folder')
+	for (i = 0; i < localSettings.bookmarks.length; i++) {
+		if (localSettings.bookmarks[i].type == 'folder')
 			bookmarksContainer.innerHTML += genFolderElement(i);
-		else if (bookmarks[i].type == 'url') bookmarksContainer.innerHTML += genBookmarkElement(i);
+		else if (localSettings.bookmarks[i].type == 'url') bookmarksContainer.innerHTML += genBookmarkElement(i);
 	}
 	//Adds Event Listeners
-	for (i = 0; i < bookmarks.length; i++) {
-		if (bookmarks[i].type == 'folder') {
+	for (i = 0; i < localSettings.bookmarks.length; i++) {
+		if (localSettings.bookmarks[i].type == 'folder') {
 			id = "folder-" + i.toString();
 			makeFolderListen(id);
 		}
-		else if (bookmarks[i].type == 'url') {
+		else if (localSettings.bookmarks[i].type == 'url') {
 			id = "bookmark-" + i.toString();
 			makeBookmarkListen(id);
 		}
 	}
 
 	document.getElementsByClassName("search-link")[0].classList.add("in-use");
-	currentEngine = searchEngines[0];
+	currentEngine = localSettings.searchEngines[0];
 	hideTip();
 	//Generates the Language Selector Entries
 	for (i = 0; i < Object.keys(translations).length; i++) {
@@ -274,7 +269,7 @@ function goToBookmarkURL(element, newTab, isChild) {
 	arrayPosition = parseInt(element.attributes.nm.value, 10);
 
 	if (!removeMode) {
-		curBookmarkSource = (isChild) ? folder.current.content : bookmarks;
+		curBookmarkSource = (isChild) ? folder.current.content : localSettings.bookmarks;
 		URL = curBookmarkSource[arrayPosition].url;
 		goToURL(URL, newTab);
 	}
@@ -301,14 +296,14 @@ document.addEventListener("keydown", function (event) {
 		case 38:
 			if (localSettings.switchEngineWithArrows) {
 				event.preventDefault();
-				if (currentEngineNum == 0) switchEngineTo(searchEngines.length - 1, false);
+				if (currentEngineNum == 0) switchEngineTo(localSettings.searchEngines.length - 1, false);
 				else switchEngineTo(currentEngineNum - 1, false);
 			}
 			break;
 		case 40:
 			if (localSettings.switchEngineWithArrows) {
 				event.preventDefault();
-				if (currentEngineNum == searchEngines.length - 1) switchEngineTo(0, false);
+				if (currentEngineNum == localSettings.searchEngines.length - 1) switchEngineTo(0, false);
 				else switchEngineTo(currentEngineNum + 1, false);
 			}
 			break;
@@ -373,13 +368,13 @@ function switchEngineTo(number, isFromElem) {
 	if (!removeMode) {
 		if (isFromElem) {
 			var engine = parseInt(number.attributes.nm.value, 10);
-			currentEngine = searchEngines[engine];
+			currentEngine = localSettings.searchEngines[engine];
 			currentEngineNum = engine;
 			document.getElementsByClassName("in-use")[0].classList.remove("in-use");
 			number.classList.add("in-use");
 		}
 		else {
-			currentEngine = searchEngines[number];
+			currentEngine = localSettings.searchEngines[number];
 			currentEngineNum = number;
 			document.getElementsByClassName("in-use")[0].classList.remove("in-use");
 			document.getElementsByClassName("search-link")[number].classList.add("in-use");
@@ -418,7 +413,7 @@ function validSubReddit(str) {
 //Function: Makes a new Search engine Element
 function genSearchElement(parent, arrayPosition) {
 	cln = engineSelectorScheme.cloneNode(true);
-	engine = searchEngines[arrayPosition];
+	engine = localSettings.searchEngines[arrayPosition];
 	currentElement = parent.appendChild(cln);
 
 	currentElement.id = `search-engine-${arrayPosition.toString()}`;
@@ -430,7 +425,7 @@ function genSearchElement(parent, arrayPosition) {
 
 //Function: Makes a new Bookmark Element
 function genBookmarkElement(arrayPosition, isChild) {
-	var bookmark = (isChild) ? folder.current.content[arrayPosition] : bookmarks[arrayPosition];
+	var bookmark = (isChild) ? folder.current.content[arrayPosition] : localSettings.bookmarks[arrayPosition];
 	var currentData = {
 		"<URL>": fetchFaviconFromAPI(bookmark.url.replace(/http(s|):\/\//g, "").split("/")[0]),
 		"<title>": bookmark.name,
@@ -448,7 +443,7 @@ function genBookmarkElement(arrayPosition, isChild) {
 
 //Function: Makes a new Folder Element
 function genFolderElement(arrayPosition, directElem, directId) {
-	var current = (!directElem) ? bookmarks[arrayPosition] : directElem;
+	var current = (!directElem) ? localSettings.bookmarks[arrayPosition] : directElem;
 	var currentData = {
 		"<id>": (directId) ? directId : `folder-${arrayPosition.toString()}`,
 		"<arrayPosition>": arrayPosition,
@@ -583,7 +578,7 @@ function fetchFaviconFromAPI(URL) {
 //Functions: Adds a new Search engine or a new Bookmark to the Array and saves the list in the localStorage element
 function addNewEngine(name, url) {
 	if (url.includes("<query>")) {
-		searchEngines.push({ 'name': name, 'url': url, 'customIcon': false })
+		localSettings.searchEngines.push({ 'name': name, 'url': url, 'customIcon': false })
 
 		savePreferences();
 		renderElements();
@@ -597,7 +592,7 @@ function addNewEngine(name, url) {
 }
 
 function addNewBookmark(name, url) {
-	bookmarks.push({ 'name': name, 'type': "url", 'url': url })
+	localSettings.bookmarks.push({ 'name': name, 'type': "url", 'url': url })
 
 	savePreferences();
 	renderElements();
@@ -606,8 +601,8 @@ function addNewBookmark(name, url) {
 
 //Functions: Removes the Search engine or the Bookmark from the Array and saves the list in the localStorage element
 function removeSpecEngine(arrayPosition) {
-	if (searchEngines.length > 1) {
-		searchEngines.splice(arrayPosition, 1)
+	if (localSettings.searchEngines.length > 1) {
+		localSettings.searchEngines.splice(arrayPosition, 1)
 
 		savePreferences();
 		renderElements();
@@ -617,7 +612,7 @@ function removeSpecEngine(arrayPosition) {
 }
 
 function removeSpecBookmark(arrayPosition, isChild) {
-	workingArray = (isChild) ? folder.current.content : bookmarks;
+	workingArray = (isChild) ? folder.current.content : localSettings.bookmarks;
 	workingArray.splice(arrayPosition, 1)
 
 	savePreferences();
@@ -631,9 +626,7 @@ function removeSpecBookmark(arrayPosition, isChild) {
 
 function savePreferences() {
 	debugLog("savePreferences() got triggered");
-	localSettings.searchEngines = searchEngines;
-	localSettings.bookmarks = bookmarks;
-	fixedElements = document.getElementsByClassName("settings-checkbox");
+	fixedElements = document.querySelectorAll(".settings-checkbox");
 	for (var i = 0; i < fixedElements.length; i++) {
 		varid = fixedElements[i].attributes.varid.value;
 		localSettings[varid] = fixedElements[i].checked;
@@ -645,7 +638,7 @@ function savePreferences() {
 //Function: Shows the Bookmark/Search Engine/Folder infos when it is hovered
 function describeURL(elem, isChild) {
 	var arrayPosition = parseInt(elem.attributes.nm.value, 10);
-	var curBookmarkSource = (isChild) ? folder.current.content : bookmarks;
+	var curBookmarkSource = (isChild) ? folder.current.content : localSettings.bookmarks;
 	var elem = curBookmarkSource[arrayPosition];
 
 	searchBox.classList.add("fHidden");
@@ -656,14 +649,14 @@ function describeURL(elem, isChild) {
 
 function describeEngine(elem) {
 	var arrayPosition = parseInt(elem.attributes.nm.value, 10);
-	var name = searchEngines[arrayPosition].name;
+	var name = localSettings.searchEngines[arrayPosition].name;
 
 	searchAction.innerText = curLang.searchOn.replace("<engine>", name);
 }
 
 function describeFolder(elem) {
 	var arrayPosition = parseInt(elem.attributes.nm.value, 10);
-	var elem = bookmarks[arrayPosition];
+	var elem = localSettings.bookmarks[arrayPosition];
 
 	searchBox.classList.add("fHidden");
 	searchAction.innerText = curLang.openFolder.replace("<title>", elem.name);
@@ -845,7 +838,7 @@ function contextRemoveElem() {
 //Function: moves a generic element to the left or to the right
 
 function contextMove(direction) {
-	workingArray = (!contextElemType) ? searchEngines : (contextElemType != 2 || contextElemType == 3) ? bookmarks : folder.current.content;
+	workingArray = (!contextElemType) ? localSettings.searchEngines : (contextElemType != 2 || contextElemType == 3) ? localSettings.bookmarks : folder.current.content;
 
 	element = workingArray[contextArrayPos];
 	calcDirection = (direction) ? 1 : -1;
@@ -856,9 +849,9 @@ function contextMove(direction) {
 	else if (contextArrayPos + calcDirection == -1) workingArray.splice(workingArray.length, 0, element)
 	else workingArray.unshift(element);
 
-	if (!contextElemType) searchEngines = workingArray;
+	if (!contextElemType) localSettings.searchEngines = workingArray;
 	else if (contextElemType == 2) folder.current.content = workingArray;
-	else bookmarks = workingArray;
+	else localSettings.bookmarks = workingArray;
 
 	if (contextElemType == 2) renderFolderElems();
 	else renderElements();
@@ -875,13 +868,13 @@ function contextFolderDiag() {
 //Function: sets the choosen Search Engine as the default one (by making it the first one)
 
 function contextMakeDefault() {
-	workingArray = searchEngines;
+	workingArray = localSettings.searchEngines;
 
 	element = workingArray[contextArrayPos];
 	workingArray.splice(contextArrayPos, 1);
 	workingArray.splice(0, 0, element);
 
-	searchEngines = workingArray;
+	localSettings.searchEngines = workingArray;
 
 	renderElements();
 	savePreferences();
@@ -891,7 +884,7 @@ function contextMakeDefault() {
 //Function: opens a new Tab from a bookmark
 
 function contextTab() {
-	workingArray = (contextElemType == 1) ? bookmarks : folder.current[3];
+	workingArray = (contextElemType == 1) ? localSettings.bookmarks : folder.current[3];
 	goToURL(workingArray[contextArrayPos].url, true);
 	contextClose();
 }
@@ -1008,7 +1001,7 @@ function disableCustomColorScheme() {
 function showFolder(elem) {
 	arrayPosition = parseInt(elem.attributes.nm.value, 10);
 	folder.currentPos = arrayPosition;
-	folder.current = bookmarks[arrayPosition];
+	folder.current = localSettings.bookmarks[arrayPosition];
 	folder.open = true;
 	renderFolderElems();
 
@@ -1084,23 +1077,23 @@ function renderExistingFolders() {
 	var i;
 	var thereAreFolders;
 	//Checks if there are any folders
-	for (i = 0; i < bookmarks.length; i++) {
-		if (bookmarks[i].type == 'folder') thereAreFolders = true;
+	for (i = 0; i < localSettings.bookmarks.length; i++) {
+		if (localSettings.bookmarks[i].type == 'folder') thereAreFolders = true;
 	}
 	//If there are folders, empty the existing folders container
 	if (thereAreFolders) {
 		existingFoldersContainer.innerHTML = "";
 		//Generate all elements, with a negative ID
-		for (i = 0; i < bookmarks.length; i++) {
-			if (bookmarks[i].type == 'folder') {
+		for (i = 0; i < localSettings.bookmarks.length; i++) {
+			if (localSettings.bookmarks[i].type == 'folder') {
 				debugLog(`renderExistingFolders, loop 2; i is ${i}`)
-				currentElement = bookmarks[i];
+				currentElement = localSettings.bookmarks[i];
 				existingFoldersContainer.innerHTML += genFolderElement(i, currentElement, `existing-folder-${i.toString()}`);
 			}
 		}
 		//Now add them a custom Listener, which moves the element in the folder
-		for (i = 0; i < bookmarks.length; i++) {
-			if (bookmarks[i].type == 'folder') {
+		for (i = 0; i < localSettings.bookmarks.length; i++) {
+			if (localSettings.bookmarks[i].type == 'folder') {
 				id = "existing-folder-" + i.toString(); debugLog(`renderExistingFolders, loop 3; id is ${id}`)
 				makeExistingFolderListen(id);
 			}
@@ -1185,17 +1178,17 @@ function randomColor(nonRandom, minimum = 360) {
 //Function: deletes the current element and moves it into a folder instead
 function moveIntoFolderFun(elem) {
 	var arrayPos = parseInt(elem.attributes.nm.value, 10); debugLog(`moveIntoFolderFun; arrayPos is ${arrayPos}`)
-	var current = bookmarks[curBookmarkToFolder]; debugLog(`moveIntoFolderFun; bookmarks is ${JSON.stringify(bookmarks)}`)
-	bookmarks[arrayPos].content.push(current);
-	bookmarks.splice(curBookmarkToFolder, 1);
+	var current = localSettings.bookmarks[curBookmarkToFolder]; debugLog(`moveIntoFolderFun; localSettings.bookmarks is ${JSON.stringify(localSettings.bookmarks)}`)
+	localSettings.bookmarks[arrayPos].content.push(current);
+	localSettings.bookmarks.splice(curBookmarkToFolder, 1);
 	savePreferences();
 	renderElements();
 }
 
 //Function converts a bookmark into a folder, from the dialog too
 function makeIntoFolder(arrayPos, name, icon) {
-	folder = { 'name': name, 'type': 'folder', 'color': curRandomColor, 'icon': icon, 'content': [bookmarks[arrayPos]] };
-	bookmarks[arrayPos] = folder;
+	folder = { 'name': name, 'type': 'folder', 'color': curRandomColor, 'icon': icon, 'content': [localSettings.bookmarks[arrayPos]] };
+	localSettings.bookmarks[arrayPos] = folder;
 	savePreferences();
 	notify(curLang.toFolder);
 	newFolderDiag();
@@ -1225,7 +1218,7 @@ function altBookMode(bool) {
 	if (bool) {
 		altIsDown = true;
 		curContainer = (folder.open) ? folderContentContainer : bookmarksContainer;
-		curArray = (folder.open) ? folder.current.content : bookmarks;
+		curArray = (folder.open) ? folder.current.content : localSettings.bookmarks;
 
 		curContainer.classList.toggle("in-use", true);
 		searchAction.innerText = curLang.openShortcut;
