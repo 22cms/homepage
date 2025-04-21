@@ -315,6 +315,7 @@ document.addEventListener("keydown", function (event) {
 			break;
 		case 27:
 			settings(false);
+			newFolderDiag(undefined, false);
 			if (folder.open) hideFolder();
 			break;
 
@@ -1049,13 +1050,14 @@ hideFolderButton.addEventListener("mouseleave", function () {
 
 
 //Function: Shows/hides the new folder dialog, and sets the working folder to the given value
-function newFolderDiag(arrayPos) {
-	debugLog(`newFolderDiag; arrayPos is ${arrayPos}`)
-	if (arrayPos != undefined) curBookmarkToFolder = arrayPos;
-	renderNewFolderPreview();
-	renderExistingFolders();
-
-	newFolderOverlay.classList.toggle("sHidden");
+function newFolderDiag(arrayPos, force) {
+	if (force || force == undefined) {
+		debugLog(`newFolderDiag; arrayPos is ${arrayPos}`)
+		if (arrayPos != undefined) curBookmarkToFolder = arrayPos;
+		renderNewFolderPreview();
+		renderExistingFolders();
+	}	
+	newFolderOverlay.classList.toggle("sHidden", force != undefined ? !force : undefined);
 }
 
 //Function: Renders the Folder Preview

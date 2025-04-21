@@ -55,7 +55,7 @@ var translations = {
 		"addNewFolder" : "Create a new Folder",
 		"useExistingFolder" : "Move into an existing folder",
 		"noOtherFolders" : "There aren't any folders.",
-		"folderUndo" : "Annulla", 
+		"folderUndo" : "Cancel", 
 		"materialIconsRedirect" : "You can find all supported icon codes on Material Design Icons' website",
 		"toFolder" : "The bookmark has been put in a Folder", 
 		"emptyFolder" : "Empty Folder",

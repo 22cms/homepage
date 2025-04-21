@@ -307,8 +307,8 @@ button {
 	width: auto;
 	height: auto;
 	max-height: 100%;
-	border-radius: 4px;
-	padding: 12px;
+	border-radius: 10px;
+	padding: 20px;
 	transition: backdrop-filter 0.4s, background-color 0.4s, transform 0.4s;
 }
 
@@ -345,10 +345,9 @@ button {
 }
 
 .settings-title {
-	font-size: 30px;
-	margin: 16px;
-	margin-left: 0px;
-
+	font-size: 26px;
+	margin: 0 0 8px 0;
+	width: 100%;
 }
 
 .settings-category-title {
@@ -364,13 +363,20 @@ button {
 	width: 220px;
 	height: 32px;
 	min-height: 32px;
-	margin-right: 6px;
+	margin: 0 1px;
 	padding: 0 12px;
 	outline: none;
 	transition: border 0.1s, background-color 0.1s;
 	font-weight: 100;
 	color: white;
-	
+}
+
+.settings-type:first-child {
+	margin-left: 0 !important;
+}
+
+.settings-type:last-child {
+	margin-right: 0 !important;
 }
 
 .settings-type:hover {
@@ -411,14 +417,13 @@ form {
 	display: initial;
 }
 
-.settings-button, .settings-cancel {
+.settings-button, .dialog-button {
 	display: inline-block;
 	cursor: pointer;
 	height: 32px;
 	min-height: 32px;
 	width: auto;
 	padding: 0px 20px 0px 20px;
-	margin: 0 2px;
 	font-size: 15px;
 	background-color: #FFFFFF0E;
 	border: 1px solid #FFFFFF06;
@@ -427,12 +432,31 @@ form {
 	color: white;
 }
 
-.settings-cancel {
+.dialog-button {
 	font-weight: 500;
 	min-width: 100px;
 	padding: 0px 10px;
 	border-radius: 4px;
-	margin: 8px 0 8px 5px;
+	margin: 8px 0 0 2px;
+}
+
+.settings-cross {
+	cursor: pointer;
+	margin-bottom: 10px;
+	transition: color 0.1s;
+	border-radius: 4px;
+}
+
+.settings-cross:hover {
+	color: #FFFFFF90;
+}
+
+.settings-cross:active{
+	color: var(--customize-primary);
+}
+
+.settings-checkbox, .settings-selector {
+	margin: 5px 4px;
 }
 
 .settings-button span {
@@ -444,7 +468,7 @@ form {
 	color: var(--customize-primary);
 }
 
-.highlight, .settings-cancel.confirm-button {
+.highlight, .dialog-button.confirm-button {
 	background-color: var(--customize-context);
 	color: white;
 }
@@ -459,6 +483,7 @@ form {
 	display: flex;
 	flex-direction: row;
 	width: 100%;
+	gap: 5px;
 }
 
 .reverse-row {
@@ -481,16 +506,16 @@ form {
 	opacity: 70%
 }
 
-.ripple.settings-button:active, .ripple.settings-cancel:active {
+.ripple.settings-button:active, .ripple.dialog-button:active {
 	border: 1px solid #FFFFFF18;
 }
 
-.ripple.highlight:hover,  .settings-cancel.confirm-button:hover {
+.ripple.highlight:hover,  .dialog-button.confirm-button:hover {
 	background: initial;
 	background-color: color-mix(in srgb, var(--customize-context), #FFFFFF90);
 }
 
-.ripple.highlight:active, .settings-cancel.confirm-button:active {
+.ripple.highlight:active, .dialog-button.confirm-button:active {
 	background-color: color-mix(in srgb, var(--customize-context), #FFFFFF70);
 	color: #FFFFFF90;
 	opacity: initial;
@@ -544,13 +569,15 @@ form {
 }
 
 .context-close {
-	display: none;
 	width: 46px;
 	margin: 4px 4px 4px calc(100% - 50px);
-	font-size: 20px;
+	font-size: 22px;
 	text-align: center;
 	border-radius: 4px;
 	transition: initial
+}
+.context-menu .context-close {
+	display: none;
 }
 
 .context-entry {

@@ -30,8 +30,11 @@
 		</div>
 		<div id="settings-overlay" class="settings-overlay centerbox sHidden">
 			<div class="settings-container" id="settings-container">
-				<p class="settings-title translatable" stringid="settings">Settings</p>
-				<div class="scrollablebox">
+				<div class="centerbox row">
+					<p class="settings-title translatable" stringid="settings">Settings</p>
+					<p onclick="settings()" class="settings-cross Micon mdi-window-close"></button>
+				</div>
+					<div class="scrollablebox">
 					<p class="settings-category-title translatable" stringid="enginesAndBookmarks">Search Engines/Bookmarks</p>
 					<form id="add-element-form" class="no-margin">
 						<input autocomplete="off" name="name" type="text" class="settings-type" placeholder="Googel Search" id="settings-nametype">
@@ -40,11 +43,11 @@
 						<br><br style="font-size: 7px;">
 						
 						<label>
-							<input for="searchEngine" type="radio" id="engine-radio" name="elementType" value="searchEngine" checked="checked">
+							<input for="searchEngine" class="settings-selector" type="radio" id="engine-radio" name="elementType" value="searchEngine" checked="checked">
 							<span class="radio-label translatable" stringid="addAsEngine">Add as a Search Engine</span>
 						</label><br>
 						<label>
-							<input for="bookmark" type="radio" id="bookmark-radio" name="elementType" value="bookmark">
+							<input for="bookmark" class="settings-selector" type="radio" id="bookmark-radio" name="elementType" value="bookmark">
 							<span class="radio-label translatable" stringid="addAsBookmark">Add as a Bookmark</span>
 						</label><br>
 					</form>
@@ -96,9 +99,6 @@
 					</div>
 					<p id="mobile-warning"><b class="translatable" stringid="mobileDisclaimerNote">Note</b>: <span class="translatable" stringid="mobileDisclaimerText">This website is not meant to be used on mobile devices. Most of the features will work just fine, but it won't resemble the best user experience scenario.</span></p>
 				</div>
-				<div class="reverse-row">
-					<button onclick="settings()" class="settings-cancel ripple translatable" stringid="settingsClose">CLOSE</button>
-				</div>
 			</div>
 		</div>
 		
@@ -108,11 +108,11 @@
 				<p class="settings-category-title row translatable" stringid="addNewFolder">Create a new Folder</p>
 				<div id="newfolder-container" class="bookmark-like-container centerbox">
 				</div>
-				<form>		
+				<form class="no-margin">		
 					<input autocomplete="off" name="name" type="text" class="settings-type" placeholder="Folder name" value="Example Folder" oninput="renderNewFolderPreview()" id="folder-nametype">
 					<input autocomplete="off" name="icon" type="text" class="settings-type" placeholder="Icon Code" value="folder-outline" oninput="renderNewFolderPreview()" id="folder-icontype">
-					<a class="radio-label row translatable" stringid="materialIconsRedirect" href="https://materialdesignicons.com/">You can find all supported icons on Material Design Icons' website</a>
 				</form>
+				<p><a class="radio-label translatable theme-advisor settings-category-title" stringid="materialIconsRedirect" href="https://materialdesignicons.com/">You can find all supported icons on Material Design Icons' website</a>
 
 				<p class="settings-category-title row translatable" stringid="useExistingFolder">Move into an existing folder</p>
 				<div id="existingfolders-container" class="bookmark-like-container centerbox">
@@ -120,8 +120,8 @@
 				</div>
 				
 				<div class="reverse-row">
-					<button onclick="makeIntoFolderDiag()" class="settings-cancel confirm-button ripple translatable" stringid="addElem">ADD</button>
-					<button onclick="newFolderDiag()" class="settings-cancel ripple translatable" stringid="folderUndo">UNDO</button>
+					<button onclick="makeIntoFolderDiag()" class="dialog-button confirm-button ripple translatable" stringid="addElem">ADD</button>
+					<button onclick="newFolderDiag(force = false)" class="dialog-button ripple translatable" stringid="folderUndo">UNDO</button>
 				</div>
 			</div>
 		</div>

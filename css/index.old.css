@@ -26,7 +26,7 @@ body {
 	border: none;
 }
 
-p, input, label, a, #notif-text {
+p, input, label, a, #notif-text, button {
 	font-family: Arial, Inter, sans-serif;
 	color: white;
 }
@@ -126,8 +126,6 @@ p, input, label, a, #notif-text {
 
 
 .bookmark-icon, .search-link {
-	margin-left: 15px;
-	margin-right: 15px;
 	filter: grayscale(100%) brightness(70%) contrast(1);
 	transition: filter 0.2s;
 	cursor: pointer;
@@ -270,14 +268,13 @@ p, input, label, a, #notif-text {
 
 .settings-title {
 	font-size: 30px;
-	margin: 16px;
-	margin-left: 0px;
-	
+	margin: 0 0 16px 0;
+	width: 100%;
 }
 .settings-category-title {
 	margin: 10px 0 10px 0px;
 }
-.settings-cancel {
+.dialog-button {
 	color: #f44336;
 	font-size: 15px;
 	font-weight: 500;
@@ -291,6 +288,22 @@ p, input, label, a, #notif-text {
 	margin: 5px;
 	margin-right: 0px;
 }
+
+.settings-cross {
+	cursor: pointer;
+	margin-bottom: 18px;
+	transition: color 0.1s;
+	border-radius: 4px;
+}
+
+.settings-cross:hover {
+	color: #FFFFFF90;
+}
+
+.settings-cross:active{
+	color: var(--customize-primary);
+}
+
 .settings-type {
 	box-sizing: border-box;
 	background-color: #333333;
