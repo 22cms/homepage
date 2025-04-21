@@ -314,6 +314,7 @@ document.addEventListener("keydown", function (event) {
 			}
 			break;
 		case 27:
+			settings(false);
 			if (folder.open) hideFolder();
 			break;
 
@@ -703,8 +704,8 @@ function regulateSearchFontSize(baseElem) {
 }
 
 //Function: Opens/Hides the settings page {
-function settings() {
-	settingsOverlay.classList.toggle("sHidden");
+function settings(bool) {
+	settingsOverlay.classList.toggle("sHidden", bool != undefined ? !bool : undefined);
 }
 
 //Function: adds the new element which has just been made in the settings overlay
