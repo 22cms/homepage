@@ -48,7 +48,7 @@ var localSettings = {
 				}
 			],
 		}
-	],
+	],	
 	"showSettingsIcon": true,
 	"enableAnimations": true,
 	"resizeSearchFont": true,
@@ -61,11 +61,14 @@ var localSettings = {
 
 if (localStorage.getItem("localSettings")) localSettings = JSON.parse(localStorage.getItem("localSettings"));
 
-//Checks if localSettings still uses the old format, and redirects user to an upgrade page if it does
+//Checks if localSettings still uses the old format, and redirects user to an upgrade page if it does.
+//Also enables visual debug tools
 
 if (Array.isArray(localSettings.searchEngines[0])) window.location.href = './upgrade.html';
+if (localSettings.debug) document.querySelector("style").innerHTML = "* {outline: 1px solid red;}"
 
 //Search Engines. The First in the List is the default one
+
 
 searchEngines = localSettings.searchEngines;
 
@@ -777,7 +780,7 @@ function exportJSON() {
 
 function notifyRightTheme() {
 	var themeName = getComputedStyle(document.documentElement).getPropertyValue('--theme-name');
-	var advisorMessage = "You're Using the \"" + themeName + "\" Theme, <a href='index.html' class='searchbox-url'>Click here</a> to change it to the default one";
+	var advisorMessage = `You're Using the "${themeName}"  Theme, <a href='index.html' class='searchbox-url'>Click here</a> to change it to the default one`;
 
 	if (themeName != "Default") themeAdvisor.innerHTML = advisorMessage;
 }
