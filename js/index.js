@@ -617,7 +617,7 @@ function removeSpecEngine(arrayPosition) {
 }
 
 function removeSpecBookmark(arrayPosition, isChild) {
-	workingArray = (isChild) ? folder.current[3] : bookmarks;
+	workingArray = (isChild) ? folder.current.content : bookmarks;
 	workingArray.splice(arrayPosition, 1)
 
 	savePreferences();
