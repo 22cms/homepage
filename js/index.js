@@ -1233,7 +1233,6 @@ function altBookMode(bool) {
 		var bookCircles = curContainer.getElementsByClassName("bookmark-circle");
 		for (var i = 0; i < curArray.length; i++) {
 			currentBook = bookCircles[i].getBoundingClientRect();
-			console.log(`${currentBook.x}, ${currentBook.y}`);
 			if (9 > i) genAltBadge(curContainer, i + 1, currentBook.x + 27, currentBook.y - 7);
 			else genAltBadge(curContainer, "emoticon-sad-outline", currentBook.x + 27, currentBook.y - 7, true);
 		}
@@ -1259,8 +1258,6 @@ function altBookMode(bool) {
 function genAltBadge(parent, value, x, y, mIcon) {
 	cln = altBadgeScheme.cloneNode(true)
 	currentBadge = parent.appendChild(cln);
-	
-	console.log(`${x}, ${y}`);
 	
 	currentBadge.style.top = Math.round(y) + "px";
 	currentBadge.style.left = Math.round(x) + "px";
