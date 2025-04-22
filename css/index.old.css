@@ -317,6 +317,7 @@ p, input, label, a, #notif-text, button {
 	height: 40px;
 	min-height: 40px;
 	margin-right: 6px;
+	margin-bottom: 8px;
 	padding: 12px;
 	padding-bottom: 0;
 	padding-top: 0;
@@ -334,8 +335,9 @@ p, input, label, a, #notif-text, button {
 }
 
 form {
-	margin: 0 0 0 11px;
+	margin: 0 0 12px 0;
 }
+
 
 .no-margin {
 	margin: 0;
@@ -523,9 +525,6 @@ label.settings-button {
 		max-height: 80%;
 	}
 
-	.settings-cross {
-		display: none;
-	}
 
 	.settings-close-bottom {
 		display: initial;
@@ -541,10 +540,14 @@ label.settings-button {
 		display: inline;
 	}
 	
-	#add-element-form {
+	.add-element-form {
 		display: flex;
 		flex-direction: column;
 		gap: 6px;
+	}
+
+	form br {
+		display: none;
 	}
 
 	.settings-type {

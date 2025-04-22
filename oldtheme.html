@@ -39,7 +39,7 @@
 			<div class="settings-container" id="settings-container">
 				<div class="centerbox row">
 					<p class="settings-title translatable" stringid="settings">Settings</p>
-					<p onclick="settings()" class="settings-cross Micon mdi-window-close"></button>
+					<p onclick="settings()" class="settings-cross mHidden Micon mdi-window-close"></button>
 				</div>
 					<div class="scrollablebox">
 						<p id="mobile-warning"><b class="translatable" stringid="mobileDisclaimerNote">Note</b>: 
@@ -48,12 +48,11 @@
 							</span>
 						</p>
 					<p class="settings-category-title translatable" stringid="enginesAndBookmarks">Search Engines/Bookmarks</p>
-					<form id="add-element-form" class="no-margin">
+					<form class="add-element-form">
 						<input autocomplete="off" name="name" type="text" class="settings-type" placeholder="Googel Search" id="settings-nametype">
 						<input autocomplete="off" name="url" type="text" class="settings-type" placeholder="Use <query> for the engine query" id="settings-urltype">
 						<button type="button" class="settings-button confirm-button highlight ripple translatable" stringid="addElem" onclick="addFormElem()">ADD</button>
-						<br><br style="font-size: 5px;">
-						
+						<br>
 						<label>
 							<input for="searchEngine" class="settings-selector" type="radio" id="engine-radio" name="elementType" value="searchEngine" checked="checked">
 							<span class="radio-label translatable" stringid="addAsEngine">Add as a Search Engine</span>
@@ -63,7 +62,6 @@
 							<span class="radio-label translatable" stringid="addAsBookmark">Add as a Bookmark</span>
 						</label><br>
 					</form>
-					<br style="font-size: 7px;">
 					<form class="no-margin mHidden">
 						<input onchange="savePreferences()" class="settings-checkbox" varid="switchEngineWithArrows" id="settings-switch-via-arrows" type="checkbox" value="true" checked>
 						<label class="radio-label translatable" stringid="switchEngineWithArrows" for="settings-switch-via-arrows">Switch Search Engines using 🠕 and 🠗 arrow keys</label><br>
@@ -74,7 +72,6 @@
 							<label class="radio-label translatable" stringid="numPadInstead" for="settings-numpad-instead">Use Num Pad instead of number keys</label>
 						</div>
 					</form>
-					<br style="font-size: 7px;">
 					<!--<button type="button" class="settings-button red ripple" onclick="removeMode = 1;settings()">REMOVE AN ELEMENT</button> -->
 				
 				
@@ -123,16 +120,15 @@
 					<p class="settings-category-title row translatable" stringid="addNewFolder">Create a new Folder</p>
 					<div id="newfolder-container" class="bookmark-like-container centerbox">
 					</div>
-					<form class="no-margin">
+					<form class="add-element-form">
 						<input autocomplete="off" name="name" type="text" class="settings-type" placeholder="Folder name"
 							value="Example Folder" oninput="renderNewFolderPreview()" id="folder-nametype">
 						<input autocomplete="off" name="icon" type="text" class="settings-type" placeholder="Icon Code"
 							value="folder-outline" oninput="renderNewFolderPreview()" id="folder-icontype">
 					</form>
-					<p><a class="radio-label translatable theme-advisor settings-category-title" stringid="materialIconsRedirect"
+					<a class="radio-label translatable theme-advisor settings-category-title" stringid="materialIconsRedirect"
 							href="https://materialdesignicons.com/">You can find all supported icons on Material Design Icons'
 							website</a>
-			
 					<p class="settings-category-title row translatable" stringid="useExistingFolder">Move into an existing folder
 					</p>
 					<div id="existingfolders-container" class="bookmark-like-container centerbox">

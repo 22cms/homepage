@@ -363,7 +363,7 @@ button {
 	width: 220px;
 	height: 32px;
 	min-height: 32px;
-	margin: 0 1px;
+	margin: 0 1px 5px 0;
 	padding: 0 12px;
 	outline: none;
 	transition: border 0.1s, background-color 0.1s;
@@ -393,7 +393,7 @@ button {
 }
 
 form {
-	margin: 0 0 16px 0;
+	margin: 0 0 10px 0;
 }
 
 .no-margin {
@@ -644,9 +644,6 @@ label.settings-button {
 		align-items: flex-end;
 	}
 
-	.settings-cross {
-		display: none;
-	}
 
 	.settings-close-bottom {
 		display: initial;
@@ -684,10 +681,14 @@ label.settings-button {
 		display: initial;
 	}
 
-	#add-element-form {
+	.add-element-form {
 		display: flex;
 		flex-direction: column;
 		gap: 6px;
+	}
+
+	.add-element-form br {
+		display: none;
 	}
 
 	.settings-type {
