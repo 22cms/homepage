@@ -304,6 +304,10 @@ p, input, label, a, #notif-text, button {
 	color: var(--customize-primary);
 }
 
+.settings-close-bottom {
+	display: none
+}
+
 .settings-type {
 	box-sizing: border-box;
 	background-color: #333333;
@@ -371,6 +375,11 @@ form {
 	padding-top: 10px;
 	display: inline-block;
   }
+label.settings-button {
+	display: inline-block;
+	box-sizing: border-box;
+	align-content: center;
+}
 .confirm-button {
 	color: #43a047;
 	border: none;
@@ -513,6 +522,15 @@ form {
 		height: auto;
 		max-height: 80%;
 	}
+
+	.settings-cross {
+		display: none;
+	}
+
+	.settings-close-bottom {
+		display: initial;
+	}
+
 	.context-menu {
 		width: auto;
 	}
@@ -523,6 +541,18 @@ form {
 		display: inline;
 	}
 	
+	#add-element-form {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+	}
+
+	.settings-type {
+		margin: 0;
+		width: auto;
+		font-size: 14px;
+	}
+
 	.mHidden {
 		display: none;
 	}

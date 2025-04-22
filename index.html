@@ -24,7 +24,14 @@
 				
 			</div>
 			<div id="folder-container" class="bookmark-like-container centerbox fHidden">
-				<div id="hide-folder-button" class="bookmark-link centerbox"><div class="bookmark-circle centerbox"><div class="centerbox" style="color: white; text-shadow: 0px 2px 6px white;"><span class="Micon folder-icon mdi-arrow-left"></span></div></div><p class="bookmark-title translatable" stringid="goBack">Go back</p></div>
+				<div id="hide-folder-button" class="bookmark-link centerbox">
+					<div class="bookmark-circle centerbox">
+						<div class="centerbox" style="color: white; text-shadow: 0px 2px 6px white;">
+							<span class="Micon folder-icon mdi-arrow-left"></span>
+						</div>
+					</div>
+					<p class="bookmark-title translatable" stringid="goBack">Go back</p>
+				</div>
 				<div id="folder-content-container" class="bookmark-like-container"></div>
 			</div>
 		</div>
@@ -35,12 +42,17 @@
 					<p onclick="settings()" class="settings-cross Micon mdi-window-close"></button>
 				</div>
 					<div class="scrollablebox">
+						<p id="mobile-warning"><b class="translatable" stringid="mobileDisclaimerNote">Note</b>: 
+							<span class="translatable" stringid="mobileDisclaimerText">
+								This website is not meant to be used on mobile devices. Most of the features will work just fine, but it won't resemble the best user experience scenario.
+							</span>
+						</p>
 					<p class="settings-category-title translatable" stringid="enginesAndBookmarks">Search Engines/Bookmarks</p>
 					<form id="add-element-form" class="no-margin">
 						<input autocomplete="off" name="name" type="text" class="settings-type" placeholder="Googel Search" id="settings-nametype">
 						<input autocomplete="off" name="url" type="text" class="settings-type" placeholder="Use <query> for the engine query" id="settings-urltype">
 						<button type="button" class="settings-button confirm-button highlight ripple translatable" stringid="addElem" onclick="addFormElem()">ADD</button>
-						<br><br style="font-size: 7px;">
+						<br><br style="font-size: 5px;">
 						
 						<label>
 							<input for="searchEngine" class="settings-selector" type="radio" id="engine-radio" name="elementType" value="searchEngine" checked="checked">
@@ -86,7 +98,7 @@
 					</form>
 					<div class="row">
 						<input oninput="createCustomColorScheme(this.value, true)" class="fHidden" type="color" id="custom-color-picker" name="custom-color-picker"value="#BDE6FB"></input>
-						<label class="settings-button ripple confirm-button" style="width:auto;flex-grow:4" onclick="settings()" for="custom-color-picker"></span><span class="translatable" stringid="applyColorTheme">APPLY A CUSTOM COLOR THEME (TELEGRAM-LIKE)</span></label>
+						<label class="settings-button ripple confirm-button translatable" stringid="applyColorTheme" style="width:auto;flex-grow:4" onclick="settings()" for="custom-color-picker">APPLY A CUSTOM COLOR THEME (TELEGRAM-LIKE)</label>
 						<button onclick="createCustomColorScheme(randomColor(false, 120), true)" class="settings-button ripple Micon mdi-shuffle-variant"></button>
 						<button onclick="disableCustomColorScheme()" class="settings-button ripple Micon mdi-rotate-right"></button>
 					</div>
@@ -97,28 +109,37 @@
 						<button type="button" class="settings-button red ripple translatable" stringid="settingsReset" onclick="localStorage.clear();location.reload()">RESET ALL SETTINGS</button>
 						<button type="button" class="settings-button confirm-button ripple translatable" stringid="settingsExport" onclick="exportJSON();settings()">EXPORT SETTINGS</button>
 					</div>
-					<p id="mobile-warning"><b class="translatable" stringid="mobileDisclaimerNote">Note</b>: <span class="translatable" stringid="mobileDisclaimerText">This website is not meant to be used on mobile devices. Most of the features will work just fine, but it won't resemble the best user experience scenario.</span></p>
+				</div>
+				<div class="reverse-row">
+					<button onclick="settings(false)" class="settings-close-bottom dialog-button ripple translatable" stringid="settingsClose">Close</button>
 				</div>
 			</div>
 		</div>
 		
 		<div id="newfolder-overlay" class="settings-overlay centerbox sHidden">
 			<div class="settings-container">
-				<p class="settings-title translatable" stringid="moveIntoFolder">Move in a Folder</p>
-				<p class="settings-category-title row translatable" stringid="addNewFolder">Create a new Folder</p>
-				<div id="newfolder-container" class="bookmark-like-container centerbox">
+				<div class="scrollablebox">
+					<p class="settings-title translatable" stringid="moveIntoFolder">Move in a Folder</p>
+					<p class="settings-category-title row translatable" stringid="addNewFolder">Create a new Folder</p>
+					<div id="newfolder-container" class="bookmark-like-container centerbox">
+					</div>
+					<form class="no-margin">
+						<input autocomplete="off" name="name" type="text" class="settings-type" placeholder="Folder name"
+							value="Example Folder" oninput="renderNewFolderPreview()" id="folder-nametype">
+						<input autocomplete="off" name="icon" type="text" class="settings-type" placeholder="Icon Code"
+							value="folder-outline" oninput="renderNewFolderPreview()" id="folder-icontype">
+					</form>
+					<p><a class="radio-label translatable theme-advisor settings-category-title" stringid="materialIconsRedirect"
+							href="https://materialdesignicons.com/">You can find all supported icons on Material Design Icons'
+							website</a>
+			
+					<p class="settings-category-title row translatable" stringid="useExistingFolder">Move into an existing folder
+					</p>
+					<div id="existingfolders-container" class="bookmark-like-container centerbox">
+						<p class="settings-category-title no-margin translatable" stringid="noOtherFolders">There aren't any
+							folders.</p>
+					</div>
 				</div>
-				<form class="no-margin">		
-					<input autocomplete="off" name="name" type="text" class="settings-type" placeholder="Folder name" value="Example Folder" oninput="renderNewFolderPreview()" id="folder-nametype">
-					<input autocomplete="off" name="icon" type="text" class="settings-type" placeholder="Icon Code" value="folder-outline" oninput="renderNewFolderPreview()" id="folder-icontype">
-				</form>
-				<p><a class="radio-label translatable theme-advisor settings-category-title" stringid="materialIconsRedirect" href="https://materialdesignicons.com/">You can find all supported icons on Material Design Icons' website</a>
-
-				<p class="settings-category-title row translatable" stringid="useExistingFolder">Move into an existing folder</p>
-				<div id="existingfolders-container" class="bookmark-like-container centerbox">
-					<p class="settings-category-title no-margin translatable" stringid="noOtherFolders">There aren't any folders.</p>
-				</div>
-				
 				<div class="reverse-row">
 					<button onclick="makeIntoFolderDiag()" class="dialog-button confirm-button ripple translatable" stringid="addElem">ADD</button>
 					<button onclick="newFolderDiag(force = false)" class="dialog-button ripple translatable" stringid="folderUndo">UNDO</button>
