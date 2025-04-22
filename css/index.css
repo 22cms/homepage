@@ -302,7 +302,7 @@ button {
 	display: flex;
 	transform: scale(1);
 	flex-direction: column;
-	background-color: #40404050;
+	background-color: #404040;
 	box-shadow: 0px 5px 10px #212121;
 	width: auto;
 	height: auto;
@@ -316,17 +316,8 @@ button {
 	transform: scale(0.5);
 }
 
-.settings-container:hover {
-	background-color: #333333;
-}
-
 @supports (backdrop-filter: blur(2em)) {
 	.settings-container {
-		backdrop-filter: blur(16px);
-		background-color: #50505060;
-	}
-
-	.settings-container:hover {
 		backdrop-filter: blur(28px);
 		background-color: #4A4A4A60;
 	}
