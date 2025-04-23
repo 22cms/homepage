@@ -949,12 +949,17 @@ function createCustomColorScheme(hexColor, save = false) {
 	} else {
 
 		colorBackground = "#000000";
-		colorPrimary = scaledHex(minIfNotZero(rgb.r * 4, 70), minIfNotZero(rgb.g * 4, 70), minIfNotZero(rgb.b * 4, 70));
+		colorPrimary = scaledHex(minIfNotZero(rgb.r * 4, 55), minIfNotZero(rgb.g * 4, 55), minIfNotZero(rgb.b * 4, 55));
 		colorTip = scaledHex(minIfNotZero(rgb.r * 3.4, 40), minIfNotZero(rgb.g * 3.4, 40), minIfNotZero(rgb.b * 3.4, 40)) + "9A";
 		colorAction = colorTip;
 		colorCircles = scaledHex(minIfNotZero(rgb.r * 2.5, 40), minIfNotZero(rgb.g * 2.5, 40), minIfNotZero(rgb.b * 2.5, 40)) + "AF";
-		colorContext = colorPrimary;
+	
+		colorContext = ((rgb.g * 4 > 200) || (rgb.g / 2 > rgb.r + rgb.b))
+			? scaledHex(minIfNotZero(rgb.r * 4, 55), Math.min(rgb.g * 3, 200), minIfNotZero(rgb.b * 4, 55))
+			: colorPrimary;
 	}
+
+
 
 	rootCSS.style.setProperty("--customize-primary", colorPrimary);
 	rootCSS.style.setProperty("--customize-background", colorBackground);
