@@ -2,7 +2,7 @@
 var translations = {
 	"en" : {
 		"languageName" : "English",
-		"languageEmoji" : "&#x1F1EC&#x1F1E7",
+		"languageEmoji" : "&#x1F1EA&#x1F1F8",
 		
 		"typeHere" : "Type here",
 		"searchOn" : "Search on <engine>",
