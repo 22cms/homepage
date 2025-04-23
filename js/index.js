@@ -915,12 +915,13 @@ function toggleSettingsButton() {
 
 //Function: Applies a custom color scheme in a Telegram-like style, basing it on a given Hexadecimal color
 
-function createCustomColorScheme(hexColor, save) {
+function createCustomColorScheme(hexColor, save = false) {
 	const rgb = hexToRgb(hexColor);
 	const totalBrightness = rgb.r + rgb.g + rgb.b;
 
 	const correctRGB = (value) => Math.max(0, Math.min(255, Math.floor(value)));
 	const scaledHex = (r, g, b) => rgbToHex(correctRGB(r), correctRGB(g), correctRGB(b));
+	const minIfNotZero = (component, min) => Math.max(component, (component != 0) ? min : 0);
 
 	let colorPrimary, colorBackground, colorTip, colorAction, colorCircles, colorContext;
 
@@ -935,10 +936,10 @@ function createCustomColorScheme(hexColor, save) {
 			colorCircles = scaledHex(rgb.r * 0.33, rgb.g * 0.33, rgb.b * 0.33);
 		} else {
 
-			colorPrimary = scaledHex(rgb.r * 1.8, rgb.g * 1.8, rgb.b * 1.8);
+			colorPrimary = scaledHex(minIfNotZero(rgb.r * 2, 50), minIfNotZero(rgb.g * 2, 50), minIfNotZero(rgb.b * 2, 50));
 			colorTip = scaledHex(rgb.r + 90, rgb.g + 90, rgb.b + 90) + "A0";
 			colorAction = scaledHex(rgb.r + 30, rgb.g + 30, rgb.b + 30);
-			colorCircles = scaledHex(rgb.r + 30, rgb.g + 30, rgb.b + 30);
+			colorCircles = scaledHex(rgb.r + 20, rgb.g + 20, rgb.b + 20) + "A0";
 		}
 
 		colorContext = (totalBrightness > 360 || (rgb.g / 2 > rgb.r + rgb.b))
@@ -948,10 +949,10 @@ function createCustomColorScheme(hexColor, save) {
 	} else {
 
 		colorBackground = "#000000";
-		colorPrimary = scaledHex(Math.max(rgb.r * 4, 70), Math.max(rgb.g * 4, 70), Math.max(rgb.b * 4, 70))
-		colorTip = scaledHex(Math.max(rgb.r * 3.4, 40), Math.max(rgb.g * 3.4, 40), Math.max(rgb.b * 3.4, 40)) + "9F";
+		colorPrimary = scaledHex(minIfNotZero(rgb.r * 4, 70), minIfNotZero(rgb.g * 4, 70), minIfNotZero(rgb.b * 4, 70));
+		colorTip = scaledHex(minIfNotZero(rgb.r * 3.4, 40), minIfNotZero(rgb.g * 3.4, 40), minIfNotZero(rgb.b * 3.4, 40)) + "9A";
 		colorAction = colorTip;
-		colorCircles = scaledHex(Math.max(rgb.r * 2.8, 40), Math.max(rgb.g * 2.8, 40), Math.max(rgb.b * 2.8, 40));
+		colorCircles = scaledHex(minIfNotZero(rgb.r * 2.5, 40), minIfNotZero(rgb.g * 2.5, 40), minIfNotZero(rgb.b * 2.5, 40)) + "AF";
 		colorContext = colorPrimary;
 	}
 
