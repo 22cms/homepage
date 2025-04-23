@@ -2,7 +2,7 @@
 var translations = {
 	"en" : {
 		"languageName" : "English",
-		"languageEmoji" : "&#x1F1EA&#x1F1F8",
+		"languageEmoji" : "&#x1F1EC&#x1F1E7",
 		
 		"typeHere" : "Type here",
 		"searchOn" : "Search on <engine>",
@@ -122,7 +122,8 @@ var translations = {
 	
 	"es": {
 		"languageName": "Español",
-		"languageEmoji": "&#x1F1EC&#x1F1E7",
+		"languageEmoji": "&#x1F1EA&#x1F1F8",
+
 		"typeHere": "Escribe aquí",
 		"searchOn": "Buscar en <engine>",
 		"goToTheURL": "Ir a URL",
@@ -141,6 +142,7 @@ var translations = {
 		"exportNotif": "La configuración ha sido exportada y copiada al portapapeles, ejecuta el código copiado donde lo desees restaurar.",
 		"settingsIconHidden": "Para abrir la página de configuración, escribe .$settings() en la barra de busqueda.",
 		"settingsIconShown": "El ícono de ajustes se mostrará de nuevo.",
+		
 		"settings": "Ajustes",
 		"enginesAndBookmarks": "Motores de busqueda/Favoritos",
 		"addElem": "Agregar",
