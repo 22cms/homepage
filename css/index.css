@@ -1,7 +1,7 @@
 :root {
 	--theme-name: Default;
 	/*Theme name*/
-	--supported-features: animations, blur, customize, font-resize;
+	--supported-features: animations, blur, customize, type-resize;
 	/*Features supported by the theme*/
 	--searchtype-sizeorig: 128px;
 	/*Set here the default font size*/
@@ -298,6 +298,7 @@ button {
 	opacity: 0;
 	visibility: hidden;
 	background-color: rgba(0, 0, 0, 0);
+	backdrop-filter: initial;
 }
 
 .settings-container {
