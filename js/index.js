@@ -51,6 +51,7 @@ var localSettings = {
 	],	
 	"showSettingsIcon": true,
 	"enableAnimations": true,
+	"enableBlur": true,
 	"resizeSearchFont": true,
 	"switchEngineWithArrows": true,
 	"useFaviconIco": false,
@@ -140,11 +141,15 @@ var contextVisible;
 
 var altIsDown;
 
+const supportedFeatures =  getComputedStyle(document.documentElement).getPropertyValue('--supported-features').split(', ')
+
 
 
 //On Load Function: Renders all the elements of the page (should probably be splitten)
 
 function renderElements() {
+	//Helper Functions
+	const cssToggler = (cssClass, option) => body.classList.toggle(cssClass, !localSettings[option])
 	//Deletes every pre-rendered element
 	searchEnginesContainer.innerHTML = "";
 	bookmarksContainer.innerHTML = "";
@@ -189,7 +194,8 @@ function renderElements() {
 	settingsIcon.classList.toggle("fHidden", !localSettings.showSettingsIcon);
 	//Applies the custom color scheme if it's set to
 	if (localSettings.customColorTheme) createCustomColorScheme(localSettings.customColorTheme);
-	body.classList.toggle("no-animations", !localSettings.enableAnimations);
+	cssToggler('no-animations', 'enableAnimations');
+	cssToggler('no-blur', 'enableBlur');
 	//Runs loadCheckboxes
 	loadCheckboxes();
 }
@@ -215,6 +221,12 @@ function hideTip() {
 	else if (validCommand(searchBox.value)) { toggleEvalMode(true); searchAction.innerText = curLang.evalJSCode }
 	else if (validSubReddit(searchBox.value)) { toggleRedditMode(true); searchAction.innerText = curLang.goToSubReddit }
 	else { toggleURLMode(false); toggleEvalMode(false); toggleRedditMode(false); };
+}
+
+//Function object: toggles various features inside settings
+const settingsToggles = {
+	'toggleAnimations' : (bool) => body.classList.toggle('no-animations', (bool != undefined) ? !bool : !localSettings.enableAnimations),
+	'toggleBlur' : (bool) => body.classList.toggle('no-blur', (bool != undefined) ? !bool : !localSettings.enableBlur), 
 }
 
 //Function: Sets every checkbox element to the right value, accordingly to the how localSettings has been set to
@@ -693,7 +705,7 @@ function getThemeInfo() {
 getThemeInfo();
 
 function regulateSearchFontSize(baseElem) {
-	if (localSettings.resizeSearchFont) {
+	if (localSettings.resizeSearchFont & supportedFeatures.includes('type-resize')) {
 		newFontSize = getComputedStyle(document.documentElement).getPropertyValue('--searchtype-sizeorig');
 		fontSizeInt = parseInt(newFontSize.replace("px", ""), 10);
 		if (baseElem.length > maxCharacters) {
@@ -942,7 +954,7 @@ function createCustomColorScheme(hexColor, save = false) {
 			colorCircles = scaledHex(rgb.r + 20, rgb.g + 20, rgb.b + 20) + "A0";
 		}
 
-		colorContext = (totalBrightness > 360 || (rgb.g / 2 > rgb.r + rgb.b))
+		colorContext = (totalBrightness > 380 || (rgb.g / 2 > rgb.r + rgb.b))
 			? scaledHex(rgb.r * 0.7 - 10, rgb.g * 0.7 - 10, rgb.b * 0.7 - 10)
 			: colorPrimary;
 

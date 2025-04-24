@@ -80,12 +80,14 @@
 					</select>
 					<p id="theme-advisor" class="radio-label">You're Using the Default Theme, <a href="oldtheme.html" class="searchbox-url">Click here</a> to use the "Old" Theme</p>
 					<form>
-						<input onchange="savePreferences();renderElements()" class="settings-checkbox" varid="enableAnimations" type="checkbox" id="settings-enable-animations" value="true" checked>
-						<label class="radio-label translatable" stringid="enableAnimations" for="settings-enable-animations">Enable animations</label><br>
+						<input onchange="savePreferences();settingsToggles.toggleAnimations()" class="settings-checkbox opt-feature animations" varid="enableAnimations" type="checkbox" id="settings-enable-animations" value="true" checked>
+						<label class="radio-label translatable opt-feature animations" stringid="enableAnimations" for="settings-enable-animations">Enable animations</label><br class="opt-feature animations">
+						<input onchange="savePreferences();settingsToggles.toggleBlur();" class="settings-checkbox opt-feature blur" varid="enableBlur" type="checkbox" id="settings-enable-blur" value="true" checked>
+						<label class="radio-label translatable opt-feature blur" stringid="enableBlur" for="settings-enable-blur">Enable blur</label><br class="opt-feature blur">
 						<input onchange="toggleSettingsButton()" class="settings-checkbox" varid="showSettingsIcon" type="checkbox" id="settings-show-icon" value="true" checked>
 						<label class="radio-label translatable" stringid="showSettingsIcon" for="settings-show-icon">Show the Settings Icon on the top-right corner</label><br>
 						<input onchange="savePreferences()" class="settings-checkbox" varid="resizeSearchFont" id="settings-font-resize" type="checkbox" value="true" checked>
-						<label class="radio-label translatable" stringid="resizeSearchFont" for="settings-font-resize">Resize the font size while typing (if supported from the theme)</label><br>
+						<label class="radio-label translatable opt-feature type-resize" stringid="resizeSearchFont" for="settings-font-resize">Resize the font size while typing (if supported from the theme)</label><br>
 						<input onchange="savePreferences()" class="settings-checkbox" varid="launchURLwhenClicked" type="checkbox" id="settings-launch-url" value="true" checked>
 						<label class="radio-label translatable" stringid="launchURLwhenClicked" for="settings-launch-url">Go to the typed URL/Subreddit when left clicked</label><br>
 						<input onchange="savePreferences();renderElements()" class="settings-checkbox" varid="useFaviconIco" id="settings-use-favicon-ico" type="checkbox" value="true" checked>
@@ -93,7 +95,7 @@
 						<input onchange="savePreferences()" class="settings-checkbox" varid="useOldReddit" id="settings-use-old-reddit" type="checkbox" value="true" checked>
 						<label class="radio-label translatable" stringid="useOldReddit" for="settings-use-old-reddit">Go to old.reddit.com when typing a Subreddit</label><br>
 					</form>
-					<div class="row">
+					<div class="row opt-feature customize">
 						<input oninput="createCustomColorScheme(this.value, true)" class="fHidden" type="color" id="custom-color-picker" name="custom-color-picker"value="#BDE6FB"></input>
 						<label class="settings-button ripple confirm-button translatable" stringid="applyColorTheme" style="width:auto;flex-grow:4" onclick="settings()" for="custom-color-picker">APPLY A CUSTOM COLOR THEME (TELEGRAM-LIKE)</label>
 						<button onclick="createCustomColorScheme(randomColor(false, 120), true)" class="settings-button ripple Micon mdi-shuffle-variant"></button>

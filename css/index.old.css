@@ -1,5 +1,6 @@
 :root {
 	--theme-name:Old; /*Theme name*/
+	--supported-features: animations, customize, type-resize; /*Features supported by the theme*/
 	--searchtype-sizeorig:105px; /*Set here the default font size*/
 	--searchtype-size:105px; /*And here too*/
 	--searchtype-onecharsize:52; /*Set here the average character size, it'll be used in the auto fontsize regulation.*/
@@ -507,6 +508,10 @@ label.settings-button {
 	transition: initial;
 }
 
+.opt-feature.blur {
+	display: none;
+}
+
 
 
 @media only screen and (max-width: 550px) {	
@@ -544,10 +549,6 @@ label.settings-button {
 		display: flex;
 		flex-direction: column;
 		gap: 6px;
-	}
-
-	form br {
-		display: none;
 	}
 
 	.settings-type {

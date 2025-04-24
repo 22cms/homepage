@@ -35,6 +35,7 @@ var translations = {
 		"langAndTheme" : "Languages and Theming",
 		"showSettingsIcon" : "Show the Settings Icon on the top-right corner",
 		"enableAnimations" : "Enable animations",
+		"enableBlur" : "Enable blur",
 		"launchURLwhenClicked" : "Go to the typed URL/Subreddit when left clicked",
 		"resizeSearchFont" : "Resize the font size while typing (if supported from the theme)",
 		"applyColorTheme" : "Apply a custom Color Theme",
@@ -94,6 +95,7 @@ var translations = {
 		"langAndTheme" : "Lingua e personalizzazione",
 		"showSettingsIcon" : "Mostra l'icona delle Impostazioni nell'angolo nord-est",
 		"enableAnimations" : "Abilita le animazioni",
+		"enableBlur" : "Abilita effetti di sfocatura",
 		"launchURLwhenClicked" : "Vai all'URL/Subreddit digitato quando si preme col mouse",
 		"resizeSearchFont" : "Ridimensiona il testo mentre si sta scrivendo (se supportato dal tema)",
 		"applyColorTheme" : "Applica un colore di base al Tema",
@@ -154,6 +156,7 @@ var translations = {
 		"langAndTheme": "Lenguajes y temas",
 		"showSettingsIcon": "Mostrar ícono de ajustes en la esquina superior derecha",
 		"enableAnimations": "Habilitar animaciones",
+		"enableBlur" : "Habilitar efectos de desenfoque",
 		"launchURLwhenClicked": "Ir a la URL/subreddit con click izquierdo",
 		"resizeSearchFont": "Cambiar tamaño de la fuente mientras se escribe (si lo soporta el tema)",
 		"applyColorTheme": "Aplicar color personalizado",
@@ -183,15 +186,16 @@ var translations = {
 }
 
 //Applies all settings about languages
-var curLang = translations["en"];
 var curLangCode = "en";
-var unbiasedLanguageCode = navigator.language.split("-")[0];
+var curLang = translations["en"];
+const unbiasedLanguageCode = navigator.language.split("-")[0];
+const savedLang = localStorage.getItem('curLang');
 if (unbiasedLanguageCode in translations) {
 	curLang = translations[unbiasedLanguageCode];
 	curLangCode = unbiasedLanguageCode;
 }
 
-if (localStorage.getItem('curLang')) {
+if (savedLang && savedLang in translations) {
 	curLang = translations[localStorage.getItem('curLang')];
 	curLangCode = localStorage.getItem('curLang');
 }
