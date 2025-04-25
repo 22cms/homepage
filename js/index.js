@@ -898,7 +898,8 @@ function contextMakeDefault() {
 //Function: opens a new Tab from a bookmark
 
 function contextTab() {
-	workingArray = (contextElemType == 1) ? localSettings.bookmarks : folder.current[3];
+	console.log(contextElemType);
+	workingArray = (contextElemType == 1) ? localSettings.bookmarks : folder.current.content;
 	goToURL(workingArray[contextArrayPos].url, true);
 	contextClose();
 }
