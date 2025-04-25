@@ -699,6 +699,7 @@ label.settings-button {
 
 	.settings-type:focus {
 		height: 36px;
+		min-height: 36px;
 	}
 
 	.notification-popup {
