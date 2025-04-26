@@ -107,7 +107,7 @@ const folderContentContainer = document.querySelector("#folder-content-container
 var folder = {};
 
 const settingsOverlay = document.querySelector("#settings-overlay");
-const settingsAddElementForm = document.querySelector("#add-element-form");
+const settingsAddElementForm = document.querySelector("#add-homepage-element-form");
 const settingsLanguageSelect = document.querySelector("#language-select");
 const customColorPicker = document.querySelector("#custom-color-picker");
 
