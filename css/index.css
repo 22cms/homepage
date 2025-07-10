@@ -312,11 +312,11 @@ button {
 	max-height: 100%;
 	border-radius: 10px;
 	padding: 16px;
-	transition: backdrop-filter 0.4s, background-color 0.4s, transform 0.4s;
+	transition: backdrop-filter 0.15s, background-color 0.15s, transform 0.15s;
 }
 
 .sHidden .settings-container {
-	transform: scale(0.5);
+	transform: scale(1.15);
 }
 
 @supports (backdrop-filter: blur(2em)) {
