@@ -58,6 +58,7 @@ var localSettings = {
 	"enableAltShortcut": true,
 	"useOldReddit": false,
 	"launchURLwhenClicked": true,
+	"defaultSearchEngine": null,
 };
 
 if (localStorage.getItem("localSettings")) localSettings = JSON.parse(localStorage.getItem("localSettings"));
@@ -144,42 +145,45 @@ var altIsDown;
 const supportedFeatures =  getComputedStyle(document.documentElement).getPropertyValue('--supported-features').split(', ')
 
 
-
 //On Load Function: Renders all the elements of the page (should probably be splitten)
 
 function renderElements() {
 	//Helper Functions
 	const cssToggler = (cssClass, option) => body.classList.toggle(cssClass, !localSettings[option])
+	ls = localSettings;
 	//Deletes every pre-rendered element
 	searchEnginesContainer.innerHTML = "";
 	bookmarksContainer.innerHTML = "";
 	settingsLanguageSelect.innerHTML = "";
 	//If a custom color scheme is present in localSettings, load it in customColorPicker
-	if (localSettings.customColorTheme) customColorPicker.value = localSettings.customColorTheme;
+	if (ls.customColorTheme) customColorPicker.value = ls.customColorTheme;
 	//Generates every element, adds adds event listener for every one of them, sets the default search engine and starts hideTip()
 	var i;
-	for (i = 0; i < localSettings.searchEngines.length; i++) {
+	for (i = 0; i < ls.searchEngines.length; i++) {
 		genSearchElement(searchEnginesContainer, i);
 	}
-	for (i = 0; i < localSettings.bookmarks.length; i++) {
-		if (localSettings.bookmarks[i].type == 'folder')
+	for (i = 0; i < ls.bookmarks.length; i++) {
+		if (ls.bookmarks[i].type == 'folder')
 			bookmarksContainer.innerHTML += genFolderElement(i);
-		else if (localSettings.bookmarks[i].type == 'url') bookmarksContainer.innerHTML += genBookmarkElement(i);
+		else if (ls.bookmarks[i].type == 'url') bookmarksContainer.innerHTML += genBookmarkElement(i);
 	}
 	//Adds Event Listeners
-	for (i = 0; i < localSettings.bookmarks.length; i++) {
-		if (localSettings.bookmarks[i].type == 'folder') {
+	for (i = 0; i < ls.bookmarks.length; i++) {
+		if (ls.bookmarks[i].type == 'folder') {
 			id = "folder-" + i.toString();
 			makeFolderListen(id);
 		}
-		else if (localSettings.bookmarks[i].type == 'url') {
+		else if (ls.bookmarks[i].type == 'url') {
 			id = "bookmark-" + i.toString();
 			makeBookmarkListen(id);
 		}
 	}
 
-	document.getElementsByClassName("search-link")[0].classList.add("in-use");
-	currentEngine = localSettings.searchEngines[0];
+	//Checks if the default search engine is different from the first one, and select that one in case
+	inUseEngine = (ls.defaultSearchEngine != null && ls.defaultSearchEngine <= ls.searchEngines.length-1) ? ls.defaultSearchEngine : 0; 
+	document.getElementsByClassName("search-link")[inUseEngine].classList.add("in-use");
+	currentEngine = ls.searchEngines[inUseEngine];
+
 	hideTip();
 	//Generates the Language Selector Entries
 	for (i = 0; i < Object.keys(translations).length; i++) {
@@ -191,9 +195,9 @@ function renderElements() {
 	maxCharacters += Math.floor(maxCharacters / 8);
 	//Hides the settings button if it's set to
 
-	settingsIcon.classList.toggle("fHidden", !localSettings.showSettingsIcon);
+	settingsIcon.classList.toggle("fHidden", !ls.showSettingsIcon);
 	//Applies the custom color scheme if it's set to
-	if (localSettings.customColorTheme) createCustomColorScheme(localSettings.customColorTheme);
+	if (ls.customColorTheme) createCustomColorScheme(ls.customColorTheme);
 	cssToggler('no-animations', 'enableAnimations');
 	cssToggler('no-blur', 'enableBlur');
 	//Runs loadCheckboxes
@@ -882,15 +886,10 @@ function contextFolderDiag() {
 //Function: sets the choosen Search Engine as the default one (by making it the first one)
 
 function contextMakeDefault() {
-	workingArray = localSettings.searchEngines;
-
-	element = workingArray[contextArrayPos];
-	workingArray.splice(contextArrayPos, 1);
-	workingArray.splice(0, 0, element);
-
-	localSettings.searchEngines = workingArray;
+	localSettings.defaultSearchEngine = contextArrayPos;
 
 	renderElements();
+	switchEngineTo(localSettings.defaultSearchEngine, false)
 	savePreferences();
 	contextClose();
 }
