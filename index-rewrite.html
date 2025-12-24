@@ -11,20 +11,18 @@
 		<style></style>
 	</head>
 	<body>
-		<p class="Micon mdi-cog-outline" id="settings-icon" onclick="settings()"></p>
+		<p class="Micon mdi-cog-outline" id="settings-icon"></p>
 		<div id="body-centerbox">
 			<div id="searchengines-container" class="centerbox"></div>
 			
 			<div class="searchbox-container centerbox">
 				<p id="search-tip">Type here</p>
-				<input autocomplete="off" onclick="dealWithSearchBoxClick()" oninput="hideTip()" id="search-box" type="text">
+				<input autocomplete="off" id="search-box" type="text">
 			</div>
 			<p id="searchbox-action">Search on Google</p>
+
 			<div id="bookmarks-container" class="bookmark-like-container centerbox">
-				
-			</div>
-			<div id="folder-container" class="bookmark-like-container centerbox fHidden">
-				<div id="hide-folder-button" class="bookmark-link centerbox">
+				<div id="go-back-button" class="bookmark-link centerbox fHidden">
 					<div class="bookmark-circle centerbox">
 						<div class="centerbox" style="color: white; text-shadow: 0px 2px 6px white;">
 							<span class="Micon folder-icon mdi-arrow-left"></span>
@@ -32,7 +30,7 @@
 					</div>
 					<p class="bookmark-title translatable" stringid="goBack">Go back</p>
 				</div>
-				<div id="folder-content-container" class="bookmark-like-container"></div>
+				<div id="bookmarks-content-container" class="bookmark-like-container"></div>
 			</div>
 		</div>
 		<div id="settings-overlay" class="settings-overlay centerbox sHidden">
@@ -167,10 +165,10 @@
 			
 			<div class="search-link centerbox" id="engine-selector-scheme" nm="((arrayPosition))"><img src="" class="search-engine"></div>
 			
-			<div id="bookmark-folder-link-scheme" class="bookmark-link centerbox" nm="((arrayPosition))">
+			<div id="bookmark-folder-scheme" class="bookmark-link centerbox" nm="((arrayPosition))">
 				<div class="bookmark-circle centerbox">
 					<img src="((url))" class="bookmark-icon">
-					<div class="centerbox" style="color: ((color)); text-shadow: 0px 2px 6px ((color));">
+					<div class="centerbox folder-icon-box" style="color: ((color)); text-shadow: 0px 2px 6px ((color));">
 						<span class="Micon folder-icon"></span>
 					</div>
 				</div>
@@ -179,6 +177,6 @@
 		</div>
 	
 		<script src="js/translations.js"></script> 
-		<script src="js/index.js"></script> 
+		<script src="js/rewrite.js"></script> 
 	</body>
 </html>

@@ -115,7 +115,7 @@ p, input, label, a, #notif-text, button {
 	gap: 4px 4px;
 	margin: 10px 0 0 0;
 }
-#folder-content-container {
+#bookmarks-content-container {
 	margin: 0 0 0 0;
 }
 #newfolder-container, #existingfolders-container {
