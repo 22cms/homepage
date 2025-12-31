@@ -263,6 +263,10 @@ button {
 	padding: 0 0 0 0;
 
 }
+.bookmark-link:hover .bookmark-title,
+.in-use .bookmark-title {
+	color: #DDDDDDF0;
+}
 
 #settings-icon {
 	position: fixed;
@@ -627,7 +631,7 @@ label.settings-button {
 
 }
 .alt-badge.unavailable .alt-badge-label {
-	color: var(--customize-primary)
+	color: #FFFFFF90
 }
 
 
