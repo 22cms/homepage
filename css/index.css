@@ -53,16 +53,16 @@ button {
 	color: white;
 }
 
+.black {
+	color: black;
+}
+
 .Micon {
 	font-family: Material Design Icons;
 	font-size: 26px;
 	margin: 0;
 }
 
-.black {
-	color: black;
-	font-size: 16px;
-}
 
 #body-centerbox,
 .centerbox {
@@ -615,6 +615,19 @@ label.settings-button {
 	height: 25px;
 	border-radius: 15px;
 	box-shadow: 0px 2px 4px var(--customize-searchaction);
+	font-size: 16px;
+}
+
+.alt-badge-label {
+	font-size: 16px;
+}
+
+.alt-badge.unavailable {
+	background-color: var(--customize-context);
+
+}
+.alt-badge.unavailable .alt-badge-label {
+	color: var(--customize-primary)
 }
 
 
