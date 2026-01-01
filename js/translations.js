@@ -1,5 +1,6 @@
-//Translations
-var translations = {
+class TranslationManager {
+    constructor() {
+        this.translations = {
 	"en" : {
 		"languageName" : "English",
 		"languageEmoji" : "&#x1F1EC&#x1F1E7",
@@ -9,6 +10,7 @@ var translations = {
 		"goToTheURL" : "Go to the URL",
 		"goToSubReddit" : "Go to the Subreddit",
 		"evalJSCode" : "Evaluate the JS Code",
+		"commandExecuted": "Command executed",
 		"openFolder" : "Open <title>",
 		"goBack" : "Go back",
 		"openShortcut" : "Open the shortcut",
@@ -42,6 +44,7 @@ var translations = {
 		"resetAndImport" : "Reset and Import",
 		"settingsExport" : "Export Settings",
 		"settingsReset" : "Reset All Settings",
+		"resetConfirm" : "Are you sure you want to reset all settings?",
 		"settingsClose" : "Close",
 		"contextDefault" : "Make Default",
 		"contextNewTab" : "Open in new Tab",
@@ -58,8 +61,9 @@ var translations = {
 		"noOtherFolders" : "There aren't any folders.",
 		"folderUndo" : "Cancel", 
 		"materialIconsRedirect" : "You can find all supported icon codes on Material Design Icons' website",
-		"toFolder" : "The bookmark has been put in a Folder", 
+		"toFolder" : "The bookmark has been moved to a folder.",
 		"emptyFolder" : "Empty Folder",
+		"moveHere" : "Move Here",
 	},
 	"it" : {
 		"languageName" : "Italiano",
@@ -70,6 +74,7 @@ var translations = {
 		"goToTheURL" : "Vai all'URL",
 		"goToSubReddit" : "Vai sul Subreddit",
 		"evalJSCode" : "Esegui il codice JS",
+		"commandExecuted": "Comando eseguito",
 		"openFolder" : "Apri <title>",
 		"goBack" : "Vai indietro",
 		"openShortcut" : "Apri la scorciatoia",
@@ -102,6 +107,7 @@ var translations = {
 		"resetAndImport" : "Reset e Importazione",
 		"settingsExport" : "Esporta Impostazioni",
 		"settingsReset" : "Ripristina tutte le Impostazioni",
+		"resetConfirm" : "Sei sicuro di voler ripristinare tutte le impostazioni?",
 		"settingsClose" : "Chiudi",
 		"contextDefault" : "Rendi predefinito",
 		"contextNewTab" : "Apri in nuova scheda",
@@ -120,6 +126,7 @@ var translations = {
 		"materialIconsRedirect" : "Puoi trovare tutti i codici icona supportati sul sito Material Design Icons",
 		"toFolder" : "Il segnalibro è stato spostato in una cartella",
 		"emptyFolder" : "Cartella vuota",
+		"moveHere" : "Sposta qui",
 	},
 	
 	"es": {
@@ -131,6 +138,7 @@ var translations = {
 		"goToTheURL": "Ir a URL",
 		"goToSubReddit": "Ir a subreddit",
 		"evalJSCode": "Evaluar código JS",
+		"commandExecuted": "Comando ejecutado",
 		"openFolder": "Abrir <title>",
 		"goBack": "Atrás",
 		"openShortcut": "Abrir atajo",
@@ -163,6 +171,7 @@ var translations = {
 		"resetAndImport": "Reiniciar e importar",
 		"settingsExport": "Exportar ajustes",
 		"settingsReset": "Reiniciar todos los ajustes",
+		"resetConfirm": "¿Estás seguro de que deseas restablecer todos los ajustes?",
 		"settingsClose": "Cerrar",
 		"contextDefault": "Hacer predeterminado",
 		"contextNewTab": "Abrir en nueva pestaña",
@@ -181,36 +190,58 @@ var translations = {
 		"materialIconsRedirect": "Puedes encontrar los códigos de íconos soportados en el sitio web de 'Material Design Icons'",
 		"toFolder": "Favorito movido a carpeta.",
 		"emptyFolder": "Carpeta vacía",
+		"moveHere" : "Mover aquí",
 	},
 
+        };
+        this.currentLang = 'en';
+        this.init();
+    }
+
+    init() {
+        const savedLang = localStorage.getItem('curLang');
+        const browserLang = navigator.language.split("-")[0];
+
+        if (savedLang && this.translations[savedLang]) {
+            this.currentLang = savedLang;
+        } else if (this.translations[browserLang]) {
+            this.currentLang = browserLang;
+        }
+
+        localStorage.setItem("curLang", this.currentLang);
+    }
+
+    getString(key, replacements = {}) {
+        let str = this.translations[this.currentLang][key] || key;
+        for (const [placeholder, value] of Object.entries(replacements)) {
+            str = str.replace(placeholder, value);
+        }
+        return str;
+    }
+
+    translateDOM() {
+        const elements = document.querySelectorAll('.translatable');
+        elements.forEach(el => {
+            const key = el.getAttribute('stringid');
+            if (key) {
+                el.innerHTML = this.getString(key);
+            }
+        });
+    }
+
+    getLanguages() {
+        return Object.keys(this.translations).map(lang => ({
+            code: lang,
+            name: this.translations[lang].languageName,
+            emoji: this.translations[lang].languageEmoji
+        }));
+    }
+
+    setLanguage(lang) {
+        if (this.translations[lang]) {
+            this.currentLang = lang;
+            localStorage.setItem("curLang", lang);
+            this.translateDOM();
+        }
+    }
 }
-
-//Applies all settings about languages
-var curLangCode = "en";
-var curLang = translations["en"];
-const unbiasedLanguageCode = navigator.language.split("-")[0];
-const savedLang = localStorage.getItem('curLang');
-if (unbiasedLanguageCode in translations) {
-	curLang = translations[unbiasedLanguageCode];
-	curLangCode = unbiasedLanguageCode;
-}
-
-if (savedLang && savedLang in translations) {
-	curLang = translations[localStorage.getItem('curLang')];
-	curLangCode = localStorage.getItem('curLang');
-}
-
-localStorage.setItem("curLang", curLangCode)
-
-//And translates Fixed Elements
-
-function applyFixedTranslations() {
-	fixedElements = document.getElementsByClassName("translatable");
-	var curLangString;
-	for (var i = 0; i < fixedElements.length; i++) {
-		curLangString = curLang[fixedElements[i].attributes.stringid.value];
-		
-		if (curLangString) fixedElements[i].innerText = curLangString;
-	} 
-}
-applyFixedTranslations()

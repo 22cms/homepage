@@ -4,6 +4,7 @@
 		<title>Francesco's Home Page</title>
 		<link id="css-id" rel="stylesheet" href="css/index.old.css">
 		<link rel="stylesheet" href="css/materialdesignicons.min.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
 		<link rel="icon" href="imgs/404.svg"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
@@ -11,20 +12,18 @@
 		<style></style>
 	</head>
 	<body>
-		<p class="Micon mdi-cog-outline" id="settings-icon" onclick="settings()"></p>
+		<p class="Micon mdi-cog-outline" id="settings-icon"></p>
 		<div id="body-centerbox">
 			<div id="searchengines-container" class="centerbox"></div>
 			
 			<div class="searchbox-container centerbox">
-				<p id="search-tip">Type here</p>
-				<input autocomplete="off" onclick="dealWithSearchBoxClick()" oninput="hideTip()" id="search-box" type="text">
+				<p id="search-tip" class="translatable" stringid="typeHere">Type here</p>
+				<input autocomplete="off" id="search-box" type="text">
 			</div>
 			<p id="searchbox-action">Search on Google</p>
+
 			<div id="bookmarks-container" class="bookmark-like-container centerbox">
-				
-			</div>
-			<div id="folder-container" class="bookmark-like-container centerbox fHidden">
-				<div id="hide-folder-button" class="bookmark-link centerbox">
+				<div id="go-back-button" class="bookmark-link centerbox fHidden">
 					<div class="bookmark-circle centerbox">
 						<div class="centerbox" style="color: white; text-shadow: 0px 2px 6px white;">
 							<span class="Micon folder-icon mdi-arrow-left"></span>
@@ -32,14 +31,14 @@
 					</div>
 					<p class="bookmark-title translatable" stringid="goBack">Go back</p>
 				</div>
-				<div id="folder-content-container" class="bookmark-like-container"></div>
+				<div id="bookmarks-content-container" class="bookmark-like-container centerbox"></div>
 			</div>
 		</div>
 		<div id="settings-overlay" class="settings-overlay centerbox sHidden">
 			<div class="settings-container" id="settings-container">
 				<div class="centerbox row">
 					<p class="settings-title translatable" stringid="settings">Settings</p>
-					<p onclick="settings()" class="settings-cross mHidden Micon mdi-window-close"></button>
+					<p id="settings-close-icon" class="settings-close-button settings-cross mHidden Micon mdi-window-close"></button>
 				</div>
 					<div class="scrollablebox">
 						<p id="mobile-warning"><b class="translatable" stringid="mobileDisclaimerNote">Note</b>: 
@@ -48,10 +47,10 @@
 							</span>
 						</p>
 					<p class="settings-category-title translatable" stringid="enginesAndBookmarks">Search Engines/Bookmarks</p>
-					<form class="add-element-form">
+					<form id="add-homepage-element-form" class="add-element-form">
 						<input autocomplete="off" name="name" type="text" class="settings-type" placeholder="Googel Search" id="settings-nametype">
 						<input autocomplete="off" name="url" type="text" class="settings-type" placeholder="Use <query> for the engine query" id="settings-urltype">
-						<button type="button" class="settings-button confirm-button highlight ripple translatable" stringid="addElem" onclick="addFormElem()">ADD</button>
+						<button type="button" class="settings-button confirm-button highlight ripple translatable" stringid="addElem">ADD</button>
 						<br>
 						<label>
 							<input for="searchEngine" class="settings-selector" type="radio" id="engine-radio" name="elementType" value="searchEngine" checked="checked">
@@ -63,54 +62,52 @@
 						</label><br>
 					</form>
 					<form class="no-margin mHidden">
-						<input onchange="savePreferences()" class="settings-checkbox" varid="switchEngineWithArrows" id="settings-switch-via-arrows" type="checkbox" value="true" checked>
+						<input class="settings-checkbox" varid="switchEngineWithArrows" id="settings-switch-via-arrows" type="checkbox" value="true" checked>
 						<label class="radio-label translatable" stringid="switchEngineWithArrows" for="settings-switch-via-arrows">Switch Search Engines using 🠕 and 🠗 arrow keys</label><br>
-						<input onchange="savePreferences()" class="settings-checkbox" varid="enableAltShortcut" id="settings-enable-alt-shortcut" type="checkbox" value="true" checked>
+						<input class="settings-checkbox" varid="enableAltShortcut" id="settings-enable-alt-shortcut" type="checkbox" value="true" checked>
 						<label class="radio-label translatable" stringid="enableAltShortcut" for="settings-enable-alt-shortcut">Open bookmarks and folder using ALT plus any keyboard number</label><br>
 						<div class="settings-alt-numpad">
-							<input onchange="savePreferences()" class="settings-checkbox " varid="numPadInstead" id="settings-numpad-instead" type="checkbox" value="true" checked>
+							<input class="settings-checkbox " varid="numPadInstead" id="settings-numpad-instead" type="checkbox" value="true" checked>
 							<label class="radio-label translatable" stringid="numPadInstead" for="settings-numpad-instead">Use Num Pad instead of number keys</label>
 						</div>
 					</form>
-					<!--<button type="button" class="settings-button red ripple" onclick="removeMode = 1;settings()">REMOVE AN ELEMENT</button> -->
 				
 				
 					<p class="settings-category-title row translatable" stringid="langAndTheme">Language and Theme</p>
 					<select class="settings-type" id="language-select" onchange="changeLangTo(this.value)">
 					</select>
-					<p id="theme-advisor" class="radio-label">You're Using the Default Theme, <a href="oldtheme.html" class="searchbox-url">Click here</a> to use the "Old" Theme</p>
 					<form>
-						<input onchange="savePreferences();settingsToggles.toggleAnimations()" class="settings-checkbox opt-feature animations" varid="enableAnimations" type="checkbox" id="settings-enable-animations" value="true" checked>
+						<input class="settings-checkbox opt-feature animations" varid="enableAnimations" type="checkbox" id="settings-enable-animations" value="true" checked>
 						<label class="radio-label translatable opt-feature animations" stringid="enableAnimations" for="settings-enable-animations">Enable animations</label><br class="opt-feature animations">
-						<input onchange="savePreferences();settingsToggles.toggleBlur();" class="settings-checkbox opt-feature blur" varid="enableBlur" type="checkbox" id="settings-enable-blur" value="true" checked>
+						<input class="settings-checkbox opt-feature blur" varid="enableBlur" type="checkbox" id="settings-enable-blur" value="true" checked>
 						<label class="radio-label translatable opt-feature blur" stringid="enableBlur" for="settings-enable-blur">Enable blur</label><br class="opt-feature blur">
-						<input onchange="toggleSettingsButton()" class="settings-checkbox" varid="showSettingsIcon" type="checkbox" id="settings-show-icon" value="true" checked>
+						<input class="settings-checkbox" varid="showSettingsIcon" type="checkbox" id="settings-show-icon" value="true" checked>
 						<label class="radio-label translatable" stringid="showSettingsIcon" for="settings-show-icon">Show the Settings Icon on the top-right corner</label><br>
-						<input onchange="savePreferences()" class="settings-checkbox" varid="resizeSearchFont" id="settings-font-resize" type="checkbox" value="true" checked>
+						<input class="settings-checkbox" varid="resizeSearchFont" id="settings-font-resize" type="checkbox" value="true" checked>
 						<label class="radio-label translatable opt-feature type-resize" stringid="resizeSearchFont" for="settings-font-resize">Resize the font size while typing (if supported from the theme)</label><br>
-						<input onchange="savePreferences()" class="settings-checkbox" varid="launchURLwhenClicked" type="checkbox" id="settings-launch-url" value="true" checked>
+						<input class="settings-checkbox" varid="launchURLwhenClicked" type="checkbox" id="settings-launch-url" value="true" checked>
 						<label class="radio-label translatable" stringid="launchURLwhenClicked" for="settings-launch-url">Go to the typed URL/Subreddit when left clicked</label><br>
-						<input onchange="savePreferences();renderElements()" class="settings-checkbox" varid="useFaviconIco" id="settings-use-favicon-ico" type="checkbox" value="true" checked>
+						<input class="settings-checkbox" varid="useFaviconIco" id="settings-use-favicon-ico" type="checkbox" value="true" checked>
 						<label class="radio-label translatable" stringid="useFaviconIco" for="settings-use-favicon-ico">Use favicon.ico instead of Favicon Kit</label><br>
-						<input onchange="savePreferences()" class="settings-checkbox" varid="useOldReddit" id="settings-use-old-reddit" type="checkbox" value="true" checked>
+						<input class="settings-checkbox" varid="useOldReddit" id="settings-use-old-reddit" type="checkbox" value="true" checked>
 						<label class="radio-label translatable" stringid="useOldReddit" for="settings-use-old-reddit">Go to old.reddit.com when typing a Subreddit</label><br>
 					</form>
 					<div class="row opt-feature customize">
-						<input oninput="createCustomColorScheme(this.value, true)" class="fHidden" type="color" id="custom-color-picker" name="custom-color-picker"value="#BDE6FB"></input>
+						<input class="fHidden" type="color" id="custom-color-picker" name="custom-color-picker"value="#BDE6FB"></input>
 						<label class="settings-button ripple confirm-button translatable" stringid="applyColorTheme" style="width:auto;flex-grow:4" onclick="settings()" for="custom-color-picker">APPLY A CUSTOM COLOR THEME (TELEGRAM-LIKE)</label>
-						<button onclick="createCustomColorScheme(randomColor(false, 120), true)" class="settings-button ripple Micon mdi-shuffle-variant"></button>
-						<button onclick="disableCustomColorScheme()" class="settings-button ripple Micon mdi-rotate-right"></button>
+						<button id="settings-shuffle-color" class="settings-button ripple Micon mdi-shuffle-variant"></button>
+						<button id="settings-reset-color" class="settings-button ripple Micon mdi-rotate-right"></button>
 					</div>
 					
 					<p class="settings category-title translatable" stringid="resetAndImport">Reset and Import</p>
 					<div class="centerbox row">
 						
-						<button type="button" class="settings-button red ripple translatable" stringid="settingsReset" onclick="localStorage.clear();location.reload()">RESET ALL SETTINGS</button>
+						<button type="button" class="settings-button red ripple translatable" stringid="settingsReset">RESET ALL SETTINGS</button>
 						<button type="button" class="settings-button confirm-button ripple translatable" stringid="settingsExport" onclick="exportJSON();settings()">EXPORT SETTINGS</button>
 					</div>
 				</div>
 				<div class="reverse-row">
-					<button onclick="settings(false)" class="settings-close-bottom dialog-button ripple translatable" stringid="settingsClose">Close</button>
+					<button class="settings-close-bottom settings-close-button dialog-button ripple translatable" stringid="settingsClose">Close</button>
 				</div>
 			</div>
 		</div>
@@ -124,9 +121,9 @@
 					</div>
 					<form class="add-element-form">
 						<input autocomplete="off" name="name" type="text" class="settings-type" placeholder="Folder name"
-							value="Example Folder" oninput="renderNewFolderPreview()" id="folder-nametype">
+							value="Example Folder" id="folder-nametype">
 						<input autocomplete="off" name="icon" type="text" class="settings-type" placeholder="Icon Code"
-							value="folder-outline" oninput="renderNewFolderPreview()" id="folder-icontype">
+							value="folder-outline" id="folder-icontype">
 					</form>
 					<a class="radio-label translatable theme-advisor settings-category-title" stringid="materialIconsRedirect"
 							href="https://materialdesignicons.com/">You can find all supported icons on Material Design Icons'
@@ -134,13 +131,22 @@
 					<p class="settings-category-title row translatable" stringid="useExistingFolder">Move into an existing folder
 					</p>
 					<div id="existingfolders-container" class="bookmark-like-container centerbox">
+						<div id="nav-back-button" class="bookmark-link centerbox fHidden">
+							<div class="bookmark-circle centerbox">
+								<div class="centerbox" style="color: white; text-shadow: 0px 2px 6px white;">
+									<span class="Micon folder-icon mdi-arrow-left"></span>
+								</div>
+							</div>
+							<p class="bookmark-title translatable" stringid="goBack">Go back</p>
+						</div>
 						<p class="settings-category-title no-margin translatable" stringid="noOtherFolders">There aren't any
 							folders.</p>
 					</div>
 				</div>
 				<div class="reverse-row">
-					<button onclick="makeIntoFolderDiag()" class="dialog-button confirm-button ripple translatable" stringid="addElem">ADD</button>
-					<button onclick="newFolderDiag(force = false)" class="dialog-button ripple translatable" stringid="folderUndo">UNDO</button>
+					<button class="dialog-button confirm-button ripple translatable" stringid="addElem">ADD</button>
+					<button id ="newfolder-move-button" class="dialog-button ripple translatable" stringid="moveHere">Move Here</button>
+					<button class="dialog-button ripple translatable close-button" stringid="folderUndo">UNDO</button>
 				</div>
 			</div>
 		</div>
@@ -150,25 +156,33 @@
 		</div>
 		
 		<div id="context-menu" class="settings-container context-menu vHidden">
-			<p class="context-close ripple Micon mdi-window-close" onclick="contextClose()"></p>
-			
-			<p id="context-default" class="context-entry ripple fHidden" onclick="contextMakeDefault()"><span class="Micon mdi-home-search-outline"></span>&nbsp;&nbsp;<span class="translatable" stringid="contextDefault">Make Default</span></p>
-			<p id="context-newtab" class="context-entry ripple" onclick="contextTab()"><span class="Micon mdi-tab-plus"></span>&nbsp;&nbsp;<span class="translatable" stringid="contextNewTab">Open in new Tab</span></p>
-			<p id="context-newfolder" class="context-entry ripple" onclick="contextFolderDiag()"><span class="Micon mdi-folder-open-outline"></span>&nbsp;&nbsp;<span class="translatable" stringid="moveIntoFolder">Move in a Folder</span></p>
+			<p id="context-default" class="context-entry ripple fHidden"><span class="Micon mdi-home-search-outline"></span>&nbsp;&nbsp;<span class="translatable" stringid="contextDefault">Make Default</span></p>
+			<p id="context-newtab" class="context-entry ripple"><span class="Micon mdi-tab-plus"></span>&nbsp;&nbsp;<span class="translatable" stringid="contextNewTab">Open in new Tab</span></p>
+			<p id="context-newfolder" class="context-entry ripple"><span class="Micon mdi-folder-open-outline"></span>&nbsp;&nbsp;<span class="translatable" stringid="moveIntoFolder">Move in a Folder</span></p>
 		
-			<p class="context-entry ripple" onclick="contextMove(false)"><span class="Micon mdi-arrow-left"></span>&nbsp;&nbsp;<span class="translatable" stringid="contextLeft">Move to the left</span></p>
-			<p class="context-entry ripple" onclick="contextMove(true)"><span class="Micon mdi-arrow-right"></span>&nbsp;&nbsp;<span class="translatable" stringid="contextRight">Move to the right</span></p>
-			<p class="context-entry ripple" onclick="contextRemoveElem()"><span class="Micon mdi-delete-outline"></span>&nbsp;&nbsp;<span class="translatable" stringid="contextDelete">Delete element</span></p>
+			<p id="context-move-left" class="context-entry ripple"><span class="Micon mdi-arrow-left"></span>&nbsp;&nbsp;<span class="translatable" stringid="contextLeft">Move to the left</span></p>
+			<p id="context-move-right" class="context-entry ripple"><span class="Micon mdi-arrow-right"></span>&nbsp;&nbsp;<span class="translatable" stringid="contextRight">Move to the right</span></p>
+			<p id="context-delete"class="context-entry ripple"><span class="Micon mdi-delete-outline"></span>&nbsp;&nbsp;<span class="translatable" stringid="contextDelete">Delete element</span></p>
 		</div>
 		
 		<!--- Elements that are generated by the renderElements() sub-functions -->
 		<div id="html-elems-schemes" class="fHidden">
-			<div id="alt-badge-scheme" class="centerbox alt-badge" style="left:0px;top:0px;"><a class="black"></a></div>
+			<div id="alt-badge-scheme" class="centerbox alt-badge" style="left:0px;top:0px;"><a class="alt-badge-label black"></a></div>
 			
-			<div class="search-link centerbox" id="engine-selector-scheme" nm="((arrayPosition))"><img src="" class="search-engine"></div>
+			<div class="search-link centerbox" id="engine-selector-scheme" nm="((arrayPosition))">
+				<img src="" class="search-engine">
+				<div class="centerbox search-icon-box">
+					<span class="Micon search-icon"></span>
+				</div>
+			</div>
 			
-			<div id="bookmark-link-scheme" class="bookmark-link centerbox" nm="((arrayPosition))">
-				<div class="bookmark-circle centerbox"><img src="" class="bookmark-icon"></div>
+			<div id="bookmark-folder-scheme" class="bookmark-link centerbox" nm="((arrayPosition))">
+				<div class="bookmark-circle centerbox">
+					<img src="((url))" class="bookmark-icon">
+					<div class="centerbox folder-icon-box" style="color: ((color)); text-shadow: 0px 2px 6px ((color));">
+						<span class="Micon folder-icon"></span>
+					</div>
+				</div>
 				<p class="bookmark-title">((title))</p>
 			</div>
 		</div>

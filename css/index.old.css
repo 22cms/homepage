@@ -6,9 +6,9 @@
 	--searchtype-onecharsize:52; /*Set here the average character size, it'll be used in the auto fontsize regulation.*/
 
 	/*Customizable color scheme*/
-	--customize-primary:white; /*The Primary color, which will be used to calculate all the other colors*/
+	--customize-primary:#FFFFFF; /*The Primary color, which will be used to calculate all the other colors*/
 	--customize-background:#212121; /*Background Color*/
-	--customize-searchtip:gray; /*Dimmed Primary color*/
+	--customize-searchtip:#777777; /*Dimmed Primary color*/
 	--customize-searchaction:#FFFFFF50; /*Even more dimmed Primary color*/
 	--customize-circles:#454545; /*Dimmed primary color, but instead of opacity, the actual RGB Values are changed*/
 	--customize-hoverbookmark:#65656560; /*The Color used to highlight the bookmarks when they're hovered*/
