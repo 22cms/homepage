@@ -61,8 +61,9 @@ class TranslationManager {
 		"noOtherFolders" : "There aren't any folders.",
 		"folderUndo" : "Cancel", 
 		"materialIconsRedirect" : "You can find all supported icon codes on Material Design Icons' website",
-		"toFolder" : "The bookmark has been put in a Folder", 
+		"toFolder" : "The bookmark has been moved to a folder.",
 		"emptyFolder" : "Empty Folder",
+		"moveHere" : "Move Here",
 	},
 	"it" : {
 		"languageName" : "Italiano",
@@ -125,6 +126,7 @@ class TranslationManager {
 		"materialIconsRedirect" : "Puoi trovare tutti i codici icona supportati sul sito Material Design Icons",
 		"toFolder" : "Il segnalibro è stato spostato in una cartella",
 		"emptyFolder" : "Cartella vuota",
+		"moveHere" : "Sposta qui",
 	},
 	
 	"es": {
@@ -188,6 +190,7 @@ class TranslationManager {
 		"materialIconsRedirect": "Puedes encontrar los códigos de íconos soportados en el sitio web de 'Material Design Icons'",
 		"toFolder": "Favorito movido a carpeta.",
 		"emptyFolder": "Carpeta vacía",
+		"moveHere" : "Mover aquí",
 	},
 
         };

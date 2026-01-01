@@ -38,7 +38,7 @@
 			<div class="settings-container" id="settings-container">
 				<div class="centerbox row">
 					<p class="settings-title translatable" stringid="settings">Settings</p>
-					<p id="settings-close-icon" class="settings-cross mHidden Micon mdi-window-close"></button>
+					<p id="settings-close-icon" class="settings-close-button settings-cross mHidden Micon mdi-window-close"></button>
 				</div>
 					<div class="scrollablebox">
 						<p id="mobile-warning"><b class="translatable" stringid="mobileDisclaimerNote">Note</b>: 
@@ -106,6 +106,9 @@
 						<button type="button" class="settings-button confirm-button ripple translatable" stringid="settingsExport" onclick="exportJSON();settings()">EXPORT SETTINGS</button>
 					</div>
 				</div>
+				<div class="reverse-row">
+					<button class="settings-close-bottom settings-close-button dialog-button ripple translatable" stringid="settingsClose">Close</button>
+				</div>
 			</div>
 		</div>
 		
@@ -118,9 +121,9 @@
 					</div>
 					<form class="add-element-form">
 						<input autocomplete="off" name="name" type="text" class="settings-type" placeholder="Folder name"
-							value="Example Folder" oninput="renderNewFolderPreview()" id="folder-nametype">
+							value="Example Folder" id="folder-nametype">
 						<input autocomplete="off" name="icon" type="text" class="settings-type" placeholder="Icon Code"
-							value="folder-outline" oninput="renderNewFolderPreview()" id="folder-icontype">
+							value="folder-outline" id="folder-icontype">
 					</form>
 					<a class="radio-label translatable theme-advisor settings-category-title" stringid="materialIconsRedirect"
 							href="https://materialdesignicons.com/">You can find all supported icons on Material Design Icons'
@@ -128,13 +131,22 @@
 					<p class="settings-category-title row translatable" stringid="useExistingFolder">Move into an existing folder
 					</p>
 					<div id="existingfolders-container" class="bookmark-like-container centerbox">
+						<div id="nav-back-button" class="bookmark-link centerbox fHidden">
+							<div class="bookmark-circle centerbox">
+								<div class="centerbox" style="color: white; text-shadow: 0px 2px 6px white;">
+									<span class="Micon folder-icon mdi-arrow-left"></span>
+								</div>
+							</div>
+							<p class="bookmark-title translatable" stringid="goBack">Go back</p>
+						</div>
 						<p class="settings-category-title no-margin translatable" stringid="noOtherFolders">There aren't any
 							folders.</p>
 					</div>
 				</div>
 				<div class="reverse-row">
-					<button onclick="makeIntoFolderDiag()" class="dialog-button confirm-button ripple translatable" stringid="addElem">ADD</button>
-					<button onclick="newFolderDiag(force = false)" class="dialog-button ripple translatable" stringid="folderUndo">UNDO</button>
+					<button class="dialog-button confirm-button ripple translatable" stringid="addElem">ADD</button>
+					<button id ="newfolder-move-button" class="dialog-button ripple translatable" stringid="moveHere">Move Here</button>
+					<button class="dialog-button ripple translatable close-button" stringid="folderUndo">UNDO</button>
 				</div>
 			</div>
 		</div>

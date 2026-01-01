@@ -452,7 +452,7 @@ label.settings-button {
 	border-radius: 4px;
 }
 
-.settings-close-bottom {
+.settings-close-button {
 	display: none
 }
 
@@ -662,7 +662,7 @@ label.settings-button {
 	}
 
 
-	.settings-close-bottom {
+	.settings-close-button {
 		display: initial;
 	}
 
