@@ -64,6 +64,7 @@ class TranslationManager {
 		"toFolder" : "The bookmark has been moved to a folder.",
 		"emptyFolder" : "Empty Folder",
 		"moveHere" : "Move Here",
+		"errorRecursive" : "Cannot move a folder into itself",
 	},
 	"it" : {
 		"languageName" : "Italiano",
@@ -127,6 +128,7 @@ class TranslationManager {
 		"toFolder" : "Il segnalibro è stato spostato in una cartella",
 		"emptyFolder" : "Cartella vuota",
 		"moveHere" : "Sposta qui",
+		"errorRecursive" : "Non puoi muovere una cartella in sé stessa",
 	},
 	
 	"es": {
@@ -191,6 +193,7 @@ class TranslationManager {
 		"toFolder": "Favorito movido a carpeta.",
 		"emptyFolder": "Carpeta vacía",
 		"moveHere" : "Mover aquí",
+		"errorRecursive" : "No puedes mover una carpeta dentro de sí misma",
 	},
 
         };
