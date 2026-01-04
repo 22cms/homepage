@@ -452,7 +452,7 @@ label.settings-button {
 	border-radius: 4px;
 }
 
-.settings-close-button {
+.dHidden {
 	display: none
 }
 
@@ -528,7 +528,6 @@ label.settings-button {
 #mobile-warning {
 	color: yellow;
 	font-size: 12px;
-	display: none;
 	margin: 8px 0 8px 0;
 	font-style: italic;
 }
@@ -695,7 +694,7 @@ label.settings-button {
 		border-radius: 10px;
 	}
 
-	#mobile-warning {
+	.dHidden {
 		display: initial;
 	}
 

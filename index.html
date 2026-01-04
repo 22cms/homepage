@@ -38,10 +38,10 @@
 			<div class="settings-container" id="settings-container">
 				<div class="centerbox row">
 					<p class="settings-title translatable" stringid="settings">Settings</p>
-					<p id="settings-close-icon" class="settings-close-button settings-cross mHidden Micon mdi-window-close"></button>
+					<p id="settings-close-icon" class="settings-close-button dHidden settings-cross mHidden Micon mdi-window-close"></button>
 				</div>
 					<div class="scrollablebox">
-						<p id="mobile-warning"><b class="translatable" stringid="mobileDisclaimerNote">Note</b>: 
+						<p id="mobile-warning" class="dHidden"><b class="translatable" stringid="mobileDisclaimerNote">Note</b>: 
 							<span class="translatable" stringid="mobileDisclaimerText">
 								This website is not meant to be used on mobile devices. Most of the features will work just fine, but it won't resemble the best user experience scenario.
 							</span>
@@ -107,7 +107,7 @@
 					</div>
 				</div>
 				<div class="reverse-row">
-					<button class="settings-close-bottom settings-close-button dialog-button ripple translatable" stringid="settingsClose">Close</button>
+					<button class="dHidden settings-close-button dialog-button ripple translatable" stringid="settingsClose">Close</button>
 				</div>
 			</div>
 		</div>
@@ -115,7 +115,10 @@
 		<div id="newfolder-overlay" class="settings-overlay centerbox sHidden">
 			<div class="settings-container">
 				<div class="scrollablebox">
-					<p class="settings-title translatable" stringid="moveIntoFolder">Move in a Folder</p>
+					<div class="centerbox row">
+						<p class="settings-title translatable" stringid="moveIntoFolder">Move in a Folder</p>
+						<p id="newfolder-close-icon" class="dHidden settings-cross mHidden Micon mdi-window-close"></button>
+					</div>
 					<p class="settings-category-title row translatable" stringid="addNewFolder">Create a new Folder</p>
 					<div id="newfolder-container" class="bookmark-like-container centerbox">
 					</div>
@@ -124,6 +127,7 @@
 							value="Example Folder" id="folder-nametype">
 						<input autocomplete="off" name="icon" type="text" class="settings-type" placeholder="Icon Code"
 							value="folder-outline" id="folder-icontype">
+						<button class="settings-button confirm-button highlight ripple translatable" stringid="addElem">ADD</button>
 					</form>
 					<a class="radio-label translatable theme-advisor settings-category-title" stringid="materialIconsRedirect"
 							href="https://materialdesignicons.com/">You can find all supported icons on Material Design Icons'
@@ -144,9 +148,8 @@
 					</div>
 				</div>
 				<div class="reverse-row">
-					<button class="dialog-button confirm-button ripple translatable" stringid="addElem">ADD</button>
-					<button id ="newfolder-move-button" class="dialog-button ripple translatable" stringid="moveHere">Move Here</button>
-					<button class="dialog-button ripple translatable close-button" stringid="folderUndo">UNDO</button>
+					<button id="newfolder-move-button" class="dialog-button highlight confirm-button ripple translatable" stringid="moveHere">Move Here</button>
+					<button id="newfolder-close-button" class="dialog-button ripple translatable close-button" stringid="folderUndo">UNDO</button>
 				</div>
 			</div>
 		</div>

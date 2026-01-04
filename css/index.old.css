@@ -305,8 +305,8 @@ p, input, label, a, #notif-text, button {
 	color: var(--customize-primary);
 }
 
-.settings-close-bottom {
-	display: none
+.dHidden {
+	display: none;
 }
 
 .settings-type {
