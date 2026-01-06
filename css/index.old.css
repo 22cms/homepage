@@ -297,6 +297,10 @@ p, input, label, a, #notif-text, button {
 	border-radius: 4px;
 }
 
+.settings-title-icon {
+	display: none;
+}
+
 .settings-cross:hover {
 	color: #FFFFFF90;
 }

@@ -445,7 +445,7 @@ label.settings-button {
 	margin: 8px 0 0 2px;
 }
 
-.settings-cross {
+.settings-cross, .settings-title-icon {
 	cursor: pointer;
 	margin-bottom: 10px;
 	transition: color 0.1s;
