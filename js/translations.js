@@ -13,7 +13,7 @@ class TranslationManager {
 		"commandExecuted": "Command executed",
 		"openFolder" : "Open <title>",
 		"goBack" : "Go back",
-		"openShortcut" : "Open the shortcut",
+		"openShortcut" : "Open shortcut",
 		"newSearchEngineAdded" : "The new search engine has been added",
 		"newSearchEngineError" : "The Search engine URL does not contain any &ltquery&gt tag. Check it the provided URL is correct.",
 		"newBookmarkAdded" : "The new bookmark has been added",
