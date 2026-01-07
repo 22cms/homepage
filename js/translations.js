@@ -39,7 +39,7 @@ class TranslationManager {
 		"enableAnimations" : "Enable animations",
 		"enableBlur" : "Enable blur",
 		"launchURLwhenClicked" : "Go to the typed URL/Subreddit when left clicked",
-		"resizeSearchFont" : "Resize the font size while typing (if supported from the theme)",
+		"resizeSearchFont" : "Resize the font size while typing",
 		"applyColorTheme" : "Apply a custom Color Theme",
 		"resetAndImport" : "Reset and Import",
 		"settingsExport" : "Export Settings",
