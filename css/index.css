@@ -175,6 +175,7 @@ button {
 .bookmark-icon {
 	min-width: 22px;
 	max-width: 32px;
+	max-height: 32px;
 	height: auto;
 	border-radius: 5px;
 }

@@ -134,6 +134,7 @@ p, input, label, a, #notif-text, button {
 }
 .search-engine, .bookmark-icon {
 	max-width: 32px;
+	max-height: 32px;
 	min-width: 22px;
 	height: auto;
 	border-radius: 5px;
