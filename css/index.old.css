@@ -147,6 +147,7 @@ p, input, label, a, #notif-text, button {
 	pointer-events: none;
 }
 .bookmark-icon {
+	max-height: 24px;
 	max-width: 24px;
 	min-width: 18px;
 }

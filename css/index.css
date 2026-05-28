@@ -191,6 +191,7 @@ button {
 }
 
 .bookmark-icon {
+	max-height: 24px;
 	max-width: 24px;
 	min-width: 18px;
 }
